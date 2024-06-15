@@ -6,9 +6,14 @@ export default function Post() {
   return (
     <div className="post">
       <div className="post__user-info">
-        <Avatar alt="user" src={user1} />
-        <h3 className="post__user-info--name">NAME</h3>
-        <h4 className="post__user-info--user">userid</h4>
+        <div className="post__user-info--userWrap">
+          <Avatar alt="user" src={user1} />
+          <div className="post__user-info--nameWrap">
+            <h3 className="post__user-info--name">George Michael</h3>
+            <h4 className="post__user-info--user">@trial_shredder </h4>
+          </div>
+        </div>
+
         <p className="post__user-info--tags">tags</p>
       </div>
       <div className="post__images">
