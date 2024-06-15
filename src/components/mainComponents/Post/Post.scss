@@ -1,0 +1,9 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+.post {
+    background-color: $color-light-sec;
+    border-radius: 10px;
+    max-width: 755px;
+    max-height: 340px;
+    width: 100%;
+}
