@@ -6,4 +6,36 @@
     max-width: 755px;
     max-height: 340px;
     width: 100%;
+    &__user-info{
+        
+        &--name{
+            color:$color-dark;
+            font-weight: 700;
+        }
+        &--tags{
+            color:$color-dark;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        &--user {
+            color:$color-text;
+            font-weight: 700;
+        }
+    }
+    &__images{
+
+    }
+    &__info{
+        &--title{ 
+            color:$color-dark;
+            font-weight: 700;
+
+        }
+        &--text{
+            color:black;
+            font-size: 14px;
+            
+        }
+    }
 }
+

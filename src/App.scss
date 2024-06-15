@@ -7,10 +7,11 @@
   background-size: cover;
   width:100%;
   height: 100%; 
+  font-family: $font-primary;
 }
 .page-font {
   font-family: $font-primary;
   font-size: 120px;
-  color: $color-light-accent;
+  color: $color-light-sec;
   font-weight: 900;
 }

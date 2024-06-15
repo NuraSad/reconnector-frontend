@@ -7,8 +7,9 @@ export default function Post() {
     <div className="post">
       <div className="post__user-info">
         <Avatar alt="user" src={user1} />
-        <div className="post__user-info--name">NAME</div>
-        <div className="post__user-info--tags">tags</div>
+        <h3 className="post__user-info--name">NAME</h3>
+        <h4 className="post__user-info--user">userid</h4>
+        <p className="post__user-info--tags">tags</p>
       </div>
       <div className="post__images">
         <img />
