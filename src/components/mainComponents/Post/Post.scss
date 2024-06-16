@@ -1,10 +1,10 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
 .post {
-    background-color: $color-light-sec;
+    background-color: $color-light-accent-sec;
     border-radius: 10px;
     max-width: 755px;
-    max-height: 340px;
+    min-height: 340px;
     width: 100%;
     &__user-info{
         display: flex;
@@ -31,6 +31,9 @@
             color:$color-dark;
             font-size: 14px;
             font-weight: 700;
+            background-color: $color-light-sec;
+            border-radius: 80px;
+            padding: .10rem .5rem;
         }
         &--user {
             color:$color-text;
@@ -39,7 +42,10 @@
         }
     }
     &__images{
-
+        display: flex;
+        &--col-2 {
+            flex-direction: column;
+        }
     }
     &__info{
         &--title{ 

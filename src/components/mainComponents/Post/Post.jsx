@@ -1,6 +1,11 @@
 import Avatar from "@mui/material/Avatar";
 import user1 from "../../../assets/user1.png";
 import "./Post.scss";
+import img1 from "../../../assets/user1_main_img.png";
+import img2 from "../../../assets/user1_sec_img.png";
+import img3 from "../../../assets/user1_sec2_img.png";
+
+// import { useState } from "react";
 
 export default function Post() {
   return (
@@ -14,10 +19,14 @@ export default function Post() {
           </div>
         </div>
 
-        <p className="post__user-info--tags">tags</p>
+        <p className="post__user-info--tags">#Mountain Biking Squad</p>
       </div>
       <div className="post__images">
-        <img />
+        <img alt="img1" src={img1} />
+        <div className="post__images--col-2">
+          <img alt="img2" src={img2} />
+          <img alt="img3" src={img3} />
+        </div>
       </div>
       <div className="post__info">
         <h2 className="post__info--title">title</h2>
