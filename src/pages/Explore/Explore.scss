@@ -1,0 +1,15 @@
+.explore {
+    height: 100vh;
+    width: 100%;
+    &__title {
+        position: absolute;
+        left: 25%;
+        top:-10%;
+    }
+    &__posts {
+       
+        display: flex;
+        justify-content: center;
+        margin: 160px auto 0;
+    }
+}

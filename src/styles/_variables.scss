@@ -1,14 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 // fonts
-$font-primary: 'Titillium Web', 'sans serif';
+$font-primary: "Roboto", sans-serif;
 // primary colors
-$color-dark: #6C3ED6;
-$color-medium:#9574E1;
-$color-light: #FFFFFF;
-// secondar colors
-$color-light-sec: #D9D9D9;
-$color-title: #6C3ED6;
-$color-text: #939396;
+$color-dark: #282828;
+$color-medium:#6C3ED6;
+$color-light: #939396;
+$color-light-sec: #ede1f3;
+$color-light-accent: #FFFFFF;
+//text-color
+$color-text: #8F8B8B;
 // screen sizes
 $tablet-width: 768px;
 $desktop-width: 1280px;
