@@ -6,6 +6,7 @@
     max-width: 755px;
     min-height: 340px;
     width: 100%;
+    margin-bottom: 2rem;
     &__user-info{
         display: flex;
         justify-content: space-between;
@@ -98,7 +99,9 @@
             &--p{
                 color:white;
                 position: absolute;
-                padding-left:.5rem;
+                padding-left:.6rem;
+                padding-top:.3rem;
+                font-size: .75rem;
             }
         }
     }

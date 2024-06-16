@@ -1,47 +1,58 @@
 import Avatar from "@mui/material/Avatar";
-import user1 from "../../../assets/user1.png";
 import "./Post.scss";
-import img1 from "../../../assets/user1_main_img.png";
-import img2 from "../../../assets/user1_sec_img.png";
-import img3 from "../../../assets/user1_sec2_img.png";
 import heart from "/heart_icon.svg";
+import PropTypes from "prop-types";
 
-// import { useState } from "react";
-
-export default function Post() {
+export default function Post({
+  profileAvatar,
+  last_name,
+  first_name,
+  username,
+  tag,
+  img1,
+  img2,
+  img3,
+  postTitle,
+  postText,
+  likes,
+}) {
   return (
     <div className="post">
       <div className="post__user-info">
         <div className="post__user-info--userWrap">
-          <Avatar alt="user" src={user1} />
+          <Avatar alt={username} src={profileAvatar} />
           <div className="post__user-info--nameWrap">
-            <h3 className="post__user-info--name">George Michael</h3>
-            <h4 className="post__user-info--user">@trial_shredder </h4>
+            <h3 className="post__user-info--name">
+              {first_name} {last_name}
+            </h3>
+            <h4 className="post__user-info--user">@{username} </h4>
           </div>
         </div>
 
-        <p className="post__user-info--tags">#Mountain Biking Squad</p>
+        <p className="post__user-info--tags">#{tag}</p>
       </div>
       <div className="post__images">
-        <img className="post__images--main" alt="img1" src={img1} />
+        <img className="post__images--main" alt="main image" src={img1} />
         <div className="post__images--col-2">
-          <img className="post__images--sec--top" alt="img2" src={img2} />
-          <img className="post__images--sec--bottom" alt="img3" src={img3} />
+          <img
+            className="post__images--sec--top"
+            alt="second image"
+            src={img2}
+          />
+          <img
+            className="post__images--sec--bottom"
+            alt="third image"
+            src={img3}
+          />
         </div>
       </div>
       <div className="post__info">
         <div className="post__info--col-1">
-          <h2 className="post__info--title">
-            Amazing ride, ended with an incredibly beautiful sunset!
-          </h2>
-          <p className="post__info--text">
-            In at iaculis lorem. Praesent tempor dictum tellus ut molestie. Sed
-            sed ullamcorper lorem, id faucibus odio. Duis eu nisl ut ligula
-            cursus molestie at at dolor.
-          </p>
+          <h2 className="post__info--title">{postTitle}</h2>
+          <p className="post__info--text">{postText}</p>
         </div>
         <div className="post__info--col-2">
-          <span className="post__info--col-2--p">24</span>
+          <span className="post__info--col-2--p">{likes}</span>
 
           <img className="post__info--col-2--svg" alt={heart} src={heart} />
         </div>
@@ -49,3 +60,17 @@ export default function Post() {
     </div>
   );
 }
+
+Post.propTypes = {
+  profileAvatar: PropTypes.string,
+  last_name: PropTypes.string,
+  first_name: PropTypes.string,
+  username: PropTypes.string,
+  tag: PropTypes.array,
+  img1: PropTypes.string,
+  img2: PropTypes.string,
+  img3: PropTypes.string,
+  postTitle: PropTypes.string,
+  postText: PropTypes.string,
+  likes: PropTypes.num,
+};
