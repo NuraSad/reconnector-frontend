@@ -1,0 +1,13 @@
+.groups {
+
+    &__cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(300px, 1fr));
+        grid-template-rows: auto;
+        gap: 20px;
+        justify-items: center;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+}
