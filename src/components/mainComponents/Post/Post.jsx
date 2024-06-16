@@ -22,10 +22,10 @@ export default function Post() {
         <p className="post__user-info--tags">#Mountain Biking Squad</p>
       </div>
       <div className="post__images">
-        <img alt="img1" src={img1} />
+        <img className="post__images--main" alt="img1" src={img1} />
         <div className="post__images--col-2">
-          <img alt="img2" src={img2} />
-          <img alt="img3" src={img3} />
+          <img className="post__images--sec--top" alt="img2" src={img2} />
+          <img className="post__images--sec--bottom" alt="img3" src={img3} />
         </div>
       </div>
       <div className="post__info">

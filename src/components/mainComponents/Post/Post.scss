@@ -43,8 +43,30 @@
     }
     &__images{
         display: flex;
+        margin: 1rem 3.85rem;
+        justify-content: space-evenly;
+        
         &--col-2 {
+            display: flex;
             flex-direction: column;
+            justify-content: space-between;
+        }
+        &--main{
+            width: 350px;
+            height: 194px;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+        &--sec{
+            width:240px;
+            height:94px;
+           
+            &--top {
+                border-top-right-radius: 10px;
+            }
+            &--bottom {
+                border-bottom-right-radius: 10px;
+            }
         }
     }
     &__info{
