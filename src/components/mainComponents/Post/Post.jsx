@@ -31,8 +31,14 @@ export default function Post() {
       </div>
       <div className="post__info">
         <div className="post__info--col-1">
-          <h2 className="post__info--title">title</h2>
-          <p className="post__info--text">text</p>
+          <h2 className="post__info--title">
+            Amazing ride, ended with an incredibly beautiful sunset!
+          </h2>
+          <p className="post__info--text">
+            In at iaculis lorem. Praesent tempor dictum tellus ut molestie. Sed
+            sed ullamcorper lorem, id faucibus odio. Duis eu nisl ut ligula
+            cursus molestie at at dolor.
+          </p>
         </div>
         <div className="post__info--col-2">
           <span className="post__info--col-2--p">24</span>

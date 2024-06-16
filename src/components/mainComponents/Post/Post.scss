@@ -72,7 +72,8 @@
     &__info{
         margin: 1rem 3.85rem;
         display: flex;
-      
+        justify-content: space-around;
+
         &--title{ 
             color:$color-dark;
             font-weight: 700;
@@ -91,14 +92,13 @@
         &--col-2 {
             width:240px;
             text-align: end;
-
             &--svg {
 
             }
             &--p{
                 color:white;
                 position: absolute;
-                
+                padding-left:.5rem;
             }
         }
     }
