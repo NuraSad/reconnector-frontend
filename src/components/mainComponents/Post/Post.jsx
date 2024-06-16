@@ -4,6 +4,7 @@ import "./Post.scss";
 import img1 from "../../../assets/user1_main_img.png";
 import img2 from "../../../assets/user1_sec_img.png";
 import img3 from "../../../assets/user1_sec2_img.png";
+import heart from "/heart_icon.svg";
 
 // import { useState } from "react";
 
@@ -29,8 +30,15 @@ export default function Post() {
         </div>
       </div>
       <div className="post__info">
-        <h2 className="post__info--title">title</h2>
-        <p className="post__info--text">text</p>
+        <div className="post__info--col-1">
+          <h2 className="post__info--title">title</h2>
+          <p className="post__info--text">text</p>
+        </div>
+        <div className="post__info--col-2">
+          <span className="post__info--col-2--p">24</span>
+
+          <img className="post__info--col-2--svg" alt={heart} src={heart} />
+        </div>
       </div>
     </div>
   );

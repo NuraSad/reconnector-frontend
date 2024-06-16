@@ -70,15 +70,36 @@
         }
     }
     &__info{
+        margin: 1rem 3.85rem;
+        display: flex;
+      
         &--title{ 
             color:$color-dark;
             font-weight: 700;
+            margin-top:0;
 
         }
         &--text{
             color:black;
             font-size: 14px;
             
+        }
+        &--col-1 {
+            width: 350px;
+            text-align: start;
+        }
+        &--col-2 {
+            width:240px;
+            text-align: end;
+
+            &--svg {
+
+            }
+            &--p{
+                color:white;
+                position: absolute;
+                
+            }
         }
     }
 }
