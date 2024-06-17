@@ -2,6 +2,7 @@ import "./Root.scss";
 import samantha from "../../assets/samantha.png";
 import companyLogo from "../../assets/icons/starbacks-logo.png";
 import logo from '../../assets/icons/reconnect-logo.svg';
+import eventImage from "../../assets/running-club.jpg"
 import {
   Outlet,
   NavLink,
@@ -12,6 +13,38 @@ import {
   redirect,
   Link,
 } from "react-router-dom";
+
+function SmallEventCard({name, src, attendees, date}){
+  console.log(name)
+  return (
+    <div className="event-card">
+      <img src={src} alt="dimmed event theme"/> 
+      <p className="date">{date}</p>
+      <p className="num">{attendees}</p>
+      <p className="name">{`# ${name}`}</p>
+    </div>
+  )
+}
+
+const events = [{
+  event_id: '1', 
+  date: "Monday @3:30pm",
+  name:"running sunday fun day",
+  attendees: 25,
+  src: eventImage,
+},{
+  event_id: '2', 
+  date: "Friday @12:30pm",
+  name:"running sunday fun day",
+  attendees: 25,
+  src: eventImage,
+}, {
+  event_id: '3', 
+  date: "Sunday @8:30am",
+  name:"running sunday fun day",
+  attendees: 25,
+  src: eventImage,
+}]
 
 
 export default function Root() {
@@ -30,7 +63,7 @@ export default function Root() {
         <img src={logo}/>
         <div className="user-info">
           <div className="avatar-field">
-            <img id='avatar' src={user.src} alt={`${user.name}'s avatar`} />
+            <Link to="/profile"><img id='avatar' src={user.src} alt={`${user.name}'s avatar`} /></Link>
             <img id ='company-logo' src={user.company} alt={`${user.name}'s company logo`} />
           </div>
           <h4>{user.name}</h4>
@@ -107,7 +140,12 @@ export default function Root() {
       </div>
       <div className="sidebar">
         <h3>Upcoming Events</h3>
+        {events.map((event) => (
+          <SmallEventCard key={event.event_id}
+          name={event.name} src={event.src} attendees={event.attendees} date={event.date} />
+        ))}
       </div>
     </div>
   );
 }
+
