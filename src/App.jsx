@@ -32,7 +32,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} id='root'/>;
 }
 
 export default App;
