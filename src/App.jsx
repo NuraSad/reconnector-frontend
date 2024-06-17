@@ -1,21 +1,38 @@
 import "./App.scss";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Explore from "./pages/Explore/Explore";
 import Groups from "./pages/Groups/Groups";
-import Leaderboard from "./pages/Leaderboard/Leaderboard";
+import Root from './pages/Root/Root';
+import ErrorPage from "./pages/ErrorPage/ErrorPage";
+import StartPage from "./pages/StartPage/StartPage";
+import Leaderboard from "./pages/Leaderboard/Leaderboard"
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    children: [
+      {index: true, element: <StartPage />},
+      {
+        path: "/explore",
+        element: <Explore />,
+      },
+      {
+        path: "/groups",
+        element: <Groups />,
+      },
+      {
+        path:"/leaderboard",
+        element: <Leaderboard/>,
+      }
+    ],
+  },
+]);
 
 function App() {
-  return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Explore />} />
-          <Route path="/groups" element={<Groups />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
