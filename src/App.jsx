@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         element: <Groups />,
       },
       {
-        path:"/leaderboard",
+        path:"/leaderboards",
         element: <Leaderboard/>,
       }
     ],
