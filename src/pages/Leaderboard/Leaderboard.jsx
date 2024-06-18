@@ -92,7 +92,7 @@ const Leaderboard = () => {
               key={company.id}
               style={{
                 backgroundImage: `url(${company.image})`,
-                maxWidth: `${company.score / 7}%`,
+                maxWidth: `${company.score / 20}%`,
                 bottom: `${Math.floor(Math.random() * 70) + 20}px`,
                 right: `${Math.floor(Math.random() * 70) + 10}px`,
               }}
