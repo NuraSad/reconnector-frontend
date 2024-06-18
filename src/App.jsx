@@ -7,6 +7,7 @@ import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import StartPage from "./pages/StartPage/StartPage";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import Calendar from "./pages/Calendar/Calendar";
 
 
 const router = createBrowserRouter([
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       }, {
         path:"/profile",
         element: <ProfilePage/>,
+      },
+      {
+        path:"/calendar",
+        element: <Calendar/>,
       },
     ],
   },

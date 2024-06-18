@@ -10,7 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@fullcalendar/daygrid": "^6.1.14",
+    "@fullcalendar/interaction": "^6.1.14",
+    "@fullcalendar/react": "^6.1.14",
     "@mui/material": "^5.15.20",
     "@supabase/supabase-js": "^2.43.5",
     "react": "^18.2.0",
