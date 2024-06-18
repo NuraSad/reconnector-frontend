@@ -1,0 +1,41 @@
+
+.profile-icons{
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    &__icon{
+        position: absolute;
+        right: 0;
+        width: 40px;
+        height: 40px;
+    }
+    &__count{
+        position: absolute;
+        right: 10px;
+        top: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    &__icon:nth-child(1){
+        right: 0;
+        filter: brightness(0.0);
+    }
+    &__icon:nth-child(2){
+        right: 25px;
+        filter: brightness(0.4);
+    }
+    &__icon:nth-child(3){
+        right: 45px;
+        filter: brightness(0.6);
+    }
+    &__icon:nth-child(4){
+        right: 65px;
+        filter: brightness(0.8);
+    }
+    &__icon:nth-child(5){
+        right: 85px;
+        filter: brightness(0.8);
+    }
+
+}
