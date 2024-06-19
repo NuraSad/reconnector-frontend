@@ -24,25 +24,26 @@ import supabase from "../../config/supabaseClient";
 //     },
 //   ];
 
-
 export default function Groups() {
   const [groups, setGroups] = useState(null);
-const [fetchError, setFetchError] = useState(null);
-useEffect(() => {
-  const fetchGroups = async () => {
-    const { data, error } = await supabase.from('group').select();
+  const [fetchError, setFetchError] = useState(null);
+  useEffect(() => {
+    const fetchGroups = async () => {
+      const { data, error } = await supabase.from("group").select();
 
-    if (error) {
-      console.log(error);
-      setFetchError("Could not Fetch the Group");
-    }
-    if (data) {
-      setGroups(data);
-      setFetchError(null);
-    }
-  };
-  fetchGroups();
-}, []);
+      if (error) {
+        console.log(error);
+        setFetchError("Could not Fetch the Group");
+      }
+      if (data) {
+        setGroups(data);
+        setFetchError(null);
+      }
+    };
+    fetchGroups();
+  }, []);
+  console.log(groups);
+
   return (
     <section className="groups">
       <h1 className="groups__title page-font">Groups</h1>
