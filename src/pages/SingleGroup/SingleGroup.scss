@@ -1,0 +1,31 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.singleGroup{
+    margin: 0 4rem;
+    width: 90%;
+    padding: 0 2rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    background-color: white;
+    &__title {
+        font-size: 42px;
+        color:$color-medium-transparent;
+        text-align: start;
+    }
+    &__header{
+        display: flex;
+        justify-content: space-between;
+        &--days{
+            display: flex;  
+            gap:10px;
+        }
+        &--left {
+            // align-items: start;
+        }
+        &--right {
+            display: flex;
+            margin-top: 1rem;
+            gap:10px;
+        }
+    }
+}
