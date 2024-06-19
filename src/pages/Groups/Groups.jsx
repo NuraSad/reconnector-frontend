@@ -7,20 +7,19 @@ export default function Groups() {
   const [groups, setGroups] = useState(null);
   const [fetchError, setFetchError] = useState(null);
 
-<<<<<<< HEAD
   const [toggle, setToggle] = useState(false);
   const [location, setLocation] = useState("all");
 
   useEffect(() => {
     const fetchGroups = async (groupType) => {
-      const { data, error } = await supabase.from('group').select();
+      const { data, error } = await supabase.from("group").select();
       if (error) {
         console.log(error);
         setFetchError("Could not Fetch the Group");
-      } else{
+      } else {
         // if (groupType === "inPerson") data.filter((group) => group.type === "inPerson")
         // else data.filter((group) => group.type === "online")
-        if (groupType === "inPerson") data.reverse() //<-- this is for testing only, need to include type filter in backend
+        if (groupType === "inPerson") data.reverse(); //<-- this is for testing only, need to include type filter in backend
         setFetchError(null);
         setGroups(data);
       }
@@ -28,23 +27,6 @@ export default function Groups() {
     toggle ? fetchGroups("inPerson") : fetchGroups("online");
     // fetchGroups();
   }, [toggle]);
-=======
-  useEffect(() => {
-    const fetchGroups = async () => {
-      const { data, error } = await supabase.from("group").select();
-
-      if (error) {
-        console.log(error);
-        setFetchError("Could not Fetch the Group");
-      }
-      if (data) {
-        setGroups(data);
-        setFetchError(null);
-      }
-    };
-    fetchGroups();
-  }, []);
->>>>>>> group-single-page--2024-06-17
 
   return (
     <section className="groups">
@@ -61,7 +43,10 @@ export default function Groups() {
             />
           </div>
           <div>
-            <select value={location} onChange={(e) => setLocation(e.target.value)}>
+            <select
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            >
               <option value="all">All Locations</option>
               <option value="location1">Location 1</option>
               <option value="location2">Location 2</option>
