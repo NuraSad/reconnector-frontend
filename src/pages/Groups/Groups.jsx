@@ -45,7 +45,9 @@ useEffect(() => {
 }, []);
   return (
     <section className="groups">
+      <div>
       <h1 className="groups__title page-font">Groups</h1>
+      </div>
       <div className="groups__cards">
         {fetchError ? (
           <p>{fetchError}</p>
