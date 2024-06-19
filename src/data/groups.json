@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "groupName": "Yoga for All 🧘‍♂️",
+    "groupImage": ["", "", ""],
+    "description": "In at iaculis lorem. Praesent tempor dictum tellus ut molestie.\nSed sed ullamcorper lorem, id faucibus odio. Duis eu nisl ut\nligula cursus molestie at at dolor."
+  },
+  {
+    "id": 2,
+    "groupName": "North Van Hiking Group",
+    "groupImage": ["", "", ""],
+    "description": "The beautiful thing about hiking is that it is truly an activity everyone can do. Whether you are young or old, an expert or an amateur, there is a trail out there that will be perfect for you. So the next time you are pondering an outdoor adventure"
+  },
+  {
+    "id": 3,
+    "groupName": "Revelstoke Cycling Group",
+    "groupImage": ["", "", ""],
+    "description": "Life is short, buy the motorcycle, have a ride, live your dreams. You do not stop riding when you get old"
+  },
+  {
+    "id": 4,
+    "groupName": "Rossland Running Club",
+    "groupImage": ["", "", ""],
+    "description": "Run with your heart, leave your worries behind. No excuses, just run. Run with purpose, run with pride. Embrace the sweat, embrace the run. Run because you can."
+  }
+]

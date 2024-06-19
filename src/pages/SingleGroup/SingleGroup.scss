@@ -1,0 +1,21 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.singleGroup{
+    margin: 0 4rem;
+    width: 90%;
+    padding: 0 2rem;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    &__title {
+        font-size: 42px;
+        color:$color-medium-transparent;
+        text-align: start;
+    }
+    &__header{
+        &--days{
+            display: flex;
+            
+        }
+    }
+}
