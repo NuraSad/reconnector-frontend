@@ -3,7 +3,6 @@
 
 .singleGroup{
     margin: 0 4rem;
-    
     padding: 0 2rem;
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     background-color: white;
@@ -34,11 +33,16 @@
         }
     }
     &__columns {
-
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        @include desktop {
+            flex-direction:row;
+        }
+        
     }
     
     &__allImage {
-        width: 70%;
         display: flex;
         &--col-1 {
             height: 370px;
@@ -69,6 +73,17 @@
         height: 100%;
     //overflow: hidden;
     }
+    &__descript {
+        margin-top: 4rem;
+    }
+    &__col-1 {
+        width: 70%;
+    }
+    &__col-2 {
+        width: 25%;
+        height: 370px;
+        overflow-y: auto;
+    }
 }
 
 .sec--2 {
@@ -76,3 +91,4 @@
     align-items: start;
     justify-content: flex-start;
 }
+
