@@ -1,7 +1,9 @@
 .container {
     width: 100vw;
-    height: min-content;
-    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 17% 66% 17%
 }
 nav {
     box-sizing: border-box;
@@ -11,7 +13,6 @@ nav {
     align-items: flex-start;
     padding: 1rem 2rem;
     background-color: white;
-    width: 17%;
     box-shadow: 0 4px 10px 0 rgba($color: #000000, $alpha: 0.25);
 
     .user-info {
@@ -83,17 +84,15 @@ nav {
 }
 
 .outlet{
-    width: 66%;
-    display: flex;
-    // justify-content: center;
-    // align-items: center;
+    height: 100vh;
+    overflow-y: scroll;
+    // width: 66%;
     // make only cental element scrollable
     // overflow-y: auto;
 }
 
 .sidebar{
     box-sizing: border-box;
-    width: 17%;
     background-color: white;
     box-shadow: 0 4px 10px 0 rgba($color: #000000, $alpha: 0.25);
     display: flex;
