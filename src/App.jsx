@@ -9,7 +9,7 @@ import Leaderboard from "./pages/Leaderboard/Leaderboard";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import Calendar from "./pages/Calendar/Calendar";
 import SingleGroup from "./pages/SingleGroup/SingleGroup";
-
+import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
 const router = createBrowserRouter([
   {
     path: "/",

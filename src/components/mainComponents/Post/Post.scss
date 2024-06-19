@@ -1,109 +1,107 @@
-@use '../../../styles/variables' as *;
-@use '../../../styles/mixins' as *;
+@use "../../../styles/variables" as *;
+@use "../../../styles/mixins" as *;
 .post {
-    background-color: $color-light-accent-sec;
-    border-radius: 10px;
-    max-width: 755px;
-    min-height: 340px;
-    width: 100%;
-    margin-bottom: 2rem;
-    &__user-info{
-        display: flex;
-        justify-content: space-between;
-        margin: 1rem 3.85rem;
-        &--userWrap {
-            display: flex;
-            justify-content: space-between;
-            width: fit-content;
-            text-align: start;
-            align-items: center;
-        }
-        &--nameWrap {
-            display: flex;
-            flex-direction: column;
-            margin-left: 1rem;
-        }
-        &--name{
-            color:$color-dark;
-            font-weight: 700;
-            margin: 0;
-        }
-        &--tags{
-            color:$color-dark;
-            font-size: 14px;
-            font-weight: 700;
-            background-color: $color-light-sec;
-            border-radius: 80px;
-            padding: .10rem .5rem;
-        }
-        &--user {
-            color:$color-text;
-            font-weight: 700;
-            margin: 0;
-        }
+  background-color: $color-light-accent-sec;
+  border-radius: 10px;
+  max-width: 755px;
+  min-height: 340px;
+  width: 100%;
+  margin-bottom: 2rem;
+  &__user-info {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 3.85rem;
+    &--userWrap {
+      display: flex;
+      justify-content: space-between;
+      width: fit-content;
+      text-align: start;
+      align-items: center;
     }
-    &__images{
-        display: flex;
-        margin: 1rem 3.85rem;
-        justify-content: space-evenly;
-        
-        &--col-2 {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        &--main{
-            width: 350px;
-            height: 194px;
-            border-top-left-radius: 10px;
-            border-bottom-left-radius: 10px;
-        }
-        &--sec{
-            width:240px;
-            height:94px;
-           
-            &--top {
-                border-top-right-radius: 10px;
-            }
-            &--bottom {
-                border-bottom-right-radius: 10px;
-            }
-        }
+    &--nameWrap {
+      display: flex;
+      flex-direction: column;
+      margin-left: 1rem;
     }
-    &__info{
-        margin: 1rem 3.85rem;
-        display: flex;
-        justify-content: space-around;
-
-        &--title{ 
-            color:$color-dark;
-            font-weight: 700;
-            margin-top:0;
-
-        }
-        &--text{
-            color:black;
-            font-size: 14px;
-            
-        }
-        &--col-1 {
-            width: 350px;
-            text-align: start;
-        }
-        &--col-2 {
-            width:240px;
-            text-align: end;
-            &--svg {
-
-            }
-            &--p{
-                color:white;
-                position: absolute;
-                padding-left:.6rem;
-                padding-top:.3rem;
-                font-size: .75rem;
-            }
-        }
+    &--name {
+      color: $color-dark;
+      font-weight: 700;
+      margin: 0;
     }
+    &--tags {
+      color: $color-dark;
+      font-size: 14px;
+      font-weight: 700;
+      background-color: $color-light-sec;
+      border-radius: 80px;
+      padding: 0.1rem 0.5rem;
+    }
+    &--user {
+      color: $color-text;
+      font-weight: 700;
+      margin: 0;
+    }
+  }
+  &__images {
+    display: flex;
+    margin: 1rem 3.85rem;
+    justify-content: space-evenly;
+
+    &--col-2 {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    &--main {
+      width: 350px;
+      height: 194px;
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+    &--sec {
+      width: 240px;
+      height: 94px;
+
+      &--top {
+        border-top-right-radius: 10px;
+      }
+      &--bottom {
+        border-bottom-right-radius: 10px;
+      }
+    }
+  }
+  &__info {
+    margin: 1rem 3.85rem;
+    display: flex;
+    justify-content: space-around;
+
+    &--title {
+      color: $color-dark;
+      font-weight: 700;
+      margin-top: 0;
+    }
+    &--text {
+      color: black;
+      font-size: 14px;
+    }
+    &--col-1 {
+      width: 350px;
+      text-align: start;
+    }
+    &--col-2 {
+      width: 240px;
+      text-align: end;
+      &--svg {
+  
+     
+      }
+      &--p {
+        color: white;
+        position: absolute;
+        padding-left: 0.6rem;
+        padding-top: 0.3rem;
+        font-size: 0.75rem;
+      }
+    }
+  }
 }
-

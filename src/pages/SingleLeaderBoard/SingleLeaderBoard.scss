@@ -1,0 +1,117 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+@use "../../styles/reset" as *;
+
+.singleleaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  background-color: white;
+  width: 80%;
+  padding: 5rem 3rem;
+  margin: 1rem 0;
+  &-first {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    &-companyLogo {
+      img {
+        width: 171px;
+      }
+    }
+    &-description {
+      display: flex;
+      flex-direction: column;
+      row-gap: 1rem;
+      .company-heading {
+        text-align: left;
+        font-size: 3rem;
+        font-weight: bold;
+      }
+      .company-bulletins {
+        display: flex;
+        gap: 2rem;
+        &-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          span {
+            color: $color-light;
+          }
+        }
+      }
+      .company-description {
+        text-align: start;
+        font-size: $font-base-sm;
+      }
+    }
+  }
+  &-second {
+    &-heading {
+      display: grid;
+      grid-template-columns: 2.5fr 1fr 1fr 1fr 4fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      div {
+        color: $color-light;
+        h3 {
+          font-weight: bold;
+          color: black;
+          font-size: 1.2rem;
+          text-align: left;
+        }
+        h5 {
+          font-size: $font-base-sm;
+          width: 66px;
+        }
+        .activegroup {
+          width: 75px;
+        }
+      }
+    }
+    &-data {
+      display: grid;
+      grid-template-columns: 2.5fr 1fr 1fr 1fr 4fr;
+      grid-template-rows: 2fr 1fr;
+      column-gap: 1rem;
+
+      div {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        .author-image {
+          width: 30px;
+        }
+        span {
+          font-size: 13px;
+        }
+        img {
+          width: 20px;
+        }
+      }
+      .author {
+        gap: 2rem;
+      }
+      .activegroups {
+        gap: 1rem;
+        &-outline {
+          background-color: $color-light-sec;
+          padding: 4px 9px;
+          border-radius: 10px;
+          font-size: 11px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  &-third {
+    h3 {
+      text-align: left;
+      font-weight: bold;
+    }
+    &-posts {
+      overflow-y: auto;
+      height: 80vh;
+    }
+  }
+}
