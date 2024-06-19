@@ -18,7 +18,7 @@ function Btn({
   hiddenText,
 }) {
   return (
-    <div className="parent">
+    <>
       <button
         className="btn"
         onClick={onClick} //this is bringing in a string somewhere and that is where the error in console log is coming from
@@ -46,7 +46,7 @@ function Btn({
       {hiddenText && hiddenText ? (
         <div className="btn__showHover">{hiddenText}</div>
       ) : null}
-    </div>
+    </>
   );
 }
 Btn.propTypes = {

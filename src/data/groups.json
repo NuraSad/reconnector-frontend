@@ -1,14 +1,22 @@
 [
   {
-    "id": 1,
+    "id": 2,
     "groupName": "Yoga for All 🧘‍♂️",
-    "groupImage": ["", "", ""],
+    "groupImage": [
+      "/images/yoga.jpg",
+      "/images/yoga2.jpg",
+      "/images/yoga3.jpg"
+    ],
     "description": "In at iaculis lorem. Praesent tempor dictum tellus ut molestie.\nSed sed ullamcorper lorem, id faucibus odio. Duis eu nisl ut\nligula cursus molestie at at dolor."
   },
   {
-    "id": 2,
+    "id": 1,
     "groupName": "North Van Hiking Group",
-    "groupImage": ["", "", ""],
+    "groupImage": [
+      "/images/hiking.jpg",
+      "/images/hiking2.jpg",
+      "/images/hiking3.jpg"
+    ],
     "description": "The beautiful thing about hiking is that it is truly an activity everyone can do. Whether you are young or old, an expert or an amateur, there is a trail out there that will be perfect for you. So the next time you are pondering an outdoor adventure"
   },
   {
