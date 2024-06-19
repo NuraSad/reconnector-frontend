@@ -3,11 +3,11 @@
 
 .singleGroup{
     margin: 0 4rem;
-    width: 90%;
     padding: 0 2rem;
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     background-color: white;
     &__title {
+        padding-top: 2rem;
         font-size: 42px;
         color:$color-medium-transparent;
         text-align: start;
@@ -22,10 +22,73 @@
         &--left {
             // align-items: start;
         }
-        &--right {
+        &--icons {
             display: flex;
             margin-top: 1rem;
+        }
+        &--right {
+            display: flex;
+            margin-top: 1.5rem;
             gap:10px;
         }
     }
+    &__columns {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        @include desktop {
+            flex-direction:row;
+        }
+        
+    }
+    
+    &__allImage {
+        display: flex;
+        &--col-1 {
+            height: 370px;
+            width: 250px;
+            background-color: #0a0a23;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+        }
+        &--col-2 {
+            height: 370px;
+            width: 250px;
+            background-color: #0a0a23;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-direction: column;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+    }
+    &__img {
+        width: auto;
+        height: 100%;
+    //overflow: hidden;
+    }
+    &__descript {
+        margin-top: 4rem;
+    }
+    &__col-1 {
+        width: 70%;
+    }
+    &__col-2 {
+        width: 25%;
+        height: 370px;
+        overflow-y: auto;
+    }
 }
+
+.sec--2 {
+    height: 75%;
+    align-items: start;
+    justify-content: flex-start;
+}
+

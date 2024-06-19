@@ -1,17 +1,13 @@
 @use './styles/variables' as *;
 @use './styles/mixins' as *;
-body{
-  background-image: url("./background.png"); // here you had it wrong
-  background-size: cover;
-  background-repeat: no-repeat;
-
-}
-
 
 #root {
   width:100vw;
   height: 100vh; 
   font-family: $font-primary;
+  background-image: url("./background.png"); // here you had it wrong
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 .page-font {
   font-family: $font-primary;
