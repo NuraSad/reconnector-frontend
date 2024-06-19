@@ -110,7 +110,8 @@ nav {
 
     .event-card{
         width: 90%;
-        height: 10rem;
+        height: auto;
+        aspect-ratio: 640 / 427;
         position: relative;
         font-family: "Roboto", sans-serif;
         margin-bottom: 1rem;
