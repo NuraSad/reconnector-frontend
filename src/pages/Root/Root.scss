@@ -1,6 +1,7 @@
 .container {
     width: 100vw;
-    height: min-content;
+    height: 100vh;
+    overflow: hidden;
     display: flex;
 }
 nav {
@@ -83,6 +84,8 @@ nav {
 }
 
 .outlet{
+    height: 100vh;
+    overflow-y: scroll;
     width: 66%;
     display: flex;
     justify-content: center;
