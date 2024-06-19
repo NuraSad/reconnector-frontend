@@ -1,8 +1,20 @@
 import "./ProfileIcons.scss";
 
-export default function ProfileIcons({ users }) {
+export default function ProfileIcons({
+  users,
+  moveLeft,
+  moveBottom,
+  marginTop,
+}) {
   return (
-    <div className="profile-icons">
+    <div
+      className="profile-icons"
+      style={{
+        left: moveLeft,
+        bottom: moveBottom,
+        marginTop: marginTop,
+      }}
+    >
       {users.slice(0, 5).map((user) => (
         <img
           alt={`${user.name}`}
