@@ -34,6 +34,10 @@ const router = createBrowserRouter([
         element: <Leaderboard />,
       },
       {
+        path: "/leaderboards/:id",
+        element: <SingleLeaderBoard />,
+      },
+      {
         path: "/profile",
         element: <ProfilePage />,
       },
