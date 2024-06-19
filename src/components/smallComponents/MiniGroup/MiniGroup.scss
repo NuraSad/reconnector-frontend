@@ -1,0 +1,23 @@
+.mini-group{
+    position: relative;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 640 / 427;
+    
+    img{
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        filter: brightness(0.4);
+        z-index: 1;
+        border-radius: 10px;
+    }
+    p{
+        position: absolute;
+        bottom: 0.5rem;
+        left: 0.5rem;
+        z-index: 2;
+        color: white;
+    }
+}

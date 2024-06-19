@@ -93,14 +93,20 @@
         &--col-2 {
             width:240px;
             text-align: end;
-            &--svg {
 
+            &--wrapper{
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                justify-items: center;
+                position: relative;
+            }
+            &--svg {
             }
             &--p{
                 color:white;
                 position: absolute;
-                padding-left:.6rem;
-                padding-top:.3rem;
+                right: 8.5px;
                 font-size: .75rem;
             }
         }
