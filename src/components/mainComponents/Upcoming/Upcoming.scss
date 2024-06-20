@@ -1,0 +1,8 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.upcoming {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

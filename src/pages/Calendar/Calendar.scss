@@ -1,0 +1,19 @@
+.fc { /* the calendar root */
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 30px;
+
+    .fc-view-harness{
+        background-color: #f5f5f5;
+        border-radius: 10px;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    b{
+        margin-right: 5px;
+    }
+  }
+
+  

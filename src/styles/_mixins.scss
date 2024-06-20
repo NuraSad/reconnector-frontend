@@ -12,3 +12,9 @@
     }
 }
 
+@mixin desktopXL {
+    @media (min-width: $desktop-xlwidth) {
+        @content;
+    }
+}
+
