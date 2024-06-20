@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./Leaderboard.scss";
 import medalIcon from "../../assets/icons/icon_medal.svg";
 import peopleGroupIcon from "../../assets/icons/icon_people-group.svg";
@@ -74,6 +74,7 @@ const Leaderboard = () => {
         setFetchError("Could not Fetch the Company");
       }
       if (data) {
+        console.log(data);
         setLeaderboardData(data);
         console.log(data);
         setFetchError(null);
@@ -87,14 +88,14 @@ const Leaderboard = () => {
       <h1 className="leaderboard__title page-font">Leaderboard</h1>
       <div className="leaderboard__bubble-container">
         {leaderboardData
-          .sort((a, b) => b.score - a.score)
+          .sort((a, b) => b.points - a.points)
           .map((company, index) => (
             <div
               className="company-bubble"
               key={company.id}
               style={{
-                backgroundImage: `url(${company.image})`,
-                maxWidth: `${company.score / 20}%`,
+                backgroundImage: `url(${company.logo})`,
+                maxWidth: `${company.points / 20}%`,
                 bottom: `${Math.floor(Math.random() * 70) + 20}px`,
                 right: `${Math.floor(Math.random() * 70) + 10}px`,
               }}
@@ -108,7 +109,7 @@ const Leaderboard = () => {
                 </div>
                 <div className="stats-item">
                   <img src={`${starIcon}`} alt="Company Score" />
-                  {company.score}
+                  {company.points}
                 </div>
                 <div className="stats-item">
                   <img src={`${medalIcon}`} alt="Medals won" />
