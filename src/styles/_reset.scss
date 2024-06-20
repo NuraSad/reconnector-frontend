@@ -2,7 +2,7 @@
    v2.0 | 20110126
    License: none (public domain)
 */
-@use '../styles/variables' as *;
+@use './variables' as *;
 
 
 html, body, div, span, applet, object, iframe,
@@ -24,7 +24,7 @@ time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
-	font-family: $font-primary !important;
+	// font-family: $font-primary !important;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
