@@ -4,6 +4,7 @@ import medalIcon from "../../assets/icons/icon_medal.svg";
 import peopleGroupIcon from "../../assets/icons/icon_people-group.svg";
 import starIcon from "../../assets/icons/icon_star.svg";
 import supabase from "../../config/supabaseClient";
+import { useNavigate } from "react-router-dom";
 // const data = [
 //     {
 //         id: 1,
@@ -50,6 +51,7 @@ import supabase from "../../config/supabaseClient";
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [fetchError, setFetchError] = useState("");
+  const navigate = useNavigate();
   //     useEffect(() => {
   //         // Fetch leaderboard data from the server
   //         const fetchLeaderboardData = async () => {
@@ -73,7 +75,7 @@ const Leaderboard = () => {
       }
       if (data) {
         setLeaderboardData(data);
-        console.log(data)
+        console.log(data);
         setFetchError(null);
       }
     };
@@ -96,9 +98,7 @@ const Leaderboard = () => {
                 bottom: `${Math.floor(Math.random() * 70) + 20}px`,
                 right: `${Math.floor(Math.random() * 70) + 10}px`,
               }}
-              onClick={() =>
-                (window.location.href = `leaderboard/${company.id}`)
-              }
+              onClick={() => navigate(`/leaderboards/${company.id}`)}
             >
               <div className="company-bubble__name">{company.name}</div>
               <div className="company-bubble__stats-wrapper">

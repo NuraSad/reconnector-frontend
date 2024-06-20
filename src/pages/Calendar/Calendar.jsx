@@ -130,7 +130,7 @@ const handleEventClick = (info) => {
         />
         <Modal
           open={open}
-          onClose={handleClose}
+           onClose={handleClose}
           aria-labelledby="event-modal-title"
           aria-describedby="event-modal-description"
         >

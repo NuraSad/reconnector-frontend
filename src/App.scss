@@ -5,7 +5,7 @@
   width:100vw;
   height: 100vh; 
   font-family: $font-primary;
-  background-image: url("./background.png"); // here you had it wrong
+  background-image: url("/background.png"); // here you had it wrong
   background-size: cover;
   background-repeat: no-repeat;
 }

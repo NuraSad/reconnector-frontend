@@ -53,8 +53,8 @@ export default function Post({
         </div>
         <div className="post__info--col-2">
           <div className="post__info--col-2--wrapper">
-          <p className="post__info--col-2--p">{likes}</p>
-          <img className="post__info--col-2--svg" alt={heart} src={heart} />
+            <p className="post__info--col-2--p">{likes}</p>
+            <img className="post__info--col-2--svg" alt={heart} src={heart} />
           </div>
         </div>
       </div>

@@ -15,7 +15,6 @@ import {
 } from "react-router-dom";
 
 function SmallEventCard({name, src, attendees, date}){
-  console.log(name)
   return (
     <div className="event-card">
       <img src={src} alt="dimmed event theme"/> 
