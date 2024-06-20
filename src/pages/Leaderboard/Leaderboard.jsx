@@ -97,7 +97,7 @@ const Leaderboard = () => {
                 right: `${Math.floor(Math.random() * 70) + 10}px`,
               }}
               onClick={() =>
-                (window.location.href = `leaderboard/${company.id}`)
+                (window.location.href = `leaderboards/${company.id}`)
               }
             >
               <div className="company-bubble__name">{company.name}</div>
