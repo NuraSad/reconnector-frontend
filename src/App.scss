@@ -3,11 +3,10 @@
 
 #root {
   text-align: center;
-  background-image: url("./background.png"); // here you had it wrong
-  background-color:$color-light-accent-sec;
+  background-image: url("/background.png"); // here you had it wrong
   background-size: cover;
-  width:100%;
-  height: 100%; 
+  width:100vw;
+  height: 100vh; 
   font-family: $font-primary;
 }
 .page-font {
