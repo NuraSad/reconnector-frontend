@@ -29,6 +29,7 @@ export default function Groups() {
     // fetchGroups();
   }, [toggle]);
 
+  console.log(groups);
   return (
     <section className="groups">
       <div className="groups__header">
@@ -64,7 +65,7 @@ export default function Groups() {
             <GroupsCards
               key={group.id}
               id={group.id}
-              groups__title={group.title}
+              groups__title={group.name}
               groups__image={group.image}
               groups__description={group.description}
             />

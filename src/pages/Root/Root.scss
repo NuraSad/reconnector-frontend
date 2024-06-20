@@ -162,3 +162,14 @@ nav {
     }
 
 }
+.root {
+    &__navlink {
+        margin-left: 1rem;
+    }
+    &__user {
+        margin: 0.75rem 0;
+    }
+    &__logo {
+        margin: 1rem;
+    }
+}

@@ -22,7 +22,7 @@ export default function GroupsCard(props) {
           <DateItem date="Tue" />
         </div>
         <div className="image">
-          <img src={props.groups__image} alt="group image" />
+          <img src={props.groups__image} alt={props.groups__title} />
         </div>
         <div className="content">
           <div className="content__description">

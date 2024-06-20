@@ -5,67 +5,11 @@ import peopleGroupIcon from "../../assets/icons/icon_people-group.svg";
 import starIcon from "../../assets/icons/icon_star.svg";
 import supabase from "../../config/supabaseClient";
 import { useNavigate } from "react-router-dom";
-// const data = [
-//     {
-//         id: 1,
-//         name: 'Company 1',
-//         image: 'https://optimise2.assets-servd.host/dig-upsiide/production/images/starbsloh.png?w=735&h=400&q=100&fm=jpg&fit=crop&dm=1668098882&s=3ee470c8b1123213d7f7f147bc1126e4',
-//         employeeCount: 100,
-//         score: 200,
-//         medals: 3
-//     },
-//     {
-//         id: 2,
-//         name: 'Company 2',
-//         image: 'https://optimise2.assets-servd.host/dig-upsiide/production/images/starbsloh.png?w=735&h=400&q=100&fm=jpg&fit=crop&dm=1668098882&s=3ee470c8b1123213d7f7f147bc1126e4',
-//         employeeCount: 200,
-//         score: 100,
-//         medals: 2
-//     },
-//     {
-//         id: 3,
-//         name: 'Company 3',
-//         image: 'https://optimise2.assets-servd.host/dig-upsiide/production/images/starbsloh.png?w=735&h=400&q=100&fm=jpg&fit=crop&dm=1668098882&s=3ee470c8b1123213d7f7f147bc1126e4',
-//         employeeCount: 300,
-//         score: 300,
-//         medals: 1
-//     },
-//     {
-//         id: 4,
-//         name: 'Company 4',
-//         image: 'https://optimise2.assets-servd.host/dig-upsiide/production/images/starbsloh.png?w=735&h=400&q=100&fm=jpg&fit=crop&dm=1668098882&s=3ee470c8b1123213d7f7f147bc1126e4',
-//         employeeCount: 150,
-//         score: 250,
-//         medals: 4
-//     },
-//     {
-//         id: 5,
-//         name: 'Company 5',
-//         image: 'https://optimise2.assets-servd.host/dig-upsiide/production/images/starbsloh.png?w=735&h=400&q=100&fm=jpg&fit=crop&dm=1668098882&s=3ee470c8b1123213d7f7f147bc1126e4',
-//         employeeCount: 250,
-//         score: 150,
-//         medals: 1
-//     }
-// ];
 
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [fetchError, setFetchError] = useState("");
   const navigate = useNavigate();
-  //     useEffect(() => {
-  //         // Fetch leaderboard data from the server
-  //         const fetchLeaderboardData = async () => {
-  //             try {
-  //                 // const response = await fetch('/api/leaderboard');
-  //                 // const data = await response.json();
-  //                 setLeaderboardData(data);
-  //             } catch (error) {
-  //                 console.error('Error fetching leaderboard data:', error);
-  //             }
-  //         };
-
-  //         fetchLeaderboardData();
-  //     }, []);
 
   useEffect(() => {
     const fetchCompany = async () => {
