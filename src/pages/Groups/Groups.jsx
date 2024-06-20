@@ -17,6 +17,7 @@ export default function Groups() {
         console.log(error);
         setFetchError("Could not Fetch the Group");
       } else {
+        console.log(data);
         // if (groupType === "inPerson") data.filter((group) => group.type === "inPerson")
         // else data.filter((group) => group.type === "online")
         if (groupType === "inPerson") data.reverse(); //<-- this is for testing only, need to include type filter in backend
