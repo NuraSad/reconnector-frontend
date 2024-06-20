@@ -73,7 +73,7 @@ const Leaderboard = () => {
       }
       if (data) {
         setLeaderboardData(data);
-        console.log(data)
+        console.log(data);
         setFetchError(null);
       }
     };
@@ -97,7 +97,7 @@ const Leaderboard = () => {
                 right: `${Math.floor(Math.random() * 70) + 10}px`,
               }}
               onClick={() =>
-                (`leaderboards/${company.id}`)
+                (window.location.href = `leaderboards/${company.id}`)
               }
             >
               <div className="company-bubble__name">{company.name}</div>
