@@ -103,21 +103,21 @@ function SingleGroup() {
   const [tempGroup, setTempGroup] = useState(tempGroupData);
   //state for the avatars coming in from the data file which will come in from the database later
   const [usersAvatar] = useState(listAvatars);
-  useEffect(() => {
-    const fetchGroups = async () => {
-      const { data, error } = await supabase.from("group").select();
+  // useEffect(() => {
+  //   const fetchGroups = async () => {
+  //     const { data, error } = await supabase.from("group").select();
 
-      if (error) {
-        console.log(error);
-        setFetchError("Could not Fetch the Group");
-      }
-      if (data) {
-        setGroups(data);
-        setFetchError(null);
-      }
-    };
-    fetchGroups();
-  }, []);
+  //     if (error) {
+  //       console.log(error);
+  //       setFetchError("Could not Fetch the Group");
+  //     }
+  //     if (data) {
+  //       setGroups(data);
+  //       setFetchError(null);
+  //     }
+  //   };
+  //   fetchGroups();
+  // }, []);
   //pulls in a few parts of information from group (look at database)
   //pulls in the rest from events for the group
 
@@ -228,7 +228,7 @@ function SingleGroup() {
                 initialView="dayGridMonth"
                 events={events}
                 // eventClick={handleEventClick}
-                eventContent={renderEventContent}
+                // eventContent={renderEventContent}
               />
             </div>
             <div className="singleGroup__col-2">
@@ -241,13 +241,13 @@ function SingleGroup() {
   );
 }
 
-function renderEventContent(eventInfo) {
-  return (
-    <>
-      <b>{eventInfo.timeText}</b>
-      <i>{eventInfo.event.title}</i>
-    </>
-  );
-}
+// function renderEventContent(eventInfo) {
+//   return (
+//     <>
+//       <b>{eventInfo.timeText}</b>
+//       <i>{eventInfo.event.title}</i>
+//     </>
+//   );
+// }
 
 export default SingleGroup;
