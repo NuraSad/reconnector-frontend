@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <StartPage /> },
+      { index: true, element: <ProfilePage /> },
       {
         path: "/explore",
         element: <Explore />,
@@ -40,18 +40,18 @@ const router = createBrowserRouter([
         path: "/leaderboards/:id",
         element: <SingleLeaderBoard />,
       },
-      {
-        path: "/profile",
-        element: <ProfilePage />,
-      },
+      // {
+      //   path: "/profile",
+      //   element: <ProfilePage />,
+      // },
       {
         path: "/calendar",
         element: <Calendar />,
       },
       {
-        path:"/maps",
-        element: <Map/>,
-      }
+        path: "/maps",
+        element: <Map />,
+      },
     ],
   },
 ]);
