@@ -2,16 +2,16 @@
 @use './styles/mixins' as *;
 
 #root {
-  text-align: center;
-  background-image: url("./background.png"); // here you had it wrong
-  background-size: cover;
-  width:100%;
-  height: 100%; 
+  width:100vw;
+  height: 100vh; 
   font-family: $font-primary;
+  background-image: url("/background.png"); // here you had it wrong
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 .page-font {
   font-family: $font-primary;
   font-size: 120px;
-  color: $color-light-sec;
+  color: $color-light-accent-sec;
   font-weight: 900;
 }
