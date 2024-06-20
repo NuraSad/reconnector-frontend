@@ -6,7 +6,7 @@ import Root from "./pages/Root/Root";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import StartPage from "./pages/StartPage/StartPage";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
-
+import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import Calendar from "./pages/Calendar/Calendar";
 import Map from "./pages/Map/Map";
@@ -36,7 +36,10 @@ const router = createBrowserRouter([
         path: "/leaderboards",
         element: <Leaderboard />,
       },
-     
+      {
+        path: "/leaderboards/:id",
+        element: <SingleLeaderBoard />,
+      },
       {
         path: "/profile",
         element: <ProfilePage />,
