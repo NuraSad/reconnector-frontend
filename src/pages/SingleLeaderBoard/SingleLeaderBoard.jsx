@@ -57,7 +57,7 @@ const leaderboard = [
 ];
 const SingleLeaderBoard = () => {
   const { id } = useParams();
-  console.log("company id", id);
+
   const [fetchError, setFetchError] = useState("");
   const [fetchOne, setFetchOne] = useState("");
   useEffect(() => {
@@ -72,7 +72,7 @@ const SingleLeaderBoard = () => {
       }
       if (data) {
         setFetchOne(data);
-        console.log("data", data);
+
         setFetchError(null);
       }
     };
