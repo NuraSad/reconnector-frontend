@@ -8,6 +8,7 @@
   { "id": 7, "name": "Matthew Thompson", "src": "/images/user1.png" },
   { "id": 8, "name": "Olivia Martinez", "src": "/images/user1.png" },
   { "id": 9, "name": "Daniel Taylor", "src": "/images/user1.png" },
+<<<<<<< HEAD
   { "id": 10, "name": "Sophia Hernandez", "src": "/images/user1.png" },
   { "id": 1, "name": "John Doe", "src": "/images/user1.png" },
   { "id": 2, "name": "Jane Smith", "src": "/images/user1.png" },
@@ -18,5 +19,7 @@
   { "id": 7, "name": "Matthew Thompson", "src": "/images/user1.png" },
   { "id": 8, "name": "Olivia Martinez", "src": "/images/user1.png" },
   { "id": 9, "name": "Daniel Taylor", "src": "/images/user1.png" },
+=======
+>>>>>>> b477ec2 (dev)
   { "id": 10, "name": "Sophia Hernandez", "src": "/images/user1.png" }
 ]
