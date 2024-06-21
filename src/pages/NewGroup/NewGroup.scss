@@ -16,26 +16,62 @@
     }
     &__col-1 {
         width: 60%;
-        
+        display: flex;
+        flex-direction: column;
+        min-height: 600px;
+        justify-content: space-around;
     }
     label {
         font-size: 16px;
         font-weight: 600;
-        line-height: 1.5rem;
+        line-height: 2.25rem;
+        
     }
     &__input {
-        // display: flex;
-        // flex-direction: column;
+       &--tall {
+        height: 3rem;
+        width: 100%;
+       }
         input {
-            height: 3rem;
             border-radius: 10px;
-            width: 100%;
-            border: 1px solid grey;
+            border: 3px solid #D9D9D9;
+            padding-left:.5rem;
+            font-family: $font-primary;
+            font-size: 14px;
         }
     }
     &__check {
         display: flex;
         gap: 20px;
         width: 100%;
+    }
+    &__dates {
+        display: flex;
+        gap: 20px;
+        width: 100%;
+        
+    }
+    &__location {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        input {
+            height: 2rem;
+            padding-left:.5rem;
+            
+        }
+    }
+    &__text {
+        textarea {
+            border-radius: 10px;
+            width: 100%;
+            border: 3px solid #D9D9D9;
+            padding-left:.5rem;
+            padding-top:.5rem;
+            height: 6rem;
+            font-family: $font-primary;
+            font-size: 14px;
+
+        }
     }
 }
