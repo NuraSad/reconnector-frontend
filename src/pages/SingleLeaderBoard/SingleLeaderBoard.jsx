@@ -89,7 +89,7 @@ const SingleLeaderBoard = () => {
             <img src={`${fetchOne.logo}`} alt="" />
           </section>
           <section className="singleleaderboard-first-description">
-            <h1 className="company-heading"> {fetchOne[0].name}</h1>
+            <h1 className="company-heading"> {fetchOne.name}</h1>
             <div className="company-bulletins">
               <article className="company-bulletins-item">
                 {" "}
