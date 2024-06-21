@@ -1,15 +1,20 @@
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { useEffect, useState } from "react";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.scss";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import supabase from "./config/supabaseClient";
+import Calendar from "./pages/Calendar/Calendar";
+import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import Explore from "./pages/Explore/Explore";
 import Groups from "./pages/Groups/Groups";
-import Root from "./pages/Root/Root";
-import ErrorPage from "./pages/ErrorPage/ErrorPage";
+// import ErrorPage from "./pages/ErrorPage/ErrorPage";
 // import StartPage from "./pages/StartPage/StartPage";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
-import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
-import ProfilePage from "./pages/ProfilePage/ProfilePage";
-import Calendar from "./pages/Calendar/Calendar";
 import Map from "./pages/Map/Map";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import Root from "./pages/Root/Root";
+import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
 
 import SingleGroup from "./pages/SingleGroup/SingleGroup";
 
@@ -57,7 +62,43 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} id="root" />;
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (!session) {
+    return (
+      <div
+        style={{
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <Auth
+            supabaseClient={supabase}
+            appearance={{ theme: ThemeSupa }}
+            providers={["discord", "github", "google"]}
+          />
+        </div>
+      </div>
+    );
+  } else {
+    return <RouterProvider router={router} id="root" />;
+  }
 }
 
 export default App;
