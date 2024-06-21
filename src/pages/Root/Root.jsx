@@ -1,19 +1,20 @@
-import "./Root.scss";
-import samantha from "../../assets/samantha.png";
-import companyLogo from "../../assets/icons/starbacks-logo.png";
-import logo from "../../assets/icons/reconnect-logo.svg";
-import eventImage from "../../assets/running-club.jpg";
 import {
-  Outlet,
+  Form,
+  Link,
   NavLink,
+  Outlet,
+  redirect,
   useLoaderData,
   useNavigation,
   useSubmit,
-  Form,
-  redirect,
-  Link,
 } from "react-router-dom";
 import CardList from "../../components/mainComponents/CardList/CardList";
+import logo from "../../assets/icons/reconnect-logo.svg";
+import companyLogo from "../../assets/icons/starbacks-logo.png";
+import eventImage from "../../assets/running-club.jpg";
+import samantha from "../../assets/samantha.png";
+import supabase from "../../config/supabaseClient";
+import "./Root.scss";
 
 const events = [
   {
@@ -130,6 +131,9 @@ export default function Root() {
             >
               Leaderboards
             </NavLink>
+          </li>
+          <li>
+            <Link onClick={() => supabase.auth.signOut()}>Logout</Link>
           </li>
         </ul>
       </nav>
