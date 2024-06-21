@@ -59,7 +59,7 @@ const SingleLeaderBoard = () => {
   const { id } = useParams();
 
   const [fetchError, setFetchError] = useState("");
-  const [fetchOne, setFetchOne] = useState("");
+  const [fetchOne, setFetchOne] = useState([]);
   useEffect(() => {
     const fetchSingleCompany = async (id) => {
       const { data, error } = await supabase
@@ -85,10 +85,10 @@ const SingleLeaderBoard = () => {
       ) : (
         <div className="singleleaderboard-first">
           <section className="singleleaderboard-first-companyLogo">
-            <img src={fetchOne.logo} alt="" />
+            <img src={fetchOne[0].logo} alt="" />
           </section>
           <section className="singleleaderboard-first-description">
-            <h1 className="company-heading"> {fetchOne.name}</h1>
+            <h1 className="company-heading"> {fetchOne[0].name}</h1>
             <div className="company-bulletins">
               <article className="company-bulletins-item">
                 {" "}
