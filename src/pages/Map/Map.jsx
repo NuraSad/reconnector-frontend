@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import MapComponent from '../../components/mainComponents/MapComponent/MapComponent';
 
 
-export default function Groups() {
+export default function Map() {
 
     const [coordinates, setCoordinates] = useState([
         { lat: 51.505, lng: -0.09 },
