@@ -99,7 +99,7 @@ const SingleLeaderBoard = () => {
               <article className="company-bulletins-item">
                 {" "}
                 <img src={icon_star} alt="" />
-                <span>{fetchOne.score}</span>
+                <span>{fetchOne.points}</span>
               </article>
               <article className="company-bulletins-item">
                 {" "}
