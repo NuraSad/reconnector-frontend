@@ -15,10 +15,14 @@
     "@fullcalendar/daygrid": "^6.1.14",
     "@fullcalendar/interaction": "^6.1.14",
     "@fullcalendar/react": "^6.1.14",
+    "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/supabase-js": "^2.43.5",
+<<<<<<< HEAD
     "leaflet": "^1.9.4",
+=======
+>>>>>>> 2c414ab (Setting up config files to connect to Supabase.)
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-leaflet": "^4.2.1",
