@@ -8,23 +8,13 @@ import {
   useNavigation,
   useSubmit,
 } from "react-router-dom";
+import CardList from "../../components/mainComponents/CardList/CardList";
 import logo from "../../assets/icons/reconnect-logo.svg";
 import companyLogo from "../../assets/icons/starbacks-logo.png";
 import eventImage from "../../assets/running-club.jpg";
 import samantha from "../../assets/samantha.png";
 import supabase from "../../config/supabaseClient";
 import "./Root.scss";
-
-function SmallEventCard({ name, src, attendees, date }) {
-  return (
-    <div className="event-card">
-      <img src={src} alt="dimmed event theme" />
-      <p className="date">{date}</p>
-      <p className="num">{attendees}</p>
-      <p className="name">{`# ${name}`}</p>
-    </div>
-  );
-}
 
 const events = [
   {
@@ -143,25 +133,15 @@ export default function Root() {
             </NavLink>
           </li>
           <li>
-						<Link onClick={() => supabase.auth.signOut()}>Logout</Link>
-					</li>
+            <Link onClick={() => supabase.auth.signOut()}>Logout</Link>
+          </li>
         </ul>
       </nav>
       <div className="outlet">
         <Outlet />
       </div>
-      <div className="sidebar">
-        <h3>Upcoming Events</h3>
-        {events.map((event) => (
-          <SmallEventCard
-            key={event.event_id}
-            name={event.name}
-            src={event.src}
-            attendees={event.attendees}
-            date={event.date}
-          />
-        ))}
-      </div>
+
+      <CardList events={events} title={"Upcoming Events"} />
     </div>
   );
 }
