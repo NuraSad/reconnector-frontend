@@ -4,7 +4,7 @@ import Explore from "./pages/Explore/Explore";
 import Groups from "./pages/Groups/Groups";
 import Root from "./pages/Root/Root";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
-import StartPage from "./pages/StartPage/StartPage";
+// import StartPage from "./pages/StartPage/StartPage";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
 import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
