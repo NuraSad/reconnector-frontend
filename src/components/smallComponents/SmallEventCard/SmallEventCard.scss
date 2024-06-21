@@ -1,0 +1,52 @@
+.event-card{
+    width: 90%;
+    height: auto;
+    aspect-ratio: 640 / 427;
+    position: relative;
+    font-family: "Roboto", sans-serif;
+    margin-bottom: 1rem;
+    font-size: 10px;
+    font-weight: 500;
+
+    img {
+        width: 100%;
+        border-radius: 10px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        filter: brightness(50%);
+    }
+    .date {
+        position: absolute;
+        top: 5%;
+        left: 0.5rem;
+        z-index: 2;
+        color: black;
+        background-color: #D9D9D9;
+        border-radius: 80px;
+        text-align: center;
+        padding: 0.2rem;
+    }
+
+    .name {
+        position: absolute;
+        bottom: 0.5rem;
+        left: 0.5rem;
+        z-index: 2;
+        color: white;
+        font-size: 12px;
+    }
+    .num {
+        position: absolute;
+        top: 5%;
+        right: 0.5rem;
+        z-index: 2;
+        color: #CFC0EC;
+        border-radius: 7px;
+        padding: 0.15rem 0.4rem;
+        background-color: #6C3ED6;
+        border: 1px solid #CFC0EC;
+    }
+
+}

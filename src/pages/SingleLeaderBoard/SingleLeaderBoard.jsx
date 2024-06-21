@@ -59,7 +59,7 @@ const SingleLeaderBoard = () => {
   const { id } = useParams();
 
   const [fetchError, setFetchError] = useState("");
-  const [fetchOne, setFetchOne] = useState("");
+  const [fetchOne, setFetchOne] = useState([]);
   useEffect(() => {
     const fetchSingleCompany = async (id) => {
       const { data, error } = await supabase
@@ -67,12 +67,13 @@ const SingleLeaderBoard = () => {
         .select("*")
         .eq("id", id)
         .single();
+
       if (error) {
         setFetchError("Could not Fetch the Company");
       }
       if (data) {
         setFetchOne(data);
-
+        console.log(data);
         setFetchError(null);
       }
     };
@@ -85,7 +86,7 @@ const SingleLeaderBoard = () => {
       ) : (
         <div className="singleleaderboard-first">
           <section className="singleleaderboard-first-companyLogo">
-            <img src={fetchOne.image} alt="" />
+            <img src={`${fetchOne.logo}`} alt="" />
           </section>
           <section className="singleleaderboard-first-description">
             <h1 className="company-heading"> {fetchOne.name}</h1>
@@ -93,12 +94,12 @@ const SingleLeaderBoard = () => {
               <article className="company-bulletins-item">
                 {" "}
                 <img src={icon_medal} alt="" />
-                <span>{fetchOne.medals}</span>
+                <span>{fetchOne.medal}</span>
               </article>
               <article className="company-bulletins-item">
                 {" "}
                 <img src={icon_star} alt="" />
-                <span>{fetchOne.score}</span>
+                <span>{fetchOne.points}</span>
               </article>
               <article className="company-bulletins-item">
                 {" "}
@@ -154,7 +155,7 @@ const SingleLeaderBoard = () => {
               <span>{item.groups_apart_of}</span>
             </div>
             <div className="activegroups">
-              {item.most_active_group.map((mag, index) => (
+              {item.most_active_group.slice(0, 2).map((mag, index) => (
                 <span className="activegroups-outline" key={index}>
                   {mag}
                 </span>

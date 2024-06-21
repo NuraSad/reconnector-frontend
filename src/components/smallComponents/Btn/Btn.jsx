@@ -9,6 +9,7 @@ function Btn({
   padding,
   height,
   fontSize,
+  fontWeight,
   onClick,
   image,
   imgHeight,
@@ -16,6 +17,9 @@ function Btn({
   marginLeft,
   border,
   hiddenText,
+  inputType = "button",
+  checked,
+  onChange,
 }) {
   return (
     <>
@@ -29,6 +33,7 @@ function Btn({
           padding: padding,
           height: height,
           fontSize: fontSize,
+          fontWeight:fontWeight,
           marginTop: marginTop,
           marginLeft: marginLeft,
           border: border,
@@ -38,6 +43,11 @@ function Btn({
           <div className="btn__imgDiv">
             <img style={{ height: imgHeight }} src={image} alt={image} />
             {textBtn}
+          </div>
+        ) : inputType === "checkbox" ? (
+          <div className="btn__checkbox">
+            <p>{textBtn}</p>
+            <input type="checkbox" checked={checked} onChange={onChange} />
           </div>
         ) : (
           textBtn // Render textBtn directly

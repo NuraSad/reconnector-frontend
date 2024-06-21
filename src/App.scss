@@ -14,4 +14,25 @@
   font-size: 120px;
   color: $color-light-accent-sec;
   font-weight: 900;
+  text-align: left;
+  margin: 0;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #DFDFDF;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

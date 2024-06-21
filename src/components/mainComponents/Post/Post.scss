@@ -7,6 +7,7 @@
     min-height: 340px;
     width: 100%;
     margin-bottom: 2rem;
+    padding: .5rem 0;
     &__user-info{
         display: flex;
         justify-content: space-between;
@@ -35,6 +36,8 @@
             background-color: $color-light-sec;
             border-radius: 80px;
             padding: .10rem .5rem;
+            height:fit-content
+            
         }
         &--user {
             color:$color-text;
@@ -74,7 +77,7 @@
         margin: 1rem 3.85rem;
         display: flex;
         justify-content: space-around;
-
+        
         &--title{ 
             color:$color-dark;
             font-weight: 700;

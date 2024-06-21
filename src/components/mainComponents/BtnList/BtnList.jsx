@@ -1,4 +1,4 @@
-import "./Upcoming.scss";
+import "./BtnList.scss";
 import eventData from "../../../data/events.json";
 import { useState } from "react";
 import LinkBtn from "../../smallComponents/LinkBtn/LinkBtn";
@@ -126,9 +126,9 @@ const events = [
   },
 ];
 
-function Upcoming({ groupdId }) {
+function BtnList({ groupdId }) {
   return (
-    <section className="upcoming">
+    <section className="btnList">
       {events.map((each) => (
         <LinkBtn
           key={each.id}
@@ -144,4 +144,4 @@ function Upcoming({ groupdId }) {
   );
 }
 
-export default Upcoming;
+export default BtnList;
