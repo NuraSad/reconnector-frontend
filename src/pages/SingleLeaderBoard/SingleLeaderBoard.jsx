@@ -155,7 +155,7 @@ const SingleLeaderBoard = () => {
               <span>{item.groups_apart_of}</span>
             </div>
             <div className="activegroups">
-              {item.most_active_group.map((mag, index) => (
+              {item.most_active_group.slice(0, 2).map((mag, index) => (
                 <span className="activegroups-outline" key={index}>
                   {mag}
                 </span>
