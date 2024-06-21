@@ -13,17 +13,7 @@ import {
   redirect,
   Link,
 } from "react-router-dom";
-
-function SmallEventCard({ name, src, attendees, date }) {
-  return (
-    <div className="event-card">
-      <img src={src} alt="dimmed event theme" />
-      <p className="date">{date}</p>
-      <p className="num">{attendees}</p>
-      <p className="name">{`# ${name}`}</p>
-    </div>
-  );
-}
+import CardList from "../../components/mainComponents/CardList/CardList";
 
 const events = [
   {
@@ -146,18 +136,8 @@ export default function Root() {
       <div className="outlet">
         <Outlet />
       </div>
-      <div className="sidebar">
-        <h3>Upcoming Events</h3>
-        {events.map((event) => (
-          <SmallEventCard
-            key={event.event_id}
-            name={event.name}
-            src={event.src}
-            attendees={event.attendees}
-            date={event.date}
-          />
-        ))}
-      </div>
+
+      <CardList events={events} title={"Upcoming Events"} />
     </div>
   );
 }
