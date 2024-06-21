@@ -29,7 +29,7 @@ export default function Groups() {
     // fetchGroups();
   }, [toggle]);
 
-  console.log(groups);
+  // console.log(groups);
   return (
     <section className="groups">
       <div className="groups__header">
