@@ -8,7 +8,7 @@ import Calendar from "./pages/Calendar/Calendar";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import Explore from "./pages/Explore/Explore";
 import Groups from "./pages/Groups/Groups";
-import ErrorPage from "./pages/ErrorPage/ErrorPage";
+// import ErrorPage from "./pages/ErrorPage/ErrorPage";
 // import StartPage from "./pages/StartPage/StartPage";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
 import Map from "./pages/Map/Map";
@@ -19,82 +19,86 @@ import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
 import SingleGroup from "./pages/SingleGroup/SingleGroup";
 
 const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <Root />,
-		errorElement: <ErrorPage />,
-		children: [
-			{ index: true, element: <ProfilePage /> },
-			{
-				path: "/explore",
-				element: <Explore />,
-			},
-			{
-				path: "/groups",
-				element: <Groups />,
-			},
-			{
-				path: "/groups/:id",
-				element: <SingleGroup />,
-			},
-			{
-				path: "/leaderboards",
-				element: <Leaderboard />,
-			},
-			{
-				path: "/leaderboards/:id",
-				element: <SingleLeaderBoard />,
-			},
-			// {
-			//   path: "/profile",
-			//   element: <ProfilePage />,
-			// },
-			{
-				path: "/calendar",
-				element: <Calendar />,
-			},
-			{
-				path: "/maps",
-				element: <Map />,
-			},
-		],
-	},
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <ProfilePage /> },
+      {
+        path: "/explore",
+        element: <Explore />,
+      },
+      {
+        path: "/groups",
+        element: <Groups />,
+      },
+      {
+        path: "/groups/:id",
+        element: <SingleGroup />,
+      },
+      {
+        path: "/leaderboards",
+        element: <Leaderboard />,
+      },
+      {
+        path: "/leaderboards/:id",
+        element: <SingleLeaderBoard />,
+      },
+      // {
+      //   path: "/profile",
+      //   element: <ProfilePage />,
+      // },
+      {
+        path: "/calendar",
+        element: <Calendar />,
+      },
+      {
+        path: "/maps",
+        element: <Map />,
+      },
+    ],
+  },
 ]);
 
 function App() {
-	const [session, setSession] = useState(null);
+  const [session, setSession] = useState(null);
 
-	useEffect(() => {
-		supabase.auth.getSession().then(({ data: { session } }) => {
-			setSession(session);
-		});
-		const {
-			data: { subscription },
-		} = supabase.auth.onAuthStateChange((_event, session) => {
-			setSession(session);
-		});
-		return () => subscription.unsubscribe();
-	}, []);
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
-	if (!session) {
-		return (
-			<div
-				style={{
-					width: "100vw",
-					height: "100vh",
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-				}}
-			>
-				<div>
-					<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={["discord", "github", "google"]} />
-				</div>
-			</div>
-		);
-	} else {
-		return <RouterProvider router={router} id="root" />;
-	}
+  if (!session) {
+    return (
+      <div
+        style={{
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <Auth
+            supabaseClient={supabase}
+            appearance={{ theme: ThemeSupa }}
+            providers={["discord", "github", "google"]}
+          />
+        </div>
+      </div>
+    );
+  } else {
+    return <RouterProvider router={router} id="root" />;
+  }
 }
 
 export default App;
