@@ -3,7 +3,7 @@
 
 .newGroup{
     margin: 2rem 4rem;
-    padding: 0 2rem;
+    padding: 0 2rem 4rem;
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     background-color: white;
  
@@ -58,7 +58,7 @@
         input {
             height: 2rem;
             padding-left:.5rem;
-            
+            width: 47%;
         }
     }
     &__text {
@@ -68,10 +68,12 @@
             border: 3px solid #D9D9D9;
             padding-left:.5rem;
             padding-top:.5rem;
-            height: 6rem;
+            min-height: 10rem;
+            height: fit-content;
             font-family: $font-primary;
             font-size: 14px;
-
+            resize: none;
+            overflow-y: auto;
         }
     }
 }

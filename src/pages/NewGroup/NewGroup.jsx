@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./NewGroup.scss";
 import Btn from "../../components/smallComponents/Btn/Btn";
+import create from "../../assets/icons/create.svg";
 
 function NewGroup() {
   //state for group name
@@ -108,7 +109,14 @@ function NewGroup() {
   console.log(newGroup);
   return (
     <section className="newGroup">
-      <h1>Create New Group</h1>
+      <h1>
+        {newGroup.groupName && newGroup.groupName ? (
+          <img src={create} alt="create group" />
+        ) : null}
+        {newGroup.groupName && newGroup.groupName
+          ? ` ${newGroup.groupName}`
+          : "Create New Group"}
+      </h1>
       <div className="newGroup__col-1">
         <div className="newGroup__input">
           <label>What is this exciting new group called?</label>
@@ -159,7 +167,7 @@ function NewGroup() {
                   <Btn
                     key={index}
                     textBtn={btn}
-                    bgColor={`${selected[btn] ? "#000" : "#D9D9D9"}`}
+                    bgColor={`${selected[btn] ? "#6c3ed64f" : "#D9D9D9"}`}
                     fontSize={"16px"}
                     fontWeight={"500"}
                     textColor={selected[btn] ? "#FFF" : "#000"}
