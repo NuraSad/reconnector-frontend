@@ -11,11 +11,12 @@ import Btn from "../../components/smallComponents/Btn/Btn";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import tempGroupData from "../../data/groups.json";
-import Upcoming from "../../components/mainComponents/Upcoming/Upcoming";
+import BtnList from "../../components/mainComponents/BtnList/BtnList";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import SingleGrpModal from "../../components/mainComponents/SingleGrpModal/SingleGrpModal";
+
 const data = [
   {
     id: 1,
@@ -227,10 +228,15 @@ function SingleGroup() {
               />
             </div>
             <div className="singleGroup__col-2">
-              <Upcoming groupdId={thisGroup.id} />
+              <BtnList groupdId={thisGroup.id} />
             </div>
           </div>
-          {openModal && <SingleGrpModal setOpenModal={setOpenModal} groupId={thisGroup.id} />}
+          {openModal && (
+            <SingleGrpModal
+              setOpenModal={setOpenModal}
+              groupId={thisGroup.id}
+            />
+          )}
         </section>
       )}
     </>

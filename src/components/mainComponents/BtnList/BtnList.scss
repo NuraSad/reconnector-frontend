@@ -1,7 +1,7 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
 
-.upcoming {
+.btnList {
     display: flex;
     flex-direction: column;
     gap: 1rem;
