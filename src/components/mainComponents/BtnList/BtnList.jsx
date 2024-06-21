@@ -128,7 +128,7 @@ const events = [
 
 function BtnList({ groupdId }) {
   return (
-    <section className="upcoming">
+    <section className="btnList">
       {events.map((each) => (
         <LinkBtn
           key={each.id}
