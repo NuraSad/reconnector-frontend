@@ -8,6 +8,8 @@ import Calendar from "./pages/Calendar/Calendar";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import Explore from "./pages/Explore/Explore";
 import Groups from "./pages/Groups/Groups";
+import ErrorPage from "./pages/ErrorPage/ErrorPage";
+// import StartPage from "./pages/StartPage/StartPage";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
 import Map from "./pages/Map/Map";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
