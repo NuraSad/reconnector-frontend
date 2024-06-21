@@ -65,7 +65,8 @@ const SingleLeaderBoard = () => {
       const { data, error } = await supabase
         .from("company")
         .select("*")
-        .eq("id", id);
+        .eq("id", id)
+        .single();
 
       if (error) {
         setFetchError("Could not Fetch the Company");
@@ -85,7 +86,7 @@ const SingleLeaderBoard = () => {
       ) : (
         <div className="singleleaderboard-first">
           <section className="singleleaderboard-first-companyLogo">
-            <img src={fetchOne.logo} alt="" />
+            <img src={`${fetchOne.logo}`} alt="" />
           </section>
           <section className="singleleaderboard-first-description">
             <h1 className="company-heading"> {fetchOne.name}</h1>
