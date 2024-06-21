@@ -15,6 +15,7 @@ import Upcoming from "../../components/mainComponents/Upcoming/Upcoming";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import SingleGrpModal from "../../components/mainComponents/SingleGrpModal/SingleGrpModal";
 const data = [
   {
     id: 1,
@@ -118,24 +119,15 @@ function SingleGroup() {
     };
     fetchGroups();
   }, []);
-  //pulls in a few parts of information from group (look at database)
-  //pulls in the rest from events for the group
 
-  //state for the groups and events
-  // const [groups, setGroups] = useState(groupInfo);
-  //const [event, setEvents] = useState(eventInfo);
   const [events, setEvents] = useState([]);
-  // const [open, setOpen] = useState(false);
-  // const [selectedEvent, setSelectedEvent] = useState(null);
-  //find the group from the useParams
+  const [openModal, setOpenModal] = useState(false);
   const thisGroup = groups.find((el) => el.id === parseInt(id));
   const tempGroupFind = tempGroup.find((el) => el.id === parseInt(id));
 
-  // const handleEventClick = (info) => {
-  //   setSelectedEvent(info.event);
-  //   setOpen(true);
-  // };
-
+  const handleJoinGrp = () => {
+    setOpenModal(true);
+  };
   return (
     <>
       {fetchError ? (
@@ -169,6 +161,7 @@ function SingleGroup() {
                   textColor={"white"}
                   marginLeft={"2rem"}
                   height={"35px"}
+                  onClick={handleJoinGrp}
                 />
               </div>
             </div>
@@ -235,6 +228,7 @@ function SingleGroup() {
               <Upcoming groupdId={thisGroup.id} />
             </div>
           </div>
+          {openModal && <SingleGrpModal setOpenModal={setOpenModal} groupId={thisGroup.id} />}
         </section>
       )}
     </>
