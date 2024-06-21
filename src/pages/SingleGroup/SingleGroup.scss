@@ -12,6 +12,8 @@
         font-size: 42px;
         color:$color-medium-transparent;
         text-align: start;
+        font-weight: 900;
+        margin-bottom: 1rem;
     }
     &__header{
         display: flex;
@@ -24,8 +26,8 @@
             // align-items: start;
         }
         &--icons {
-            display: flex;
-            margin-top: 1rem;
+            // display: flex;
+            // margin-top: 1rem;
         }
         &--right {
             display: flex;

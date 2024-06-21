@@ -1,21 +1,18 @@
 import groupInfo from "../../data/groups.json";
-import eventInfo from "../../data/events.json";
 import { useParams } from "react-router-dom";
 import DateItem from "../../components/smallComponents/DateItem/DateItem";
 import "./SingleGroup.scss";
 import listAvatars from "../../data/listAvatars.json";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 // import ProfileIcons from "../../components/smallComponents/ProfileIcons/ProfileIcons";
-import supabase from "../../config/supabaseClient";
 import Btn from "../../components/smallComponents/Btn/Btn";
-import Avatar from "@mui/material/Avatar";
-import AvatarGroup from "@mui/material/AvatarGroup";
 import tempGroupData from "../../data/groups.json";
 import BtnList from "../../components/mainComponents/BtnList/BtnList";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import SingleGrpModal from "../../components/mainComponents/SingleGrpModal/SingleGrpModal";
+import ProfileIcons from "../../components/smallComponents/ProfileIcons/ProfileIcons";
 
 const data = [
   {
@@ -137,7 +134,7 @@ function SingleGroup() {
         <p>{fetchError}</p>
       ) : (
         <section className="singleGroup">
-          <h1 className="singleGroup__title">#{thisGroup.title}</h1>
+          <h1 className="singleGroup__title">#{thisGroup.groupName}</h1>
           <div className="singleGroup__header">
             <div className="singleGroup__header--left">
               <div className="singleGroup__header--days">
@@ -145,24 +142,24 @@ function SingleGroup() {
                 <DateItem date={"Tues"} />
                 <DateItem date={"Wed"} />
               </div>
-              {/* <ProfileIcons
-                className="singleGroup__header--days"
-                users={usersAvatar}
-                // moveBottom={"50%"}
-                moveLeft={"-50%"}
-                marginTop={"1rem"}
-              /> */}
+
               <div className="singleGroup__header--icons">
-                <AvatarGroup max={4}>
+                {/* <AvatarGroup max={4}>
                   {usersAvatar.map((each) => (
                     <Avatar key={each.id} alt={each.name} src={each.src} />
                   ))}
-                </AvatarGroup>
+                </AvatarGroup> */}
+                <ProfileIcons
+                  className="singleGroup__header--days"
+                  users={usersAvatar}
+                  moveLeft={"-50%"}
+                  marginTop={"1rem"}
+                />
                 <Btn
                   textBtn={"Join Group +"}
                   bgColor={"#6c3ed696"}
                   textColor={"white"}
-                  marginLeft={"2rem"}
+                  marginLeft={"10rem"}
                   height={"35px"}
                   onClick={handleJoinGrp}
                 />
@@ -242,14 +239,5 @@ function SingleGroup() {
     </>
   );
 }
-
-// function renderEventContent(eventInfo) {
-//   return (
-//     <>
-//       <b>{eventInfo.timeText}</b>
-//       <i>{eventInfo.event.title}</i>
-//     </>
-//   );
-// }
 
 export default SingleGroup;

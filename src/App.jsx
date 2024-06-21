@@ -15,8 +15,8 @@ import Map from "./pages/Map/Map";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import Root from "./pages/Root/Root";
 import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
-
 import SingleGroup from "./pages/SingleGroup/SingleGroup";
+import NewGroup from "./pages/NewGroup/NewGroup";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "/maps",
         element: <Map />,
+      },
+      {
+        path: "/createGroup",
+        element: <NewGroup />,
       },
     ],
   },
