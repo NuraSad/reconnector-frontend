@@ -65,14 +65,14 @@ const SingleLeaderBoard = () => {
       const { data, error } = await supabase
         .from("company")
         .select("*")
-        .eq("id", id)
-        .single();
+        .eq("id", id);
+
       if (error) {
         setFetchError("Could not Fetch the Company");
       }
       if (data) {
         setFetchOne(data);
-
+        console.log(data);
         setFetchError(null);
       }
     };
@@ -85,7 +85,7 @@ const SingleLeaderBoard = () => {
       ) : (
         <div className="singleleaderboard-first">
           <section className="singleleaderboard-first-companyLogo">
-            <img src={fetchOne.image} alt="" />
+            <img src={fetchOne.logo} alt="" />
           </section>
           <section className="singleleaderboard-first-description">
             <h1 className="company-heading"> {fetchOne.name}</h1>
@@ -93,7 +93,7 @@ const SingleLeaderBoard = () => {
               <article className="company-bulletins-item">
                 {" "}
                 <img src={icon_medal} alt="" />
-                <span>{fetchOne.medals}</span>
+                <span>{fetchOne.medal}</span>
               </article>
               <article className="company-bulletins-item">
                 {" "}
