@@ -1,12 +1,12 @@
 [
-  { "id": 1, "name": "John Doe", "src": "images/user1.png" },
-  { "id": 2, "name": "Jane Smith", "src": "images/user1.png" },
-  { "id": 3, "name": "Michael Johnson", "src": "images/user1.png" },
-  { "id": 4, "name": "Emily Davis", "src": "images/user1.png" },
-  { "id": 5, "name": "Dav'id Wilson", "src": "images/user1.png" },
-  { "id": 6, "name": "Sarah Anderson", "src": "images/user1.png" },
-  { "id": 7, "name": "Matthew Thompson", "src": "images/user1.png" },
-  { "id": 8, "name": "Olivia Martinez", "src": "images/user1.png" },
-  { "id": 9, "name": "Daniel Taylor", "src": "images/user1.png" },
-  { "id": 10, "name": "Sophia Hernandez", "src": "images/user1.png" }
+  { "id": 1, "name": "John Doe", "src": "/images/user1.png" },
+  { "id": 2, "name": "Jane Smith", "src": "/images/user1.png" },
+  { "id": 3, "name": "Michael Johnson", "src": "/images/user1.png" },
+  { "id": 4, "name": "Emily Davis", "src": "/images/user1.png" },
+  { "id": 5, "name": "Dav'id Wilson", "src": "/images/user1.png" },
+  { "id": 6, "name": "Sarah Anderson", "src": "/images/user1.png" },
+  { "id": 7, "name": "Matthew Thompson", "src": "/images/user1.png" },
+  { "id": 8, "name": "Olivia Martinez", "src": "/images/user1.png" },
+  { "id": 9, "name": "Daniel Taylor", "src": "/images/user1.png" },
+  { "id": 10, "name": "Sophia Hernandez", "src": "/images/user1.png" }
 ]
