@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./NewGroup.scss";
 import Btn from "../../components/smallComponents/Btn/Btn";
 import create from "../../assets/icons/create.svg";
+import supabase from "../../config/supabaseClient";
 
 function NewGroup() {
   //state for group name
@@ -105,6 +106,29 @@ function NewGroup() {
     }));
   }
   const buttonNames = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if (!newGroup.groupName || !newGroup.description) {
+      console.log("Group name and description cannot be empty.");
+    }
+
+    const { data, error } = await supabase
+      .from('group')
+      .insert([
+        { name: newGroup.groupName, description: newGroup.description },
+      ])
+      .select();
+
+    if (error) {
+      console.log(error);
+    }
+
+    if (data) {
+      console.log("New Group was successfully added.")
+    }
+  }
 
   console.log(newGroup);
   return (
@@ -216,6 +240,7 @@ function NewGroup() {
           </div>
         </div>
       </div>
+      <button onClick={handleSubmit}>Create Group</button>
     </section>
   );
 }
