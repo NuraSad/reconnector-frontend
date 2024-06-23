@@ -11,6 +11,8 @@ import starbacksLogo from "../../assets/starbucks.png";
 import hikingMedal from "../../assets/medals/hiking-medal.png";
 import bikingMedal from "../../assets/medals/biking-medal.png";
 import groupBanner from "../../assets/running-club.jpg";
+import PropTypes from "prop-types";
+import supabase from "../../config/supabaseClient";
 
 const userINITIAL = {
   firstName: "Samantha",
@@ -26,15 +28,47 @@ const userINITIAL = {
   posts: [],
 };
 
-export default function ProfilePage() {
-  const [user, setUser] = useState(userINITIAL);
+export default function ProfilePage({ userId }) {
+	const [user, setUser] = useState(null);
+	const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
-    setUser((prev) => ({ ...prev, posts: postData }));
-  }, []);
+	useEffect(() => {
+		async function getUser() {
+			let { data: user_data, error: user_error } = await supabase.from("user").select("*").eq("id", userId);
 
-  return (
-    <div className="user-profile">
+			if (user_error) {
+				console.error("Error fetching user:", user_error.message);
+				return;
+			}
+
+			if (user_data && user_data.length > 0) {
+				setUser(user_data[0]);
+			}
+		}
+
+		async function getPosts() {
+			let { data: posts_data, error: posts_error } = await supabase.from("post").select("*").eq("created_by", userId);
+
+			if (posts_error) {
+				console.error("Error fetching posts:", posts_error.message);
+				return;
+			}
+
+			if (posts_data) {
+				setPosts(posts_data);
+			}
+		}
+
+		getUser();
+
+		if (user) {
+			getPosts();
+		}
+	}, [userId]);
+
+	return (
+    user &&
+		<div className="user-profile">
       <h1 className="user-profile__title page-font"></h1>
       <div className="user-profile__container">
         <div className="top">
@@ -90,8 +124,8 @@ export default function ProfilePage() {
         </div>
         <h3>Recent Post</h3>
         <div className="posts-field">
-          {user.posts &&
-            user.posts.map((i) => (
+          {posts &&
+            posts.map((i) => (
               <Post
                 key={i.id}
                 profileAvatar={i.profileAvatar}
@@ -112,3 +146,7 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+ProfilePage.propTypes = {
+	userId: PropTypes.integer,
+};

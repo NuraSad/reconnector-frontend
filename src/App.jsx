@@ -18,91 +18,110 @@ import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
 import SingleGroup from "./pages/SingleGroup/SingleGroup";
 import NewGroup from "./pages/NewGroup/NewGroup";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-    errorElement: <ErrorPage />,
-    children: [
-      { index: true, element: <ProfilePage /> },
-      {
-        path: "/explore",
-        element: <Explore />,
-      },
-      {
-        path: "/groups",
-        element: <Groups />,
-      },
-      {
-        path: "/groups/:id",
-        element: <SingleGroup />,
-      },
-      {
-        path: "/leaderboards",
-        element: <Leaderboard />,
-      },
-      {
-        path: "/leaderboards/:id",
-        element: <SingleLeaderBoard />,
-      },
-      // {
-      //   path: "/profile",
-      //   element: <ProfilePage />,
-      // },
-      {
-        path: "/calendar",
-        element: <Calendar />,
-      },
-      {
-        path: "/maps",
-        element: <Map />,
-      },
-      {
-        path: "/createGroup",
-        element: <NewGroup />,
-      },
-    ],
-  },
-]);
-
 function App() {
-  const [session, setSession] = useState(null);
+	const [session, setSession] = useState(null);
+	const [internalUserId, setInternalUserId] = useState(null);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
+	const router = createBrowserRouter([
+		{
+			path: "/",
+			element: <Root />,
+			errorElement: <ErrorPage />,
+			children: [
+				{ index: true, element: <ProfilePage userId={internalUserId} /> },
+				{
+					path: "/explore",
+					element: <Explore />,
+				},
+				{
+					path: "/groups",
+					element: <Groups />,
+				},
+				{
+					path: "/groups/:id",
+					element: <SingleGroup />,
+				},
+				{
+					path: "/leaderboards",
+					element: <Leaderboard />,
+				},
+				{
+					path: "/leaderboards/:id",
+					element: <SingleLeaderBoard />,
+				},
+				{
+					path: "/profile",
+					element: <ProfilePage userId={internalUserId} />,
+				},
+				{
+					path: "/calendar",
+					element: <Calendar />,
+				},
+				{
+					path: "/maps",
+					element: <Map />,
+				},
+				{
+					path: "/createGroup",
+					element: <NewGroup />,
+				},
+			],
+		},
+	]);
 
-  if (!session) {
-    return (
-      <div
-        style={{
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <div>
-          <Auth
-            supabaseClient={supabase}
-            appearance={{ theme: ThemeSupa }}
-            providers={["discord", "github", "google"]}
-          />
-        </div>
-      </div>
-    );
-  } else {
-    return <RouterProvider router={router} id="root" />;
-  }
+	async function getUserId() {
+		// get internal user id
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+		const auth_user_id = user.id;
+
+		let { data: user_data, user_error } = await supabase.from("user").select("id").eq("auth_user_id", auth_user_id);
+
+		if (user_error) {
+			console.log("Could not retrieve logged in user id " + user_error);
+		}
+
+		if (user_data) {
+			setInternalUserId(user_data[0].id);
+		}
+	}
+
+	useEffect(() => {
+		supabase.auth.getSession().then(({ data: { session } }) => {
+			setSession(session);
+		});
+		const {
+			data: { subscription },
+		} = supabase.auth.onAuthStateChange((_event, session) => {
+			setSession(session);
+		});
+		return () => subscription.unsubscribe();
+	}, []);
+
+	useEffect(() => {
+		getUserId();
+	}, [session]);
+
+	if (!session) {
+		return (
+			<div
+				style={{
+					width: "100vw",
+					height: "100vh",
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<div>
+					<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={["discord", "github", "google"]} />
+				</div>
+			</div>
+		);
+	} else {
+		return <RouterProvider router={router} id="root" />;
+	}
 }
 
 export default App;
