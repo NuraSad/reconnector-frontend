@@ -24,6 +24,7 @@ const Leaderboard = () => {
         setFetchError(null);
       }
     };
+
     fetchCompany();
   }, []);
 
