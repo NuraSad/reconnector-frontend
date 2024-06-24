@@ -31,6 +31,7 @@ const userINITIAL = {
 export default function ProfilePage({ userId }) {
 	const [user, setUser] = useState(null);
 	const [posts, setPosts] = useState([]);
+  const [userCompany, setUserCompany] = useState(null);
 
 	useEffect(() => {
 		async function getUser() {
@@ -46,6 +47,25 @@ export default function ProfilePage({ userId }) {
 			}
 		}
 
+		if (userId) {
+			getUser();
+		}
+	}, [userId]);
+
+  useEffect(() => {
+    const getUserCompany = async () => {
+			let { data: user_company_data, error: user_company_error } = await supabase.from("company").select().eq("id", user.company_id);
+
+			if (user_company_error) {
+				console.error("Error fetching user:", user_company_error.message);
+				return;
+			}
+
+			if (user_company_data && user_company_data.length > 0) {
+				setUserCompany(user_company_data[0]);
+			}
+		};
+
 		async function getPosts() {
 			let { data: posts_data, error: posts_error } = await supabase.from("post").select("*").eq("created_by", userId);
 
@@ -59,14 +79,12 @@ export default function ProfilePage({ userId }) {
 			}
 		}
 
-		if (userId) {
-			getUser();
-		}
-
-		if (user) {
+    if (user) {
+      getUserCompany();
 			getPosts();
 		}
-	}, [userId]);
+
+  }, [user])
 
 	return (
     user &&
@@ -83,20 +101,21 @@ export default function ProfilePage({ userId }) {
               <img
                 className="photo"
                 src={user.avatar}
-                alt={`${user.firstName} avatar`}
+                alt={`${user.first_name} avatar`}
               />
+              {userCompany && 
               <img
                 className="logo"
-                src={user.companyLogo}
-                alt={`${user.company}'s logo`}
-              />
+                src={userCompany.logo}
+                alt={`${userCompany.name}'s logo`}
+              />}
             </div>
             <div className="stat">
               <p>&#127775;</p>
               <p>{user.points}</p>
             </div>
           </div>
-          <h4>{`${user.firstName} ${user.lastName}`}</h4>
+          <h4>{`${user.first_name} ${user.last_name}`}</h4>
           <p className="email">{user.email}</p>
           <p>{user.location}</p>
         </div>
@@ -126,7 +145,7 @@ export default function ProfilePage({ userId }) {
         </div>
         <h3>Recent Post</h3>
         <div className="posts-field">
-          {posts &&
+          {posts.length ?
             posts.map((i) => (
               <Post
                 key={i.id}
@@ -142,7 +161,7 @@ export default function ProfilePage({ userId }) {
                 postText={i.postText}
                 likes={i.likes}
               />
-            ))}
+            )) : <p className="empty-message">You have no posts</p>}
         </div>
       </div>
     </div>

@@ -178,6 +178,16 @@ export default function Root() {
 								Leaderboards
 							</NavLink>
 						</li>
+            <li>
+              <Link to="/createGroup">
+                <button className="btn">Start New Group</button>
+              </Link>
+            </li>
+            <li>
+              <Link to="/createPost">
+                <button className="btn">Create Post</button>
+              </Link>
+            </li>
 						<li>
 							<Link onClick={() => supabase.auth.signOut()}>Logout</Link>
 						</li>
