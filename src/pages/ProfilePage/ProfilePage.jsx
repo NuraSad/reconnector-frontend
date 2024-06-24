@@ -1,17 +1,17 @@
+import { useEffect, useState } from "react";
 import "./ProfilePage.scss";
-import { useState, useEffect } from "react";
 
 import postData from "../../data/postData.json";
 
-import MiniGroup from "../../components/smallComponents/MiniGroup/MiniGroup";
 import Post from "../../components/mainComponents/Post/Post";
+import MiniGroup from "../../components/smallComponents/MiniGroup/MiniGroup";
 
+import PropTypes from "prop-types";
+import bikingMedal from "../../assets/medals/biking-medal.png";
+import hikingMedal from "../../assets/medals/hiking-medal.png";
+import groupBanner from "../../assets/running-club.jpg";
 import samantha from "../../assets/samantha.png";
 import starbacksLogo from "../../assets/starbucks.png";
-import hikingMedal from "../../assets/medals/hiking-medal.png";
-import bikingMedal from "../../assets/medals/biking-medal.png";
-import groupBanner from "../../assets/running-club.jpg";
-import PropTypes from "prop-types";
 import supabase from "../../config/supabaseClient";
 
 const userINITIAL = {
@@ -59,7 +59,9 @@ export default function ProfilePage({ userId }) {
 			}
 		}
 
-		getUser();
+		if (userId) {
+			getUser();
+		}
 
 		if (user) {
 			getPosts();
@@ -148,5 +150,5 @@ export default function ProfilePage({ userId }) {
 }
 
 ProfilePage.propTypes = {
-	userId: PropTypes.integer,
+	userId: PropTypes.number,
 };

@@ -12,11 +12,12 @@ import Groups from "./pages/Groups/Groups";
 // import StartPage from "./pages/StartPage/StartPage";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
 import Map from "./pages/Map/Map";
+import NewGroup from "./pages/NewGroup/NewGroup";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import Root from "./pages/Root/Root";
-import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
 import SingleGroup from "./pages/SingleGroup/SingleGroup";
-import NewGroup from "./pages/NewGroup/NewGroup";
+import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
+import { getUserId } from "./userUtils.js";
 
 function App() {
 	const [session, setSession] = useState(null);
@@ -69,24 +70,6 @@ function App() {
 		},
 	]);
 
-	async function getUserId() {
-		// get internal user id
-		const {
-			data: { user },
-		} = await supabase.auth.getUser();
-		const auth_user_id = user.id;
-
-		let { data: user_data, user_error } = await supabase.from("user").select("id").eq("auth_user_id", auth_user_id);
-
-		if (user_error) {
-			console.log("Could not retrieve logged in user id " + user_error);
-		}
-
-		if (user_data) {
-			setInternalUserId(user_data[0].id);
-		}
-	}
-
 	useEffect(() => {
 		supabase.auth.getSession().then(({ data: { session } }) => {
 			setSession(session);
@@ -100,7 +83,12 @@ function App() {
 	}, []);
 
 	useEffect(() => {
-		getUserId();
+		const fetchUserId = async () => {
+			const userId = await getUserId();
+			setInternalUserId(userId);
+		};
+
+		fetchUserId();
 	}, [session]);
 
 	if (!session) {
