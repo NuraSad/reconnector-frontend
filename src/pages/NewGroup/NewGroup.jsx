@@ -1,22 +1,33 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import create from "../../assets/icons/create.svg";
 import Btn from "../../components/smallComponents/Btn/Btn";
 import supabase from "../../config/supabaseClient";
 import "./NewGroup.scss";
-import { v4 as uuidv4 } from "uuid";
-import ImageUploading from "react-images-uploading";
+import { useDropzone } from "react-dropzone";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function NewGroup() {
   //state for group name
   const [newGroup, setNewGroup] = useState({});
-  const [images, setImages] = useState([]);
-  const maxNumber = 1;
+  const [image, setImage] = useState();
+  const [imageName, setImageName] = useState();
+  const onDrop = useCallback((acceptedFiles) => {
+    acceptedFiles.map((file) => {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        setImage(e.target.result);
+      };
+      reader.readAsDataURL(file);
+      //I have set file information in here, which is going to Supabase?
+      setImageName(file);
+      return file;
+    });
+  }, []);
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-  const onChange = (imageList, addUpdateIndex) => {
-    // data for submit
-    console.log(imageList, addUpdateIndex);
-    setImages(imageList);
-  };
+  const notify = () => toast("Group is Completed");
+
   //set the group name in the newgroup object
   function groupNaming(e) {
     let groupName = e.target.value;
@@ -45,7 +56,13 @@ function NewGroup() {
     // add group
     const { data: group_data, error: group_error } = await supabase
       .from("group")
-      .insert([{ name: newGroup.groupName, description: newGroup.description }])
+      .insert([
+        {
+          name: newGroup.groupName,
+          description: newGroup.description,
+          image: imageName,
+        },
+      ])
       .select();
 
     if (group_error) {
@@ -106,25 +123,12 @@ function NewGroup() {
 
         if (group_members_data) {
           console.log("User was successfully added to group member table.");
+          notify();
         }
       }
     }
   }
 
-  async function uploadImage(e) {
-    let file = e.target.files[0];
-    console.log(file);
-    //the user can only upload to their folder
-    // add group
-    const { data: group_data, error: group_error } = await supabase
-      .from("group")
-      .insert([{ image: newGroup.image }])
-      .select();
-
-    if (group_error) {
-      console.log(group_error);
-    }
-  }
   // console.log(newGroup);
   return (
     <section className="newGroup">
@@ -147,52 +151,14 @@ function NewGroup() {
           ></input>
         </div>
         <div className="newGroup__input">
-          <label>Upload an image for {newGroup.groupName}?</label>
-          <ImageUploading
-            multiple
-            value={images}
-            onChange={onChange}
-            maxNumber={maxNumber}
-            dataURLKey="data_url"
-          >
-            {({
-              imageList,
-              onImageUpload,
-              onImageRemoveAll,
-              // onImageUpdate,
-              // onImageRemove,
-              isDragging,
-              dragProps,
-            }) => (
-              // write your building UI
-              <div className="upload__image-wrapper">
-                {imageList.map((image, index) => (
-                  <div key={index} className="image-item">
-                    <img src={image["data_url"]} alt="" width="100%" />
-                    {/* <div className="image-item__btn-wrapper">
-                      <button onClick={() => onImageUpdate(index)}>
-                        Update
-                      </button>
-                      <button onClick={() => onImageRemove(index)}>
-                        Remove
-                      </button>
-                    </div> */}
-                  </div>
-                ))}
-                <div className="newGroup__imageUpload">
-                  <Btn
-                    textBtn={"Click or Drop to Upload Image"}
-                    style={isDragging ? { color: "red" } : undefined}
-                    onClick={onImageUpload}
-                    {...dragProps}
-                  />
-                  <Btn textBtn={"Remove Image"} onClick={onImageRemoveAll} />
-                </div>
-              </div>
-            )}
-          </ImageUploading>
+          <div className="newGroup__image-wrapper" {...getRootProps()}>
+            <input {...getInputProps()} />
+            <Btn textBtn={"Click here to upload image"} />
+            <img className="newGroup__imageUpload" alt="" src={image} />
+          </div>
         </div>
         <div className="newGroup__input">
+          <ToastContainer />
           <label>Describe your event, tells others what to expect. </label>
           <div className="newGroup__text">
             <textarea
@@ -204,7 +170,16 @@ function NewGroup() {
           </div>
         </div>
       </div>
-      <button onClick={handleSubmit}>Create Group</button>
+      <Btn
+        bgColor={"#6c3ed64f"}
+        fontSize={"16px"}
+        fontWeight={"500"}
+        textColor={"white"}
+        textBtn={"Create Group"}
+        onClick={handleSubmit}
+        height={"45px"}
+        marginTop={"2rem"}
+      />
     </section>
   );
 }
