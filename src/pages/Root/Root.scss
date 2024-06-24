@@ -30,14 +30,18 @@ nav {
             width: min-content;
 
             #avatar{
-                width: 9rem;
-                height: 9rem;
+                width: 10rem;
+                height: 10rem;
                 border-radius: 50%;
+                object-fit: cover;
             }
             #company-logo{
                 position: absolute;
                 bottom: 0;
                 right: 0;
+                width: 3rem;
+                height: 3rem;
+                border-radius: 50%;
             }
         }
         .stats-field{

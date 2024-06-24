@@ -1,16 +1,18 @@
+import { useEffect, useState } from "react";
 import "./ProfilePage.scss";
-import { useState, useEffect } from "react";
 
 import postData from "../../data/postData.json";
 
-import MiniGroup from "../../components/smallComponents/MiniGroup/MiniGroup";
 import Post from "../../components/mainComponents/Post/Post";
+import MiniGroup from "../../components/smallComponents/MiniGroup/MiniGroup";
 
+import PropTypes from "prop-types";
+import bikingMedal from "../../assets/medals/biking-medal.png";
+import hikingMedal from "../../assets/medals/hiking-medal.png";
+import groupBanner from "../../assets/running-club.jpg";
 import samantha from "../../assets/samantha.png";
 import starbacksLogo from "../../assets/starbucks.png";
-import hikingMedal from "../../assets/medals/hiking-medal.png";
-import bikingMedal from "../../assets/medals/biking-medal.png";
-import groupBanner from "../../assets/running-club.jpg";
+import supabase from "../../config/supabaseClient";
 
 const userINITIAL = {
   firstName: "Samantha",
@@ -26,15 +28,67 @@ const userINITIAL = {
   posts: [],
 };
 
-export default function ProfilePage() {
-  const [user, setUser] = useState(userINITIAL);
+export default function ProfilePage({ userId }) {
+	const [user, setUser] = useState(null);
+	const [posts, setPosts] = useState([]);
+  const [userCompany, setUserCompany] = useState(null);
+
+	useEffect(() => {
+		async function getUser() {
+			let { data: user_data, error: user_error } = await supabase.from("user").select("*").eq("id", userId);
+
+			if (user_error) {
+				console.error("Error fetching user:", user_error.message);
+				return;
+			}
+
+			if (user_data && user_data.length > 0) {
+				setUser(user_data[0]);
+			}
+		}
+
+		if (userId) {
+			getUser();
+		}
+	}, [userId]);
 
   useEffect(() => {
-    setUser((prev) => ({ ...prev, posts: postData }));
-  }, []);
+    const getUserCompany = async () => {
+			let { data: user_company_data, error: user_company_error } = await supabase.from("company").select().eq("id", user.company_id);
 
-  return (
-    <div className="user-profile">
+			if (user_company_error) {
+				console.error("Error fetching user:", user_company_error.message);
+				return;
+			}
+
+			if (user_company_data && user_company_data.length > 0) {
+				setUserCompany(user_company_data[0]);
+			}
+		};
+
+		async function getPosts() {
+			let { data: posts_data, error: posts_error } = await supabase.from("post").select("*").eq("created_by", userId);
+
+			if (posts_error) {
+				console.error("Error fetching posts:", posts_error.message);
+				return;
+			}
+
+			if (posts_data) {
+				setPosts(posts_data);
+			}
+		}
+
+    if (user) {
+      getUserCompany();
+			getPosts();
+		}
+
+  }, [user])
+
+	return (
+    user &&
+		<div className="user-profile">
       <h1 className="user-profile__title page-font"></h1>
       <div className="user-profile__container">
         <div className="top">
@@ -47,20 +101,21 @@ export default function ProfilePage() {
               <img
                 className="photo"
                 src={user.avatar}
-                alt={`${user.firstName} avatar`}
+                alt={`${user.first_name} avatar`}
               />
+              {userCompany && 
               <img
                 className="logo"
-                src={user.companyLogo}
-                alt={`${user.company}'s logo`}
-              />
+                src={userCompany.logo}
+                alt={`${userCompany.name}'s logo`}
+              />}
             </div>
             <div className="stat">
               <p>&#127775;</p>
               <p>{user.points}</p>
             </div>
           </div>
-          <h4>{`${user.firstName} ${user.lastName}`}</h4>
+          <h4>{`${user.first_name} ${user.last_name}`}</h4>
           <p className="email">{user.email}</p>
           <p>{user.location}</p>
         </div>
@@ -90,8 +145,8 @@ export default function ProfilePage() {
         </div>
         <h3>Recent Post</h3>
         <div className="posts-field">
-          {user.posts &&
-            user.posts.map((i) => (
+          {posts.length ?
+            posts.map((i) => (
               <Post
                 key={i.id}
                 profileAvatar={i.profileAvatar}
@@ -106,9 +161,13 @@ export default function ProfilePage() {
                 postText={i.postText}
                 likes={i.likes}
               />
-            ))}
+            )) : <p className="empty-message">You have no posts</p>}
         </div>
       </div>
     </div>
   );
 }
+
+ProfilePage.propTypes = {
+	userId: PropTypes.number,
+};
