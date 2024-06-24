@@ -1,6 +1,8 @@
+// App.jsx
+import React from 'react';
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.scss";
 import supabase from "./config/supabaseClient";
@@ -8,14 +10,40 @@ import Calendar from "./pages/Calendar/Calendar";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import Explore from "./pages/Explore/Explore";
 import Groups from "./pages/Groups/Groups";
-// import ErrorPage from "./pages/ErrorPage/ErrorPage";
-// import StartPage from "./pages/StartPage/StartPage";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
 import Map from "./pages/Map/Map";
 import NewGroup from "./pages/NewGroup/NewGroup";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import Root from "./pages/Root/Root";
 import SingleGroup from "./pages/SingleGroup/SingleGroup";
+<<<<<<< HEAD
+import NewGroup from "./pages/NewGroup/NewGroup";
+import NewPost from "./pages/NewPost/NewPost";
+import { SessionProvider, useSession } from './sessionContext'; // import context provider
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <ProfilePage /> },
+      { path: "/explore", element: <Explore /> },
+      { path: "/groups", element: <Groups /> },
+      { path: "/groups/:id", element: <SingleGroup /> },
+      { path: "/leaderboards", element: <Leaderboard /> },
+      { path: "/leaderboards/:id", element: <SingleLeaderBoard /> },
+      { path: "/calendar", element: <Calendar /> },
+      { path: "/maps", element: <Map /> },
+      { path: "/createGroup", element: <NewGroup /> },
+      { path: "/createPost", element: <NewPost /> },
+    ],
+  },
+]);
+
+function App() {
+  const session = useSession();
+=======
 import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
 import { getUserId } from "./userUtils.js";
 
@@ -69,6 +97,7 @@ function App() {
 			],
 		},
 	]);
+>>>>>>> 6eb33387e56e4a81834f6407c39201536e82d06f
 
 	useEffect(() => {
 		supabase.auth.getSession().then(({ data: { session } }) => {
@@ -112,4 +141,10 @@ function App() {
 	}
 }
 
-export default App;
+export default function WrappedApp() {
+  return (
+    <SessionProvider>
+      <App />
+    </SessionProvider>
+  );
+}
