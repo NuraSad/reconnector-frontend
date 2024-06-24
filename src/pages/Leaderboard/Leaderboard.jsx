@@ -98,37 +98,41 @@ const Leaderboard = () => {
     <section className="leaderboard">
       <h1 className="leaderboard__title page-font">Leaderboard</h1>
       <div className="leaderboard__bubble-container">
-        {leaderboardData
-          .sort((a, b) => b.points - a.points)
-          .map((company, index) => (
-            <div
-              className="company-bubble"
-              key={company.id}
-              style={{
-                backgroundImage: `url(${company.logo})`,
-                maxWidth: `${company.points / 20}%`,
-                bottom: `${Math.floor(Math.random() * 70) + 20}px`,
-                right: `${Math.floor(Math.random() * 70) + 10}px`,
-              }}
-              onClick={() => navigate(`/leaderboards/${company.id}`)}
-            >
-              <div className="company-bubble__name">{company.name}</div>
-              <div className="company-bubble__stats-wrapper">
-                <div className="stats-item">
-                  <img src={`${peopleGroupIcon}`} alt="Employee Count" />
-                  {company.employeeCount}
-                </div>
-                <div className="stats-item">
-                  <img src={`${starIcon}`} alt="Company Score" />
-                  {company.points}
-                </div>
-                <div className="stats-item">
-                  <img src={`${medalIcon}`} alt="Medals won" />
-                  {company.medal_count}
+        {fetchError ? (
+          <>{fetchError}</>
+        ) : (
+          leaderboardData
+            .sort((a, b) => b.points - a.points)
+            .map((company, index) => (
+              <div
+                className="company-bubble"
+                key={company.id}
+                style={{
+                  backgroundImage: `url(${company.logo})`,
+                  maxWidth: `${company.points / 20}%`,
+                  bottom: `${Math.floor(Math.random() * 70) + 20}px`,
+                  right: `${Math.floor(Math.random() * 70) + 10}px`,
+                }}
+                onClick={() => navigate(`/leaderboards/${company.id}`)}
+              >
+                <div className="company-bubble__name">{company.name}</div>
+                <div className="company-bubble__stats-wrapper">
+                  <div className="stats-item">
+                    <img src={`${peopleGroupIcon}`} alt="Employee Count" />
+                    {company.employeeCount}
+                  </div>
+                  <div className="stats-item">
+                    <img src={`${starIcon}`} alt="Company Score" />
+                    {company.points}
+                  </div>
+                  <div className="stats-item">
+                    <img src={`${medalIcon}`} alt="Medals won" />
+                    {company.medal_count}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+        )}
       </div>
     </section>
   );
