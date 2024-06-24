@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./SingleLeaderBoard.scss";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import starbucks from "../../assets/starbucks.png";
 import icon_medal from "../../assets/icons/icon_medal.svg";
 import icon_star from "../../assets/icons/icon_star.svg";
@@ -10,6 +10,7 @@ import user1 from "../../assets/user1.png";
 import posts from "../../data/postData.json";
 import Post from "../../components/mainComponents/Post/Post";
 import supabase from "../../config/supabaseClient";
+
 const leaderboard = [
   {
     username: "Alex Guerrerro",
@@ -60,6 +61,9 @@ const SingleLeaderBoard = () => {
 
   const [fetchError, setFetchError] = useState("");
   const [fetchOne, setFetchOne] = useState([]);
+  const location = useLocation();
+  const { logo, points, medals, employeeCount, companyId, companyName } =
+    location.state;
   useEffect(() => {
     const fetchSingleCompany = async (id) => {
       const { data, error } = await supabase
@@ -73,7 +77,7 @@ const SingleLeaderBoard = () => {
       }
       if (data) {
         setFetchOne(data);
-        console.log(data);
+        //console.log(data);
         setFetchError(null);
       }
     };
@@ -86,25 +90,25 @@ const SingleLeaderBoard = () => {
       ) : (
         <div className="singleleaderboard-first">
           <section className="singleleaderboard-first-companyLogo">
-            <img src={`${fetchOne.logo}`} alt="" />
+            <img src={logo} alt="" />
           </section>
           <section className="singleleaderboard-first-description">
-            <h1 className="company-heading"> {fetchOne.name}</h1>
+            <h1 className="company-heading"> {companyName}</h1>
             <div className="company-bulletins">
               <article className="company-bulletins-item">
                 {" "}
                 <img src={icon_medal} alt="" />
-                <span>{fetchOne.medal}</span>
+                <span>{medals}</span>
               </article>
               <article className="company-bulletins-item">
                 {" "}
                 <img src={icon_star} alt="" />
-                <span>{fetchOne.points}</span>
+                <span>{points}</span>
               </article>
               <article className="company-bulletins-item">
                 {" "}
                 <img src={icon_people} alt="" />
-                <span>{fetchOne.employeecount}</span>
+                <span>{employeeCount}</span>
               </article>
             </div>
             <p className="company-description">

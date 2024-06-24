@@ -113,7 +113,18 @@ const Leaderboard = () => {
                   bottom: `${Math.floor(Math.random() * 70) + 20}px`,
                   right: `${Math.floor(Math.random() * 70) + 10}px`,
                 }}
-                onClick={() => navigate(`/leaderboards/${company.id}`)}
+                onClick={() =>
+                  navigate(`/leaderboards/${company.id}`, {
+                    state: {
+                      companyId: company.id,
+                      companyName: company.name,
+                      logo: company.logo,
+                      points: company.points,
+                      medals: company.medal_count,
+                      employeeCount: company.employeeCount,
+                    },
+                  })
+                }
               >
                 <div className="company-bubble__name">{company.name}</div>
                 <div className="company-bubble__stats-wrapper">
