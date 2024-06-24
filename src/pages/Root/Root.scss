@@ -73,7 +73,7 @@ nav {
         padding: 0;
 
         li{
-            margin: 1.5rem 0;
+            margin: 1.5rem 1rem;
 
             a{
                 color: #939396;
@@ -84,6 +84,18 @@ nav {
                 font-weight: 900;
             }
         }
+        li:last-child{
+            margin-top: 4rem;
+        }
+    }
+    .btn {
+        color: white;
+        background-color: #D9D9D9;
+        box-shadow: none;
+        font-size: 1rem;
+    }
+    .btn:hover{
+        background-color: rgba(108, 62, 214, 0.31);
     }
 }
 
