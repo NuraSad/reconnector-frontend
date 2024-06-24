@@ -6,12 +6,16 @@ import "./NewGroup.scss";
 import { useDropzone } from "react-dropzone";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 function NewGroup() {
   //state for group name
   const [newGroup, setNewGroup] = useState({});
   const [image, setImage] = useState();
   const [imageName, setImageName] = useState();
+
+  let navigate = useNavigate();
+
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.map((file) => {
       const reader = new FileReader();
@@ -26,7 +30,9 @@ function NewGroup() {
   }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-  const notify = () => toast("Group is Completed");
+  const groupCreate = () => toast.success("Group is Created");
+  const notCreate = () =>
+    toast.warn("Group name AND description are Required!");
 
   //set the group name in the newgroup object
   function groupNaming(e) {
@@ -50,7 +56,7 @@ function NewGroup() {
     event.preventDefault();
 
     if (!newGroup.groupName || !newGroup.description) {
-      return alert("Group name and description cannot be empty.");
+      return notCreate();
     }
 
     // add group
@@ -123,7 +129,10 @@ function NewGroup() {
 
         if (group_members_data) {
           console.log("User was successfully added to group member table.");
-          notify();
+          groupCreate();
+          //I want this to navigate to the groupID
+          setTimeout(() => navigate(`/groups/${groupID}`), 1000);
+          //redirect to group page of that id
         }
       }
     }
@@ -158,7 +167,7 @@ function NewGroup() {
           </div>
         </div>
         <div className="newGroup__input">
-          <ToastContainer />
+          <ToastContainer position="top-center" />
           <label>Describe your event, tells others what to expect. </label>
           <div className="newGroup__text">
             <textarea
@@ -180,6 +189,7 @@ function NewGroup() {
         height={"45px"}
         marginTop={"2rem"}
       />
+      <ToastContainer position="top-center" />
     </section>
   );
 }
