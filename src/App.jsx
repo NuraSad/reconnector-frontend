@@ -19,6 +19,7 @@ import SingleGroup from "./pages/SingleGroup/SingleGroup";
 import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
 import { getUserId } from "./userUtils.js";
 import { useSession ,SessionProvider} from "./sessionContext.jsx";
+import NewPost from "./pages/NewPost/NewPost";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -67,6 +68,10 @@ function App() {
         {
           path: "/createGroup",
           element: <NewGroup />,
+        },
+        {
+          path: '/createPost',
+          element: <NewPost/>
         },
       ],
     },
