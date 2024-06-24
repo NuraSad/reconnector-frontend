@@ -130,7 +130,7 @@ function NewGroup() {
 
 			// get internal user id
 			const {
-				data: { user },
+				data: {user},
 			} = await supabase.auth.getUser();
 			const auth_user_id = user.id;
 
