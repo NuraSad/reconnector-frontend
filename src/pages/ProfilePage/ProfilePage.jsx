@@ -47,6 +47,12 @@ export default function ProfilePage({ userId }) {
 			}
 		}
 
+		if (userId) {
+			getUser();
+		}
+	}, [userId]);
+
+  useEffect(() => {
     const getUserCompany = async () => {
 			let { data: user_company_data, error: user_company_error } = await supabase.from("company").select().eq("id", user.company_id);
 
@@ -73,16 +79,12 @@ export default function ProfilePage({ userId }) {
 			}
 		}
 
-		if (userId) {
-			getUser();
-		}
-
-		if (user) {
+    if (user) {
       getUserCompany();
 			getPosts();
 		}
 
-	}, [userId]);
+  }, [user])
 
 	return (
     user &&
@@ -101,11 +103,12 @@ export default function ProfilePage({ userId }) {
                 src={user.avatar}
                 alt={`${user.first_name} avatar`}
               />
+              {userCompany && 
               <img
                 className="logo"
                 src={userCompany.logo}
                 alt={`${userCompany.name}'s logo`}
-              />
+              />}
             </div>
             <div className="stat">
               <p>&#127775;</p>
