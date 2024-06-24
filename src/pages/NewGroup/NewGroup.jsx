@@ -1,8 +1,8 @@
 import { useState } from "react";
-import "./NewGroup.scss";
-import Btn from "../../components/smallComponents/Btn/Btn";
 import create from "../../assets/icons/create.svg";
+import Btn from "../../components/smallComponents/Btn/Btn";
 import supabase from "../../config/supabaseClient";
+import "./NewGroup.scss";
 
 function NewGroup() {
   //state for group name
@@ -111,7 +111,7 @@ function NewGroup() {
 		event.preventDefault();
 
 		if (!newGroup.groupName || !newGroup.description) {
-			console.log("Group name and description cannot be empty.");
+			alert("Group name and description cannot be empty.");
 		}
 
     // add group
