@@ -6,7 +6,7 @@ import Btn from "../../smallComponents/Btn/Btn";
 import Map from "../../../pages/Map/Map";
 import listavatars from "../../../data/listAvatars.json";
 import BackDrop from "../../smallComponents/BackDrop/BackDrop";
-const SingleGrpModal = ({ setOpenModal,groupId }) => {
+const SingleGrpModal = ({ setOpenModal,groupId,groupName,groupDescription }) => {
   const [toggle, setToggle] = useState(true);
 
   return (
@@ -18,7 +18,7 @@ const SingleGrpModal = ({ setOpenModal,groupId }) => {
         </div>
         <section className="singlegrpmodal-content">
           <div className="singlegrpmodal-content-grp">
-            <h1>#Zen Yoga After Hours</h1>
+            <h1>#{groupName}</h1>
             <div className="singlegrpmodal-content-grp-info">
               <p>Monday @ 3:30pm</p>
               <p>In-person Event</p>
@@ -45,16 +45,7 @@ const SingleGrpModal = ({ setOpenModal,groupId }) => {
               />
             </div>
             <p className="singlegrpmodal-content-grp-stmt">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse lacinia eros vitae nunc feugiat sollicitudin. Donec
-              suscipit, erat a rhoncus cursus, orci dui varius augue, vel
-              blandit augue magna ut orci. Pellentesque in lorem volutpat,
-              blandit urna eu, laoreet magna. Pellentesque sed eros tellus.
-              Donec gravida porta nibh ac luctus. Aliquam eu magna vel lorem
-              tincidunt faucibus ac vitae felis. Nam in sodales felis, nec
-              dictum ex. In feugiat facilisis sapien, sed lobortis dui porttitor
-              ut. Praesent consectetur nisl a nisi varius, ut auctor sem
-              malesuada.
+              {groupDescription}
             </p>
             <h3>Gear You Need</h3>
             <p className="singlegrpmodal-content-grp-gear">
