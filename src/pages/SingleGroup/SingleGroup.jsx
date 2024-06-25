@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "./SingleGroup.scss";
 import listAvatars from "../../data/listAvatars.json";
 import { useState, useEffect } from "react";
@@ -16,6 +16,7 @@ function SingleGroup() {
   const [groups, setGroups] = useState();
   const [fetchError, setFetchError] = useState(null);
   let { id } = useParams();
+  let navigate = useNavigate();
 
   //state for the avatars coming in from the data file which will come in from the database later
   const [usersAvatar] = useState(listAvatars);
@@ -49,6 +50,11 @@ function SingleGroup() {
   const handleJoinGrp = () => {
     setOpenModal(true);
   };
+
+  async function goToEvent() {
+    //navigate to the page to create an event
+    navigate("/createEvent");
+  }
   useEffect(() => {
     // Loading function to load data or
     // fake it using setTimeout;
@@ -92,17 +98,27 @@ function SingleGroup() {
                   moveLeft={"-50%"}
                   marginTop={"1rem"}
                 />
-                <Btn
-                  textBtn={"Join Group +"}
-                  bgColor={"#6c3ed696"}
-                  textColor={"white"}
-                  marginLeft={"10rem"}
-                  height={"35px"}
-                  onClick={handleJoinGrp}
-                />
+                <div className="singleGroup__btns">
+                  <Btn
+                    textBtn={"Join Group +"}
+                    bgColor={"#6c3ed696"}
+                    textColor={"white"}
+                    marginLeft={"10rem"}
+                    height={"35px"}
+                    onClick={handleJoinGrp}
+                  />
+                </div>
               </div>
             </div>
             <div className="singleGroup__header--right">
+              <Btn
+                textBtn={"+ Create Event"}
+                bgColor={"#6c3ed696"}
+                textColor={"white"}
+                marginTop={"1rem"}
+                height={"35px"}
+                onClick={goToEvent}
+              />
               <Btn
                 textBtn={"In-person"}
                 bgColor={"#D9D9D9"}
