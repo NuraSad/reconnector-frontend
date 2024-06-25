@@ -1,0 +1,31 @@
+@use '../../../styles/mixins' as *;
+@use '../../../styles/variables' as *;
+
+
+.dateInput {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1.5rem;
+    @include desktop {
+        width: 90%;
+        margin-left:5%;
+    }
+    &__label {
+        margin-bottom: .5rem;
+        font-weight: 600;
+    }
+    &__input {
+        border-radius: 20px;
+        height: 38px;
+        border: 1px solid $color-light;
+        padding-left:1rem;
+        padding-right:1rem;
+        width: 100%;
+    }
+}
+
+.react-datepicker-wrapper {
+    width: 100% !important;
+}

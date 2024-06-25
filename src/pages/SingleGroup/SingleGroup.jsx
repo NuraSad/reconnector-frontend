@@ -22,7 +22,7 @@ function SingleGroup() {
   const [usersAvatar] = useState(listAvatars);
 
   useEffect(() => {
-    const fetchSingleCompany = async (id) => {
+    const fetchGroupId = async (id) => {
       const { data, error } = await supabase
         .from("group")
         .select("*")
@@ -38,7 +38,7 @@ function SingleGroup() {
         setFetchError(null);
       }
     };
-    fetchSingleCompany(id);
+    fetchGroupId(id);
   }, [id]);
 
   const [events, setEvents] = useState([]);
@@ -53,7 +53,7 @@ function SingleGroup() {
 
   async function goToEvent() {
     //navigate to the page to create an event
-    navigate("/createEvent");
+    navigate("/createEvent", { state: { groupId: id } });
   }
   useEffect(() => {
     // Loading function to load data or
