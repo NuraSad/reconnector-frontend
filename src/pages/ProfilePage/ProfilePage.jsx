@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./ProfilePage.scss";
 import Post from "../../components/mainComponents/Post/Post";
 import MiniGroup from "../../components/smallComponents/MiniGroup/MiniGroup";
+import UpdateProfilePopup from "../../components/mainComponents/UpdateProfilePopup/UpdateProfilePopup";
 import PropTypes from "prop-types";
 import bikingMedal from "../../assets/medals/biking-medal.png";
 import hikingMedal from "../../assets/medals/hiking-medal.png";
@@ -10,8 +11,10 @@ import supabase from "../../config/supabaseClient";
 
 export default function ProfilePage({ userId }) {
   const [user, setUser] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [posts, setPosts] = useState([]);
   const [userCompany, setUserCompany] = useState(null);
+
 
   useEffect(() => {
     async function getUser() {
@@ -65,12 +68,21 @@ export default function ProfilePage({ userId }) {
         setPosts(posts_data);
       }
     }
+    
 
-    if (user) {
+    if (user.company_id && user.location) {
       getUserCompany();
       getPosts();
+    } else {
+      setIsEditing(true)
     }
   }, [user]);
+
+  if(user && isEditing){
+    return (
+      <UpdateProfilePopup userInit={user} onClose={() => setIsEditing(prev => !prev)}/>
+    )
+  }
 
   return (
     user && (
@@ -105,6 +117,7 @@ export default function ProfilePage({ userId }) {
             <h4>{`${user.first_name} ${user.last_name}`}</h4>
             <p className="email">{user.email}</p>
             <p>{user.location}</p>
+            <button onClick={() => setIsEditing(true)}>Edit Info</button>
           </div>
           <h3>Featured Awards</h3>
           <div className="awards-field">
