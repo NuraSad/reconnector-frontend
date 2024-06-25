@@ -18,8 +18,10 @@ export default function NewEvent(id) {
   const [newEvent, setnewEvent] = useState({});
   const [toggleOnline, setToggleOnline] = useState(false);
   const [togglePerson, setTogglePerson] = useState(false);
-  const [selected, setSelected] = useState({});
   const [image, setImage] = useState();
+  const [fetchError, setFetchError] = useState(null);
+  const [thisGroup, setThisGroup] = useState();
+  const [groups, setGroups] = useState(null);
 
   // let navigate = useNavigate();
 
@@ -75,19 +77,23 @@ export default function NewEvent(id) {
     }));
   }
 
-  const [groups, setGroups] = useState(null);
   useEffect(() => {
-    const fetchGroups = async () => {
+    const fetchGroups = async (groupType) => {
       const { data, error } = await supabase.from("group").select();
       if (error) {
+        console.log(error);
         setFetchError("Could not Fetch the Group");
       } else {
+        console.log(data);
+        // if (groupType === "inPerson") data.filter((group) => group.type === "inPerson")
+        // else data.filter((group) => group.type === "online")
+        if (groupType === "inPerson") data.reverse(); //<-- this is for testing only, need to include type filter in backend
         setFetchError(null);
         setGroups(data);
       }
     };
 
-    // fetchGroups();
+    fetchGroups();
   }, []);
 
   //set the online
@@ -133,8 +139,6 @@ export default function NewEvent(id) {
     }));
   }
 
-  const [fetchError, setFetchError] = useState(null);
-  const [thisGroup, setThisGroup] = useState();
   useEffect(() => {
     const fetchGroupId = async (startGroup) => {
       const { data, error } = await supabase
