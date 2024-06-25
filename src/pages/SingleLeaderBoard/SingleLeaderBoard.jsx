@@ -1,69 +1,30 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./SingleLeaderBoard.scss";
 import { useLocation, useParams } from "react-router-dom";
-import starbucks from "../../assets/starbucks.png";
 import icon_medal from "../../assets/icons/icon_medal.svg";
 import icon_star from "../../assets/icons/icon_star.svg";
 import icon_people from "../../assets/icons/icon_people-group.svg";
 import icon_fire from "../../assets/icons/icon_fire.png";
-import user1 from "../../assets/user1.png";
 import posts from "../../data/postData.json";
 import Post from "../../components/mainComponents/Post/Post";
 import supabase from "../../config/supabaseClient";
 
-const leaderboard = [
-  {
-    username: "Alex Guerrerro",
-    total_starts: 408,
-    week_streaks: 123,
-    groups_apart_of: 8,
-    most_active_group: ["#Mountain Bike Ride", "#Girls Running and Drinks"],
-  },
-  {
-    username: "Brown Guerrerro",
-    total_starts: 408,
-    week_streaks: 12,
-    groups_apart_of: 8,
-    most_active_group: ["#Mountain Bike Ride", "#Girls Running and Drinks"],
-  },
-  {
-    username: "Rima Guerrerro",
-    total_starts: 411,
-    week_streaks: 17,
-    groups_apart_of: 80,
-    most_active_group: ["#Mountain Bike Ride"],
-  },
-  {
-    username: "Alex Ray",
-    total_starts: 800,
-    week_streaks: 12,
-    groups_apart_of: 157,
-    most_active_group: [
-      "#Mountain Bike Ride",
-      "#Girls Running and Drinks",
-      "#Hiking park",
-    ],
-  },
-  {
-    username: "Alex Ray",
-    total_starts: 800,
-    week_streaks: 12,
-    groups_apart_of: 157,
-    most_active_group: [
-      "#Mountain Bike Ride",
-      "#Girls Running and Drinks",
-      "#Hiking park",
-    ],
-  },
-];
 const SingleLeaderBoard = () => {
   const { id } = useParams();
 
   const [fetchError, setFetchError] = useState("");
   const [fetchUsers, setFetchusers] = useState([]);
   const location = useLocation();
-  const { logo, points, medals, employeeCount, companyId, companyName } =
-    location.state;
+  console.log(location.state);
+  const {
+    logo,
+    points,
+    medals,
+    employeeCount,
+    companyId,
+    companyName,
+    description,
+  } = location.state;
   useEffect(() => {
     const fetchUser = async (id) => {
       const { data, error } = await supabase
@@ -87,7 +48,6 @@ const SingleLeaderBoard = () => {
     const userIds = fetchUsers.map((item) => item.id);
     console.log("userIds", userIds);
 
-
     const fetchGroup = async () => {
       const { data: grpCount, error } = await supabase.rpc(`getgroupcount`, {
         user_ids: userIds,
@@ -97,8 +57,7 @@ const SingleLeaderBoard = () => {
       } else {
         const updatedUsers = fetchUsers.map((item) => {
           const foundgrp = grpCount.find((data) => data.user_id === item.id);
-          if (foundgrp)
-            return { ...item, groupCount: foundgrp.groupcount };
+          if (foundgrp) return { ...item, groupCount: foundgrp.groupcount };
           else {
             return item;
           }
@@ -113,13 +72,31 @@ const SingleLeaderBoard = () => {
     fetchGroup();
   }, [fetchUsers]);
 
+  const [posts, setPosts] = useState();
+
+  useEffect(() => {
+    async function getPosts() {
+      let { data: posts_data, error: posts_error } = await supabase
+        .from("post")
+        .select("*");
+
+      if (posts_error) {
+        console.error("Error fetching posts:", posts_error.message);
+        return;
+      }
+
+      if (posts_data) {
+        setPosts(posts_data);
+      }
+    }
+    getPosts();
+  }, []);
   return (
     <div className="singleleaderboard">
       {fetchError ? (
         <p>{fetchError}</p>
       ) : (
         <div className="singleleaderboard-first">
-          {console.log("fetchusers/////////////////", fetchUsers)}
           <section className="singleleaderboard-first-companyLogo">
             <img src={logo} alt="" />
           </section>
@@ -142,13 +119,7 @@ const SingleLeaderBoard = () => {
                 <span>{employeeCount}</span>
               </article>
             </div>
-            <p className="company-description">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse lacinia eros vitae nunc feugiat sollicitudin. Donec
-              suscipit, erat a rhoncus cursus, orci dui varius augue, vel
-              blandit augue magna ut orci. Pellentesque in lorem volutpat,
-              blandit urna eu, laoreet magna. Pellentesque sed eros tellus.
-            </p>
+            <p className="company-description">{description}</p>
           </section>
         </div>
       )}
@@ -175,7 +146,9 @@ const SingleLeaderBoard = () => {
           <section className="singleleaderboard-second-data" key={index}>
             <div className="author">
               <img className="author-image" src={`${item.avatar}`} alt="" />
-              <span>{item.first_name} {item.last_name}</span>
+              <span>
+                {item.first_name} {item.last_name}
+              </span>
             </div>
             <div>
               <img src={icon_star} alt="" />
@@ -208,13 +181,13 @@ const SingleLeaderBoard = () => {
               profileAvatar={post.profileAvatar}
               last_name={post.last_name}
               first_name={post.first_name}
-              username={post.username}
-              tag={post.tag}
-              img1={post.img_main}
+              username={post.created_by}
+              tag={post.group_name}
+              img1={post.images}
               img2={post.img_sec}
               img3={post.img_third}
-              postTitle={post.postTitle}
-              postText={post.postText}
+              postTitle={post.title}
+              postText={post.body}
               likes={post.likes}
             />
           ))}

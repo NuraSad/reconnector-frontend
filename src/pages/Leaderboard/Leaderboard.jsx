@@ -122,6 +122,7 @@ const Leaderboard = () => {
                       points: company.points,
                       medals: company.medal_count,
                       employeeCount: company.employeeCount,
+                      description: company.description,
                     },
                   })
                 }
