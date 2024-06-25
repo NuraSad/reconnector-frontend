@@ -1,8 +1,7 @@
 // App.jsx
-import React from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.scss";
 import supabase from "./config/supabaseClient";
@@ -18,11 +17,12 @@ import Root from "./pages/Root/Root";
 import SingleGroup from "./pages/SingleGroup/SingleGroup";
 import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
 import { getUserId } from "./userUtils.js";
-import { useSession ,SessionProvider} from "./sessionContext.jsx";
+import { useSession, SessionProvider } from "./sessionContext.jsx";
 import NewPost from "./pages/NewPost/NewPost";
+import NewEvent from "./pages/NewEvent/NewEvent";
 
 function App() {
-  const [session, setSession] = useState(null);
+  // const [session, setSession] = useState(null);
   const session1 = useSession();
   const [internalUserId, setInternalUserId] = useState(null);
 
@@ -70,8 +70,12 @@ function App() {
           element: <NewGroup />,
         },
         {
-          path: '/createPost',
-          element: <NewPost/>
+          path: "/createPost",
+          element: <NewPost />,
+        },
+        {
+          path: "/createEvent",
+          element: <NewEvent />,
         },
       ],
     },
@@ -99,6 +103,28 @@ function App() {
 
     fetchUserId();
   }, [session1]);
+
+  // if (!session1) {
+  //   useEffect(() => {
+  //     supabase.auth.getSession().then(({ data: { session } }) => {
+  //       setSession(session);
+  //     });
+  //     const {
+  //       data: { subscription },
+  //     } = supabase.auth.onAuthStateChange((_event, session) => {
+  //       setSession(session);
+  //     });
+  //     return () => subscription.unsubscribe();
+  //   }, []);
+
+  //   useEffect(() => {
+  //     const fetchUserId = async () => {
+  //       const userId = await getUserId();
+  //       setInternalUserId(userId);
+  //     };
+
+  //     fetchUserId();
+  // }, [session]);
 
   if (!session1) {
     return (
