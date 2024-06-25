@@ -1,18 +1,22 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { v4 as uuidv4 } from 'uuid';
 import create from "../../assets/icons/create.svg";
 import Btn from "../../components/smallComponents/Btn/Btn";
 import supabase from "../../config/supabaseClient";
+import { getAuthUserId, getUserId } from "../../userUtils.js";
 import "./NewGroup.scss";
-import { useDropzone } from "react-dropzone";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+
+const CDNURL = "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/";
 
 function NewGroup() {
   //state for group name
   const [newGroup, setNewGroup] = useState({});
-  const [image, setImage] = useState();
-  const [imageName, setImageName] = useState();
+  const [imagePreview, setImagePreview] = useState();
+  const [imageFile, setImageFile] = useState();
 
   let navigate = useNavigate();
 
@@ -20,11 +24,10 @@ function NewGroup() {
     acceptedFiles.map((file) => {
       const reader = new FileReader();
       reader.onload = function (e) {
-        setImage(e.target.result);
+        setImagePreview(e.target.result);
       };
       reader.readAsDataURL(file);
-      //I have set file information in here, which is going to Supabase?
-      setImageName(file);
+      setImageFile(file);
       return file;
     });
   }, []);
@@ -53,145 +56,141 @@ function NewGroup() {
   }
 
   async function handleSubmit(event) {
-    event.preventDefault();
+		event.preventDefault();
 
-    if (!newGroup.groupName || !newGroup.description) {
-      return notCreate();
-    }
+		if (!newGroup.groupName || !newGroup.description) {
+			return notCreate();
+		}
 
-    // add group
-    const { data: group_data, error: group_error } = await supabase
-      .from("group")
-      .insert([
-        {
-          name: newGroup.groupName,
-          description: newGroup.description,
-          image: imageName,
-        },
-      ])
-      .select();
+    let imageURL = null;
 
-    if (group_error) {
-      console.log(group_error);
-    }
+		if (imageFile) {
+			// supabase storage uses authenticated user id instead of our internal id
+			const auth_user_id = await getAuthUserId();
 
-    if (group_data) {
-      const groupID = group_data[0].id;
-      console.log("New Group was successfully added.");
+			const { data: uploadData, error: uploadError } = await supabase.storage.from("groupImages").upload(auth_user_id + "/" + uuidv4(), imageFile);
 
-      // get internal user id
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      const auth_user_id = user.id;
+			if (uploadError) {
+				console.log("Unable to upload image file.");
+			}
 
-      let { data: user_data, user_error } = await supabase
-        .from("user")
-        .select("id")
-        .eq("auth_user_id", auth_user_id);
+			if (uploadData) {
+        imageURL = CDNURL + uploadData.fullPath
+			}
+		}
 
-      if (user_error) {
-        console.log("Could not retrieve logged in user id " + user_error);
-      }
+		// add group
+		const { data: group_data, error: group_error } = await supabase
+			.from("group")
+			.insert([
+				{
+					name: newGroup.groupName,
+					description: newGroup.description,
+					image: imageURL,
+				},
+			])
+			.select();
 
-      if (user_data) {
-        const userID = user_data[0].id;
+		if (group_error) {
+			console.log(group_error);
+		}
 
-        // add user to group admin
-        const { data: group_admin_data, error: group_admin_error } =
-          await supabase
-            .from("group_admin")
-            .insert([{ group_id: groupID, user_id: userID }])
-            .select();
+		if (group_data) {
+			const groupID = group_data[0].id;
+			console.log("New Group was successfully added.");
 
-        if (group_admin_error) {
-          console.log(
-            "Failed to add user to group admin table " + group_admin_error
-          );
-        }
+			// get internal user id
+			const userID = await getUserId();
 
-        if (group_admin_data) {
-          console.log("User was successfully added to group admin table.");
-        }
+			if (userID) {
+				// add user to group admin
+				const { data: group_admin_data, error: group_admin_error } = await supabase
+					.from("group_admin")
+					.insert([{ group_id: groupID, user_id: userID }])
+					.select();
 
-        // add user to group members
-        const { data: group_members_data, error: group_members_error } =
-          await supabase
-            .from("group_members")
-            .insert([{ group_id: groupID, user_id: userID }])
-            .select();
+				if (group_admin_error) {
+					console.log("Failed to add user to group admin table " + group_admin_error);
+				}
 
-        if (group_members_error) {
-          console.log(
-            "Failed to add user to group member table " + group_members_error
-          );
-        }
+				if (group_admin_data) {
+					console.log("User was successfully added to group admin table.");
+				}
 
-        if (group_members_data) {
-          console.log("User was successfully added to group member table.");
-          groupCreate();
-          //I want this to navigate to the groupID
+				// add user to group members
+				const { data: group_members_data, error: group_members_error } = await supabase
+					.from("group_members")
+					.insert([{ group_id: groupID, user_id: userID }])
+					.select();
+
+				if (group_members_error) {
+					console.log("Failed to add user to group member table " + group_members_error);
+				}
+
+				if (group_members_data) {
+					console.log("User was successfully added to group member table.");
+					groupCreate();
+					//I want this to navigate to the groupID
           setTimeout(() => navigate(`/groups/${groupID}`), 1000);
-          //redirect to group page of that id
-        }
-      }
-    }
+					//redirect to group page of that id
+				}
+			}
+		}
+	}
+
+    return (
+      <section className="newGroup">
+        <h1>
+          {newGroup.groupName && newGroup.groupName ? (
+            <img src={create} alt="create group" />
+          ) : null}
+          {newGroup.groupName && newGroup.groupName
+            ? ` ${newGroup.groupName}`
+            : "Create New Group"}
+        </h1>
+        <div className="newGroup__col-1">
+          <div className="newGroup__input">
+            <label>What is this exciting new group called?</label>
+            <input
+              className="newGroup__input--tall"
+              type="text"
+              name="groupName"
+              onChange={groupNaming}
+            ></input>
+          </div>
+          <div className="newGroup__input">
+            <div className="newGroup__image-wrapper" {...getRootProps()}>
+              <input {...getInputProps()} />
+              <Btn textBtn={"Click here to upload image"} />
+              <img className="newGroup__imageUpload" alt="" src={imagePreview} />
+            </div>
+          </div>
+          <div className="newGroup__input">
+            <ToastContainer position="top-center" />
+            <label>Describe your event, tells others what to expect. </label>
+            <div className="newGroup__text">
+              <textarea
+                type="text"
+                name="descript"
+                placeholder={"This activity will be enjoyable..."}
+                onChange={description}
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <Btn
+          bgColor={"#6c3ed64f"}
+          fontSize={"16px"}
+          fontWeight={"500"}
+          textColor={"white"}
+          textBtn={"Create Group"}
+          onClick={handleSubmit}
+          height={"45px"}
+          marginTop={"2rem"}
+        />
+        <ToastContainer position="top-center" />
+      </section>
+    );
   }
 
-  // console.log(newGroup);
-  return (
-    <section className="newGroup">
-      <h1>
-        {newGroup.groupName && newGroup.groupName ? (
-          <img src={create} alt="create group" />
-        ) : null}
-        {newGroup.groupName && newGroup.groupName
-          ? ` ${newGroup.groupName}`
-          : "Create New Group"}
-      </h1>
-      <div className="newGroup__col-1">
-        <div className="newGroup__input">
-          <label>What is this exciting new group called?</label>
-          <input
-            className="newGroup__input--tall"
-            type="text"
-            name="groupName"
-            onChange={groupNaming}
-          ></input>
-        </div>
-        <div className="newGroup__input">
-          <div className="newGroup__image-wrapper" {...getRootProps()}>
-            <input {...getInputProps()} />
-            <Btn textBtn={"Click here to upload image"} />
-            <img className="newGroup__imageUpload" alt="" src={image} />
-          </div>
-        </div>
-        <div className="newGroup__input">
-          <ToastContainer position="top-center" />
-          <label>Describe your event, tells others what to expect. </label>
-          <div className="newGroup__text">
-            <textarea
-              type="text"
-              name="descript"
-              placeholder={"This activity will be enjoyable..."}
-              onChange={description}
-            ></textarea>
-          </div>
-        </div>
-      </div>
-      <Btn
-        bgColor={"#6c3ed64f"}
-        fontSize={"16px"}
-        fontWeight={"500"}
-        textColor={"white"}
-        textBtn={"Create Group"}
-        onClick={handleSubmit}
-        height={"45px"}
-        marginTop={"2rem"}
-      />
-      <ToastContainer position="top-center" />
-    </section>
-  );
-}
-
-export default NewGroup;
+  export default NewGroup;
