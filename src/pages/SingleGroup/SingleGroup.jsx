@@ -11,14 +11,17 @@ import SingleGrpModal from "../../components/mainComponents/SingleGrpModal/Singl
 import ProfileIcons from "../../components/smallComponents/ProfileIcons/ProfileIcons";
 import supabase from "../../config/supabaseClient";
 import Tree from "../../assets/tree-loader";
-
+import SingleEventModal from "../../components/mainComponents/SingleEventModal/SingleEventModal";
 function SingleGroup() {
   const [groups, setGroups] = useState();
   const [fetchError, setFetchError] = useState(null);
+
+  const [events, setEvents] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [openEventModal, setOpenEventModal] = useState(false);
+  const [loading, setLoading] = useState(true);
   let { id } = useParams();
   let navigate = useNavigate();
-
-  //state for the avatars coming in from the data file which will come in from the database later
   const [usersAvatar] = useState(listAvatars);
 
   useEffect(() => {
@@ -34,44 +37,49 @@ function SingleGroup() {
       }
       if (data) {
         setGroups(data);
-        console.log(data);
         setFetchError(null);
       }
     };
+    const fetchEvent = async () => {
+      const { data, error } = await supabase
+        .from("event")
+        .select("*")
+        .eq("created_by_group_id", id);
+
+      if (error) {
+        setFetchError("Could not Fetch the Event");
+      } else {
+        setEvents(data);
+        console.log(events);
+        setFetchError("");
+      }
+    };
     fetchGroupId(id);
+    fetchEvent();
   }, [id]);
 
-  const [events, setEvents] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
-  // const thisGroup = groups.find((el) => el.id === parseInt(id));
-  // const tempGroupFind = tempGroup.find((el) => el.id === parseInt(id));
-  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
 
   const handleJoinGrp = () => {
     setOpenModal(true);
   };
   const handleJoinEvents = () => {
-    setOpenModal(true);
+    setOpenEventModal(true);
   };
   async function goToEvent() {
-    //navigate to the page to create an event
     navigate("/createEvent", { state: { groupId: id } });
   }
+
   useEffect(() => {
-    // Loading function to load data or
-    // fake it using setTimeout;
     const loadData = async () => {
-      // wait for 2 secs if there is no wait
-      await new Promise((resolved) => setTimeout(resolved, 2000));
-      // set the toggle loading state
+      await new Promise((resolved) => setTimeout(resolved, 1000));
       setLoading((loading) => !loading);
     };
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // If page is in loading state, display
-  // loading div which is a spinning circle.
   if (loading) {
     return (
       <div className="loader">
@@ -152,13 +160,15 @@ function SingleGroup() {
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView="dayGridMonth"
                 events={events}
-                // eventClick={handleEventClick}
-                // eventContent={renderEventContent}
               />
             </div>
             <div className="singleGroup__col-2">
               {/* this is for the list of events */}
-              <BtnList groupdId={groups.id} onClickEvents={handleJoinEvents} />
+              <BtnList
+                groupdId={groups.id}
+                onClickEvents={handleJoinEvents}
+                events={events}
+              />
             </div>
           </div>
           {openModal && (
@@ -169,6 +179,15 @@ function SingleGroup() {
               groupDescription={groups.description}
             />
           )}
+          {openEventModal &&
+            events.map((event) => (
+              <SingleEventModal
+                setOpenEventModal={setOpenEventModal}
+                eventTitle={event.title}
+                eventDescription={event.description}
+                online={event.online}
+              />
+            ))}
         </section>
       </>
     );
