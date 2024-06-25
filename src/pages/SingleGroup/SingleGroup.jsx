@@ -50,7 +50,9 @@ function SingleGroup() {
   const handleJoinGrp = () => {
     setOpenModal(true);
   };
-
+  const handleJoinEvents = () => {
+    setOpenModal(true);
+  };
   async function goToEvent() {
     //navigate to the page to create an event
     navigate("/createEvent", { state: { groupId: id } });
@@ -156,7 +158,7 @@ function SingleGroup() {
             </div>
             <div className="singleGroup__col-2">
               {/* this is for the list of events */}
-              <BtnList groupdId={groups.id} />
+              <BtnList groupdId={groups.id} onClickEvents={handleJoinEvents} />
             </div>
           </div>
           {openModal && (
