@@ -60,35 +60,66 @@ const SingleLeaderBoard = () => {
   const { id } = useParams();
 
   const [fetchError, setFetchError] = useState("");
-  const [fetchOne, setFetchOne] = useState([]);
+  const [fetchUsers, setFetchusers] = useState([]);
   const location = useLocation();
   const { logo, points, medals, employeeCount, companyId, companyName } =
     location.state;
   useEffect(() => {
-    const fetchSingleCompany = async (id) => {
+    const fetchUser = async (id) => {
       const { data, error } = await supabase
-        .from("company")
+        .from("user")
         .select("*")
-        .eq("id", id)
-        .single();
-
+        .eq("company_id", id);
       if (error) {
         setFetchError("Could not Fetch the Company");
       }
       if (data) {
-        setFetchOne(data);
-        //console.log(data);
+        setFetchusers(data);
         setFetchError(null);
       }
     };
-    fetchSingleCompany(id);
+
+    fetchUser(id);
   }, [id]);
+
+  useEffect(() => {
+    if (fetchUsers.length == 0) return;
+    const userIds = fetchUsers.map((item) => item.id);
+    console.log("userIds", userIds);
+
+
+    const fetchGroup = async () => {
+      const { data: grpCount, error } = await supabase.rpc(`getgroupcount`, {
+        user_ids: userIds,
+      });
+      if (error) {
+        setFetchError("Error fetching in group");
+      } else {
+        const updatedUsers = fetchUsers.map((item) => {
+          const foundgrp = grpCount.find((data) => data.user_id === item.id);
+          if (foundgrp)
+            return { ...item, groupCount: foundgrp.groupcount };
+          else {
+            return item;
+          }
+        });
+        if (JSON.stringify(updatedUsers) !== JSON.stringify(fetchUsers)) {
+          setFetchusers(updatedUsers);
+          setFetchError("");
+        }
+      }
+    };
+
+    fetchGroup();
+  }, [fetchUsers]);
+
   return (
     <div className="singleleaderboard">
       {fetchError ? (
         <p>{fetchError}</p>
       ) : (
         <div className="singleleaderboard-first">
+          {console.log("fetchusers/////////////////", fetchUsers)}
           <section className="singleleaderboard-first-companyLogo">
             <img src={logo} alt="" />
           </section>
@@ -140,30 +171,30 @@ const SingleLeaderBoard = () => {
             <h5 className="activegroup">Most Active Groups</h5>
           </div>
         </section>
-        {leaderboard.map((item, index) => (
+        {fetchUsers?.map((item, index) => (
           <section className="singleleaderboard-second-data" key={index}>
             <div className="author">
-              <img className="author-image" src={user1} alt="" />
-              <span>{item.username}</span>
+              <img className="author-image" src={`${item.avatar}`} alt="" />
+              <span>{item.first_name} {item.last_name}</span>
             </div>
             <div>
               <img src={icon_star} alt="" />
-              <span>{item.total_starts}</span>
+              <span>{item.points}</span>
             </div>
             <div>
               <img src={icon_fire} alt="aoo" />
-              <span>{item.week_streaks}</span>
+              <span>{item.streak}</span>
             </div>
             <div>
               <img src={icon_people} alt="" />
-              <span>{item.groups_apart_of}</span>
+              <span>{item.groupCount}</span>
             </div>
             <div className="activegroups">
-              {item.most_active_group.slice(0, 2).map((mag, index) => (
+              {/* {item.most_active_group.slice(0, 2).map((mag, index) => (
                 <span className="activegroups-outline" key={index}>
                   {mag}
                 </span>
-              ))}
+              ))} */}
             </div>
           </section>
         ))}
