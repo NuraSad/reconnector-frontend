@@ -7,10 +7,8 @@
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    margin-top: 1.5rem;
     @include desktop {
         width: 90%;
-        margin-left:5%;
     }
     &__label {
         margin-bottom: .5rem;

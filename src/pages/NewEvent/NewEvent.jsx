@@ -9,19 +9,25 @@ import supabase from "../../config/supabaseClient";
 import SelectInput from "../../components/smallComponents/SelectInput/SelectInput";
 import DateInput from "../../components/smallComponents/DateInput/DateInput";
 import { useLocation } from "react-router-dom";
+import { getAuthUserId } from "../../userUtils.js";
+import { v4 as uuidv4 } from "uuid";
+
+const CDNURL =
+  "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/";
 
 export default function NewEvent(id) {
   const location = useLocation();
   //here is the groupId for the group coming in, put the name into the first select intpu
-  const startGroup = location.state.groupId;
+  // const startGroup = location.state.groupId;
   //state for event name
   const [newEvent, setnewEvent] = useState({});
   const [toggleOnline, setToggleOnline] = useState(false);
   const [togglePerson, setTogglePerson] = useState(false);
-  const [image, setImage] = useState();
   const [fetchError, setFetchError] = useState(null);
   const [thisGroup, setThisGroup] = useState();
   const [groups, setGroups] = useState(null);
+  const [imagePreview, setImagePreview] = useState();
+  const [imageFile, setImageFile] = useState();
 
   // let navigate = useNavigate();
 
@@ -29,15 +35,10 @@ export default function NewEvent(id) {
     acceptedFiles.map((file) => {
       const reader = new FileReader();
       reader.onload = function (e) {
-        setImage(e.target.result);
+        setImagePreview(e.target.result);
       };
       reader.readAsDataURL(file);
-      //I have set file information in here, which is going to Supabase?
-
-      setnewEvent((prevState) => ({
-        ...prevState,
-        image: file,
-      }));
+      setImageFile(file);
       return file;
     });
   }, []);
@@ -78,16 +79,12 @@ export default function NewEvent(id) {
   }
 
   useEffect(() => {
-    const fetchGroups = async (groupType) => {
+    const fetchGroups = async () => {
       const { data, error } = await supabase.from("group").select();
       if (error) {
         console.log(error);
         setFetchError("Could not Fetch the Group");
       } else {
-        console.log(data);
-        // if (groupType === "inPerson") data.filter((group) => group.type === "inPerson")
-        // else data.filter((group) => group.type === "online")
-        if (groupType === "inPerson") data.reverse(); //<-- this is for testing only, need to include type filter in backend
         setFetchError(null);
         setGroups(data);
       }
@@ -180,20 +177,37 @@ export default function NewEvent(id) {
     if (!newEvent.eventName || !newEvent.description || !newEvent.groupList) {
       return notCreate();
     }
+    let imageURL = null;
 
+    if (imageFile) {
+      // supabase storage uses authenticated user id instead of our internal id
+      const auth_user_id = await getAuthUserId();
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from("groupImages")
+        .upload(auth_user_id + "/" + uuidv4(), imageFile);
+
+      if (uploadError) {
+        console.log("Unable to upload image file.");
+      }
+
+      if (uploadData) {
+        imageURL = CDNURL + uploadData.fullPath;
+      }
+    }
     // add event
     const { data: event_data, error: event_error } = await supabase
       .from("event")
       .insert([
         {
-          name: newEvent.eventName,
+          title: newEvent.eventName,
           description: newEvent.description,
-          event_image: image,
-          create_by_group: newEvent.groupList,
+          event_image: imageURL,
+          created_by_group: newEvent.groupList,
+          online: newEvent.online,
         },
       ])
       .select();
-
     if (event_error) {
       console.log(event_error);
     }
@@ -367,7 +381,7 @@ export default function NewEvent(id) {
             <img
               className="newEvent__imageUpload"
               alt={`${newEvent.eventName} image`}
-              src={image}
+              src={imagePreview}
             />
           </div>
         </div>
