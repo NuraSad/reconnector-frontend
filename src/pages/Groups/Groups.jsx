@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import supabase from "../../config/supabaseClient";
 import "./Groups.scss";
 import GroupsCards from "../../components/mainComponents/GroupsCard/GroupsCard";
-import supabase from "../../config/supabaseClient";
 
 export default function Groups() {
   const [groups, setGroups] = useState(null);
