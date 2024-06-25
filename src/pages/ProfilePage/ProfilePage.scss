@@ -36,7 +36,23 @@
             justify-content: center;
             row-gap: 1rem;
             color: white;
+            position: relative;
             
+            .edit-btn{
+                background-color: transparent;
+                border:none;
+                box-shadow: none;
+                cursor: pointer;
+                position: absolute;
+                right: 2rem;
+                top: 1rem;
+
+               img{
+                object-fit: fill;
+                width: 2rem;
+               }
+            }
+
             .avatar-field{
                 display: flex;
                 align-items: center;
@@ -48,6 +64,13 @@
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
+                    row-gap: 0.3rem;
+
+                    img{
+                        width: 1.5rem;
+                        height: 1.5rem;
+                        object-fit: fill;
+                    }
 
                     p{
                         font-size: 1rem;

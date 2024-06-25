@@ -113,7 +113,7 @@ export default function UpdateProfilePopup({userInit, onClose}) {
         <h1>
             Profile Info
         </h1>
-        <button className="close-btn" onClick={() => onClose()}>X</button>
+        <button className="close-btn" onClick={onClose}>X</button>
         <label htmlFor="first_name"> First Name:
             <input className="input name" type='text' name='first_name' value={user.first_name ?? ''} onChange={(e) => onInputChange(e)} minLength='2'/>
         </label>

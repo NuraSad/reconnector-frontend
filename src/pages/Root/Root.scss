@@ -57,6 +57,7 @@ nav {
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
+                row-gap: 0.3rem;
                 
                 p{
                     margin: 0;
@@ -64,6 +65,11 @@ nav {
                     font-family: "Roboto", sans-serif;
                     font-weight: 500;
                     color:#939396;
+                }
+                img{
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    object-fit: fill;
                 }
             }
         }

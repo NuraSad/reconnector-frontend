@@ -8,6 +8,9 @@ import bikingMedal from "../../assets/medals/biking-medal.png";
 import hikingMedal from "../../assets/medals/hiking-medal.png";
 import groupBanner from "../../assets/running-club.jpg";
 import supabase from "../../config/supabaseClient";
+import createIcon from '../../assets/icons/create.svg';
+import fireIcon from '../../assets/icons/icon_fire.png';
+import pointsIcon from '../../assets/icons/icon_star.svg';
 
 export default function ProfilePage({ userId }) {
   const [user, setUser] = useState(null);
@@ -92,7 +95,7 @@ export default function ProfilePage({ userId }) {
           <div className="top">
             <div className="avatar-field">
               <div className="stat">
-                <p>&#128293;</p>
+                <img src={fireIcon} alt="fire"/>
                 <p>{user.streak}</p>
               </div>
               <div className="avatar">
@@ -110,14 +113,14 @@ export default function ProfilePage({ userId }) {
                 )}
               </div>
               <div className="stat">
-                <p>&#127775;</p>
+                <img src={pointsIcon} alt="star"/>
                 <p>{user.points}</p>
               </div>
             </div>
             <h4>{`${user.first_name} ${user.last_name}`}</h4>
             <p className="email">{user.email}</p>
             <p>{user.location}</p>
-            <button onClick={() => setIsEditing(true)}>Edit Info</button>
+            <button className="edit-btn" onClick={() => setIsEditing(true)}><img src={createIcon} alt="edit icon"/></button>
           </div>
           <h3>Featured Awards</h3>
           <div className="awards-field">

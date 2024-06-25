@@ -3,11 +3,13 @@ import { Link, NavLink, Outlet } from "react-router-dom";
 import logo from "../../assets/icons/reconnect-logo.svg";
 import companyLogo from "../../assets/icons/starbacks-logo.png";
 import eventImage from "../../assets/running-club.jpg";
-import samantha from "../../assets/samantha.png";
 import CardList from "../../components/mainComponents/CardList/CardList";
 import supabase from "../../config/supabaseClient";
 import { getUserId } from "../../userUtils.js";
 import "./Root.scss";
+import fireIcon from '../../assets/icons/icon_fire.png';
+import pointsIcon from '../../assets/icons/icon_star.svg';
+import groupIcon from '../../assets/icons/icon_people-group.svg';
 
 const events = [
   {
@@ -130,15 +132,15 @@ export default function Root() {
             <h4 className="root__user">{user.first_name}</h4>
             <div className="stats-field">
               <div className="stat">
-                <p>&#128101;</p>
+                <img src={groupIcon} alt="group of people"/>
                 <p>{userGroupsCount}</p>
               </div>
               <div className="stat">
-                <p>&#127775;</p>
+                <img src={pointsIcon} alt="star"/>
                 <p>{user.points ? user.points : 0}</p>
               </div>
               <div className="stat">
-                <p>&#128293;</p>
+                <img src={fireIcon} alt="fire"/>
                 <p>{user.streak ? user.streak : 0}</p>
               </div>
             </div>
