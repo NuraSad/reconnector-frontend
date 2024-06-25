@@ -10,8 +10,6 @@ export default function Post({
   username,
   tag,
   img1,
-  img2,
-  img3,
   postTitle,
   postText,
   likes,
@@ -34,23 +32,13 @@ export default function Post({
       <div className="post__images">
         <img className="post__images--main" alt="main image" src={img1} />
         <div className="post__images--col-2">
-          <img
-            className="post__images--sec--top"
-            alt="second image"
-            src={img2}
-          />
-          <img
-            className="post__images--sec--bottom"
-            alt="third image"
-            src={img3}
-          />
+          <div className="post__info--col-1">
+            <h2 className="post__info--title">{postTitle}</h2>
+            <p className="post__info--text">{postText}</p>
+          </div>
         </div>
       </div>
       <div className="post__info">
-        <div className="post__info--col-1">
-          <h2 className="post__info--title">{postTitle}</h2>
-          <p className="post__info--text">{postText}</p>
-        </div>
         <div className="post__info--col-2">
           <div className="post__info--col-2--wrapper">
             <p className="post__info--col-2--p">{likes}</p>
