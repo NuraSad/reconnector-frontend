@@ -126,7 +126,7 @@ const events = [
   },
 ];
 
-function BtnList({ groupdId }) {
+function BtnList({ groupdId,onClickEvents }) {
   return (
     <section className="btnList">
       {events.map((each) => (
@@ -138,6 +138,7 @@ function BtnList({ groupdId }) {
           bgColor={"#6c3ed64f"}
           image={plus}
           imgHeight={"15px"}
+          onClickFunction={onClickEvents}
         />
       ))}
     </section>
