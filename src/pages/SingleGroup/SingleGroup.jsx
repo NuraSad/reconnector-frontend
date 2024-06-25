@@ -1,154 +1,91 @@
-import groupInfo from "../../data/groups.json";
 import { useParams } from "react-router-dom";
-import DateItem from "../../components/smallComponents/DateItem/DateItem";
 import "./SingleGroup.scss";
 import listAvatars from "../../data/listAvatars.json";
-import { useState } from "react";
-// import ProfileIcons from "../../components/smallComponents/ProfileIcons/ProfileIcons";
+import { useState, useEffect } from "react";
 import Btn from "../../components/smallComponents/Btn/Btn";
-import tempGroupData from "../../data/groups.json";
 import BtnList from "../../components/mainComponents/BtnList/BtnList";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import SingleGrpModal from "../../components/mainComponents/SingleGrpModal/SingleGrpModal";
 import ProfileIcons from "../../components/smallComponents/ProfileIcons/ProfileIcons";
-
-const data = [
-  {
-    id: 1,
-    title: "Meeting",
-    start: "2022-10-10T10:00:00",
-    end: "2022-10-10T11:00:00",
-    allDay: false,
-  },
-  {
-    id: 2,
-    title: "Event 1",
-    start: "2024-06-01T09:00:00",
-    end: "2024-06-01T10:00:00",
-    allDay: false,
-  },
-  {
-    id: 3,
-    title: "Event 2",
-    start: "2024-06-02T14:00:00",
-    end: "2024-06-02T15:00:00",
-    allDay: false,
-  },
-  {
-    id: 4,
-    title: "Event 3",
-    start: "2024-06-03T11:30:00",
-    end: "2024-06-03T12:30:00",
-    allDay: false,
-  },
-  {
-    id: 5,
-    title: "Event 4",
-    start: "2024-06-04T16:00:00",
-    end: "2024-06-04T17:00:00",
-    allDay: true,
-  },
-  {
-    id: 6,
-    title: "Event 5",
-    start: "2024-06-05T13:00:00",
-    end: "2024-06-05T14:00:00",
-    allDay: false,
-  },
-  {
-    id: 7,
-    title: "Event 6",
-    start: "2024-06-06T10:30:00",
-    end: "2024-06-06T11:30:00",
-    allDay: false,
-  },
-  {
-    id: 8,
-    title: "Event 7",
-    start: "2024-06-07T15:30:00",
-    end: "2024-06-07T16:30:00",
-    allDay: false,
-  },
-  {
-    id: 9,
-    title: "Event 8",
-    start: "2024-06-08T12:00:00",
-    end: "2024-06-08T13:00:00",
-    allDay: false,
-  },
-  {
-    id: 10,
-    title: "Event 9",
-    start: "2024-06-09T17:30:00",
-    end: "2024-06-09T18:30:00",
-    allDay: false,
-  },
-  {
-    id: 11,
-    title: "Event 10",
-    start: "2024-06-10T09:30:00",
-    end: "2024-06-10T10:30:00",
-    allDay: false,
-  },
-];
+import supabase from "../../config/supabaseClient";
+import Tree from "../../assets/tree-loader";
 
 function SingleGroup() {
-  const { id } = useParams();
-  const [groups, setGroups] = useState(groupInfo);
+  const [groups, setGroups] = useState();
   const [fetchError, setFetchError] = useState(null);
+  let { id } = useParams();
 
-  const [tempGroup, setTempGroup] = useState(tempGroupData);
   //state for the avatars coming in from the data file which will come in from the database later
   const [usersAvatar] = useState(listAvatars);
-  // useEffect(() => {
-  //   const fetchGroups = async () => {
-  //     const { data, error } = await supabase.from("group").select();
 
-  //     if (error) {
-  //       console.log(error);
-  //       setFetchError("Could not Fetch the Group");
-  //     }
-  //     if (data) {
-  //       setGroups(data);
-  //       setFetchError(null);
-  //     }
-  //   };
-  //   fetchGroups();
-  // }, []);
-  //pulls in a few parts of information from group (look at database)
-  //pulls in the rest from events for the group
+  useEffect(() => {
+    const fetchSingleCompany = async (id) => {
+      const { data, error } = await supabase
+        .from("group")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error) {
+        setFetchError("Could not Fetch the Company");
+      }
+      if (data) {
+        setGroups(data);
+        console.log(data);
+        setFetchError(null);
+      }
+    };
+    fetchSingleCompany(id);
+  }, [id]);
 
   const [events, setEvents] = useState([]);
   const [openModal, setOpenModal] = useState(false);
-  const thisGroup = groups.find((el) => el.id === parseInt(id));
-  const tempGroupFind = tempGroup.find((el) => el.id === parseInt(id));
+  // const thisGroup = groups.find((el) => el.id === parseInt(id));
+  // const tempGroupFind = tempGroup.find((el) => el.id === parseInt(id));
+  const [loading, setLoading] = useState(true);
 
   const handleJoinGrp = () => {
     setOpenModal(true);
   };
-  return (
-    <>
-      {fetchError ? (
-        <p>{fetchError}</p>
-      ) : (
+  useEffect(() => {
+    // Loading function to load data or
+    // fake it using setTimeout;
+    const loadData = async () => {
+      // wait for 2 secs if there is no wait
+      await new Promise((resolved) => setTimeout(resolved, 2000));
+      // set the toggle loading state
+      setLoading((loading) => !loading);
+    };
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // If page is in loading state, display
+  // loading div which is a spinning circle.
+  if (loading) {
+    return (
+      <div className="loader">
+        <Tree />
+      </div>
+    );
+  }
+  // If page is not in loading state, display page.
+  else {
+    return (
+      <>
         <section className="singleGroup">
-          <h1 className="singleGroup__title">#{thisGroup.groupName}</h1>
+          <h1 className="singleGroup__title">#{groups.name}</h1>
           <div className="singleGroup__header">
             <div className="singleGroup__header--left">
-              <div className="singleGroup__header--days">
+              {/* <div className="singleGroup__header--days">
                 <DateItem date={"Mon"} />
                 <DateItem date={"Tues"} />
                 <DateItem date={"Wed"} />
-              </div>
+              </div> */}
 
               <div className="singleGroup__header--icons">
-                {/* <AvatarGroup max={4}>
-                  {usersAvatar.map((each) => (
-                    <Avatar key={each.id} alt={each.name} src={each.src} />
-                  ))}
-                </AvatarGroup> */}
                 <ProfileIcons
                   className="singleGroup__header--days"
                   users={usersAvatar}
@@ -184,38 +121,15 @@ function SingleGroup() {
           </div>
           <div className="singleGroup__columns">
             <div className="singleGroup__col-1">
-              <div className="singleGroup__col-1--images">
-                {tempGroupFind && tempGroupFind.groupImage > 0 ? (
-                  tempGroupFind.groupImage.map((index, img) => (
-                    <img key={index} alt={`${img}`} src={img} />
-                  ))
-                ) : (
-                  <div className="singleGroup__allImage">
-                    <div className="singleGroup__allImage--col-1">
-                      <img
-                        className="singleGroup__img"
-                        alt="hiking image"
-                        src={thisGroup.image}
-                      />
-                    </div>
-                    <div className="singleGroup__allImage--col-2">
-                      <img
-                        className="singleGroup__img sec--1"
-                        alt="hiking image"
-                        src={thisGroup.image}
-                      />
-                      <img
-                        className="singleGroup__img sec--2"
-                        alt="hiking image"
-                        src={thisGroup.image}
-                      />
-                    </div>
-                  </div>
-                )}
+              <div className="singleGroup__allImage">
+                <img
+                  className="singleGroup__img"
+                  alt="hiking image"
+                  src={groups.image}
+                />
               </div>
-              <div className="singleGroup__descript">
-                {thisGroup.description}
-              </div>
+
+              <div className="singleGroup__descript">{groups.description}</div>
               <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView="dayGridMonth"
@@ -225,19 +139,17 @@ function SingleGroup() {
               />
             </div>
             <div className="singleGroup__col-2">
-              <BtnList groupdId={thisGroup.id} />
+              {/* this is for the list of events */}
+              <BtnList groupdId={groups.id} />
             </div>
           </div>
           {openModal && (
-            <SingleGrpModal
-              setOpenModal={setOpenModal}
-              groupId={thisGroup.id}
-            />
+            <SingleGrpModal setOpenModal={setOpenModal} groupId={groups.id} />
           )}
         </section>
-      )}
-    </>
-  );
+      </>
+    );
+  }
 }
 
 export default SingleGroup;

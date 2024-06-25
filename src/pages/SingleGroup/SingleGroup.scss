@@ -42,7 +42,8 @@
     }
     
     &__allImage {
-        display: flex;
+        width: auto;
+        max-height:100vh;
         &--col-1 {
            
             height: 370px;
@@ -70,11 +71,13 @@
     }
     &__img {
         width: auto;
-        height: 100%;
-    //overflow: hidden;
+        max-height:100vh;
+       max-width: 90%;
+       border-radius: 20px;
+    
     }
     &__descript {
-        margin-top: 4rem;
+        margin-top: 1.5rem;
     }
     &__col-1 {
         width: 75%;
