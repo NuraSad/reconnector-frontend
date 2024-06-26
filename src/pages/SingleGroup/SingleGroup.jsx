@@ -25,6 +25,7 @@ function SingleGroup() {
   const [openEventModal, setOpenEventModal] = useState(false);
   const [loading, setLoading] = useState(true);
   let { id } = useParams();
+  const[eventTitle,setEventTitle] =useState("");
   let navigate = useNavigate();
   // const [usersAvatar] = useState(listAvatars);
   const [joinGroup, setJoinGroup] = useState(false);
@@ -57,7 +58,7 @@ function SingleGroup() {
         setFetchError("Could not Fetch the Event");
       } else {
         setEvents(data);
-    
+
         setFetchError("");
       }
     };
@@ -66,50 +67,52 @@ function SingleGroup() {
   }, [id]);
 
   //query the users in this group
-  useEffect(() => {
-    const fetchGroupMembers = async () => {
-      const groupId = id;
-      if (!id) {
-        setFetchError("No group ID provided");
-        return;
-      }
-      const { data: groupMembersData, error: groupMembersError } =
-        await supabase
-          .from("group_members")
-          .select("user_id")
-          .eq("group_id", groupId);
-   
-      if (groupMembersError) {
-        setFetchError("Could not fetch the group members");
-        return;
-      }
+  // useEffect(() => {
+  //   const fetchGroupMembers = async () => {
+  //     const groupId = id;
+  //     if (!id) {
+  //       setFetchError("No group ID provided");
+  //       return;
+  //     }
+  //     const { data: groupMembersData, error: groupMembersError } =
+  //       await supabase
+  //         .from("group_members")
+  //         .select("user_id")
+  //         .eq("group_id", groupId);
 
-      if (groupMembersData) {
-        // Extract user_ids
-        const userIds = groupMembersData.map((member) => member.user_id);
-        console.log(userIds);
-        // Fetch user details from users table
-        const { data: usersData, error: usersError } = await supabase
-          .from("user")
-          .select("first_name, avatar")
-          .in("id", userIds);
+  //     if (groupMembersError) {
+  //       setFetchError("Could not fetch the group members");
+  //       return;
+  //     }
 
-        if (usersError) {
-          setFetchError("Could not fetch user details");
-          return;
-        }
+  //     if (groupMembersData) {
+  //       // Extract user_ids
+  //       const userIds = groupMembersData.map((member) => member.user_id);
+  //       console.log(userIds);
+  //       // Fetch user details from users table
+  //       const { data: usersData, error: usersError } = await supabase
+  //         .from("user")
+  //         .select("first_name, avatar")
+  //         .in("id", userIds);
 
-        if (usersData) {
-          setGroupMembers(usersData);
-          setFetchError(null);
-        }
-      }
-    };
+  //       if (usersError) {
+  //         setFetchError("Could not fetch user details");
+  //         return;
+  //       }
 
-    fetchGroupMembers();
-  }, [id]);
+  //       if (usersData) {
+  //         setGroupMembers(usersData);
+  //         setFetchError(null);
+  //       }
+  //     }
+  //   };
 
-  const handleJoinEvents = () => {
+  //   fetchGroupMembers();
+  // }, [id]);
+
+  const handleJoinEvents = (e) => {
+    setEventTitle(e.target.textContent) ;
+    console.log(e.target.textContent);
     setOpenEventModal(true);
   };
   async function goToEvent() {
@@ -283,17 +286,12 @@ function SingleGroup() {
               groupDescription={groups.description}
             />
           )} */}
-          {openEventModal &&
-            events.map((event, index) => (
-              <SingleEventModal
-                setOpenEventModal={setOpenEventModal}
-                eventTitle={event.title}
-                eventDescription={event.description}
-                online={event.online}
-                image={event.image}
-                key={index}
-              />
-            ))}
+          {openEventModal && (
+            <SingleEventModal
+              setOpenEventModal={setOpenEventModal}
+              eventTitle={eventTitle}
+            />
+          )}
         </section>
       </>
     );
