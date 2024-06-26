@@ -11,15 +11,21 @@ import SingleGrpModal from "../../components/mainComponents/SingleGrpModal/Singl
 import ProfileIcons from "../../components/smallComponents/ProfileIcons/ProfileIcons";
 import supabase from "../../config/supabaseClient";
 import Tree from "../../assets/tree-loader";
+import SingleEventModal from "../../components/mainComponents/SingleEventModal/SingleEventModal";
+import { getUserId } from "../../userUtils.js";
 
 function SingleGroup() {
   const [groups, setGroups] = useState();
   const [fetchError, setFetchError] = useState(null);
+
+  const [events, setEvents] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [openEventModal, setOpenEventModal] = useState(false);
+  const [loading, setLoading] = useState(true);
   let { id } = useParams();
   let navigate = useNavigate();
-
-  //state for the avatars coming in from the data file which will come in from the database later
   const [usersAvatar] = useState(listAvatars);
+  const [joinGroup, setJoinGroup] = useState(false);
 
   useEffect(() => {
     const fetchGroupId = async (id) => {
@@ -34,44 +40,89 @@ function SingleGroup() {
       }
       if (data) {
         setGroups(data);
-        console.log(data);
         setFetchError(null);
       }
     };
+    const fetchEvent = async () => {
+      const { data, error } = await supabase
+        .from("event")
+        .select("*")
+        .eq("created_by_group_id", id);
+
+      if (error) {
+        setFetchError("Could not Fetch the Event");
+      } else {
+        setEvents(data);
+        console.log(events);
+        setFetchError("");
+      }
+    };
     fetchGroupId(id);
+    fetchEvent();
   }, [id]);
 
-  const [events, setEvents] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
-  // const thisGroup = groups.find((el) => el.id === parseInt(id));
-  // const tempGroupFind = tempGroup.find((el) => el.id === parseInt(id));
-  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    console.log(events);
+  }, [events]);
 
-  const handleJoinGrp = () => {
-    setOpenModal(true);
-  };
   const handleJoinEvents = () => {
-    setOpenModal(true);
+    setOpenEventModal(true);
   };
   async function goToEvent() {
-    //navigate to the page to create an event
     navigate("/createEvent", { state: { groupId: id } });
   }
+
   useEffect(() => {
-    // Loading function to load data or
-    // fake it using setTimeout;
     const loadData = async () => {
-      // wait for 2 secs if there is no wait
-      await new Promise((resolved) => setTimeout(resolved, 2000));
-      // set the toggle loading state
+      await new Promise((resolved) => setTimeout(resolved, 1000));
       setLoading((loading) => !loading);
     };
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // If page is in loading state, display
-  // loading div which is a spinning circle.
+  useEffect(() => {
+    const fetchSetJoinGroup = async () => {
+      const userId = await getUserId();
+      const { data, error } = await supabase
+        .from("group_members")
+        .select()
+        .eq("user_id", userId)
+        .eq("group_id", id);
+      if (error) {
+        console.log(error);
+      }
+      if (data.length === 0) {
+        setJoinGroup(true);
+      }
+    }
+    fetchSetJoinGroup();
+
+  },[])
+
+  const handleJoinGrp = async () => {
+    const userId = await getUserId();
+    const { data, error } = await supabase.from('group_members').insert([
+      {
+          user_id: userId,
+          group_id: id
+      }
+    ]);
+    if (!error) {
+      setJoinGroup(false);
+    }
+  };
+  const handleLeaveGrp = async () => {
+    const userId = await getUserId();
+    const { data, error } = await supabase.from('group_members')
+      .delete()
+      .eq("user_id", userId)
+      .eq("group_id", id)
+
+    if (!error) {
+      setJoinGroup(true);
+    }
+  };
+
   if (loading) {
     return (
       <div className="loader">
@@ -84,7 +135,7 @@ function SingleGroup() {
     return (
       <>
         <section className="singleGroup">
-          <h1 className="singleGroup__title">#{groups.name}</h1>
+          <h1 className="singleGroup__title">#{groups?.name}</h1>
           <div className="singleGroup__header">
             <div className="singleGroup__header--left">
               {/* <div className="singleGroup__header--days">
@@ -101,6 +152,7 @@ function SingleGroup() {
                   marginTop={"1rem"}
                 />
                 <div className="singleGroup__btns">
+                { joinGroup != false ? ( 
                   <Btn
                     textBtn={"Join Group +"}
                     bgColor={"#6c3ed696"}
@@ -108,7 +160,16 @@ function SingleGroup() {
                     marginLeft={"10rem"}
                     height={"35px"}
                     onClick={handleJoinGrp}
-                  />
+                    />
+                  ) : (
+                  <Btn
+                    textBtn={"Leave Group -"}
+                    bgColor={"#6c3ed696"}
+                    textColor={"white"}
+                    marginLeft={"10rem"}
+                    height={"35px"}
+                    onClick={handleLeaveGrp}
+                  />)}
                 </div>
               </div>
             </div>
@@ -143,32 +204,43 @@ function SingleGroup() {
                 <img
                   className="singleGroup__img"
                   alt="hiking image"
-                  src={groups.image}
+                  src={groups?.image}
                 />
               </div>
 
-              <div className="singleGroup__descript">{groups.description}</div>
+              <div className="singleGroup__descript">{groups?.description}</div>
               <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView="dayGridMonth"
                 events={events}
-                // eventClick={handleEventClick}
-                // eventContent={renderEventContent}
               />
             </div>
             <div className="singleGroup__col-2">
               {/* this is for the list of events */}
-              <BtnList groupdId={groups.id} onClickEvents={handleJoinEvents} />
+              <BtnList
+                groupdId={groups?.id}
+                onClickEvents={handleJoinEvents}
+                events={events}
+              />
             </div>
           </div>
-          {openModal && (
+          {/* {openModal && (
             <SingleGrpModal
               setOpenModal={setOpenModal}
               groupId={groups.id}
               groupName={groups.name}
               groupDescription={groups.description}
             />
-          )}
+          )} */}
+          {openEventModal &&
+            events.map((event) => (
+              <SingleEventModal
+                setOpenEventModal={setOpenEventModal}
+                eventTitle={event.title}
+                eventDescription={event.description}
+                online={event.online}
+              />
+            ))}
         </section>
       </>
     );
