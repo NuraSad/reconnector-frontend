@@ -30,7 +30,8 @@
     "react-toastify": "^10.0.5",
     "sass": "^1.77.5",
     "styled-components": "^6.1.11",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

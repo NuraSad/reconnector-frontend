@@ -3,23 +3,39 @@ import './NewPost.scss';
 import { useState, useEffect } from 'react';
 import supabase from "../../config/supabaseClient";
 import {getUserId} from '../../userUtils'
+import { v4 as uuidv4 } from 'uuid';
 
 function NewPost() {
+    
 
     useEffect(() => {
+        const getSupaUserID = async () => {
+            try {
+              const { data: { user } } = await supabase.auth.getUser()
+              if (user !== null) {
+                setSupaUserId(user.id);
+              } else {
+                setSupaUserId('');
+              }
+            } catch (error) {}
+          }
+
         const fetchUser = async () => {
             const user = await getUserId();
             setUserId(user);
         };
         fetchUser();
+        getSupaUserID();
     }, []);
 
     const [userId, setUserId] = useState(); 
     const [postId, setPostId] = useState(Math.floor(Math.random()*(10**8-10**7))+10**7);
     const [groupName, setGroupName] = useState('');
-    const [images, setImages] = useState(null);
+    const [files, setFiles] = useState([]);
     const [postTitle, setPostTitle] = useState('');
     const [postDescription, setPostDescription] = useState('');
+
+    const [supaUserId, setSupaUserId] = useState('');
   
 
     const handleSubmit = async (e) => {
@@ -31,7 +47,7 @@ function NewPost() {
                 id: postId,
                 created_by: userId,
                 group_name: groupName,
-                image: images,
+                image: files,
                 title: postTitle,
                 body: postDescription
             }
@@ -43,17 +59,40 @@ function NewPost() {
             console.log('Post created successfully:', postData);
             // Reset form fields
             setGroupName('');
-            setImages(null);
+            setFiles(null);
             setPostTitle('');
             setPostDescription('');
             setPostId(Math.floor(Math.random()*(10**8-10**7))+10**7);
         }
     };
 
-    const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
-        setImages(files);
-    };
+    const uploadFiles = async (files) => {
+        const uploads = [];
+      
+        for (let file of files) {
+          const { data, error } = await supabase
+            .storage
+            .from('postImages')
+            .upload(supaUserId + '/' + uuidv4(), file);
+      
+          if (error) {
+            console.error('Error uploading file:', error);
+          } else {
+            uploads.push(data);
+          }
+        }
+      
+        return uploads;
+      };
+
+      const handleFileChange = (event) => {
+        setFiles([...event.target.files]);
+      };
+    
+      const handleUpload = async () => {
+        const uploadedFiles = await uploadFiles(files);
+        console.log('Uploaded files:', uploadedFiles);
+      };
 
     return (
         <div className="form-wrapper">
@@ -76,8 +115,9 @@ function NewPost() {
                             name="image"
                             accept="image/*"
                             multiple
-                            onChange={handleImageChange}
+                            onChange={handleFileChange}
                         />
+                        <button onClick={handleUpload}>Upload Files</button>
                     </div>
                     <div className="form__input-container">
                         <label htmlFor="postTitle">Title</label>
