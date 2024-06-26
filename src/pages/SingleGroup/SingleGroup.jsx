@@ -12,6 +12,8 @@ import ProfileIcons from "../../components/smallComponents/ProfileIcons/ProfileI
 import supabase from "../../config/supabaseClient";
 import Tree from "../../assets/tree-loader";
 import SingleEventModal from "../../components/mainComponents/SingleEventModal/SingleEventModal";
+import { getUserId } from "../../userUtils.js";
+
 function SingleGroup() {
   const [groups, setGroups] = useState();
   const [fetchError, setFetchError] = useState(null);
@@ -23,6 +25,7 @@ function SingleGroup() {
   let { id } = useParams();
   let navigate = useNavigate();
   const [usersAvatar] = useState(listAvatars);
+  const [joinGroup, setJoinGroup] = useState(false);
 
   useEffect(() => {
     const fetchGroupId = async (id) => {
@@ -62,9 +65,6 @@ function SingleGroup() {
     console.log(events);
   }, [events]);
 
-  const handleJoinGrp = () => {
-    setOpenModal(true);
-  };
   const handleJoinEvents = () => {
     setOpenEventModal(true);
   };
@@ -80,6 +80,49 @@ function SingleGroup() {
     loadData();
   }, []);
 
+  useEffect(() => {
+    const fetchSetJoinGroup = async () => {
+      const userId = await getUserId();
+      const { data, error } = await supabase
+        .from("group_members")
+        .select()
+        .eq("user_id", userId)
+        .eq("group_id", id);
+      if (error) {
+        console.log(error);
+      }
+      if (data.length === 0) {
+        setJoinGroup(true);
+      }
+    }
+    fetchSetJoinGroup();
+
+  },[])
+
+  const handleJoinGrp = async () => {
+    const userId = await getUserId();
+    const { data, error } = await supabase.from('group_members').insert([
+      {
+          user_id: userId,
+          group_id: id
+      }
+    ]);
+    if (!error) {
+      setJoinGroup(false);
+    }
+  };
+  const handleLeaveGrp = async () => {
+    const userId = await getUserId();
+    const { data, error } = await supabase.from('group_members')
+      .delete()
+      .eq("user_id", userId)
+      .eq("group_id", id)
+
+    if (!error) {
+      setJoinGroup(true);
+    }
+  };
+
   if (loading) {
     return (
       <div className="loader">
@@ -92,7 +135,7 @@ function SingleGroup() {
     return (
       <>
         <section className="singleGroup">
-          <h1 className="singleGroup__title">#{groups.name}</h1>
+          <h1 className="singleGroup__title">#{groups?.name}</h1>
           <div className="singleGroup__header">
             <div className="singleGroup__header--left">
               {/* <div className="singleGroup__header--days">
@@ -109,6 +152,7 @@ function SingleGroup() {
                   marginTop={"1rem"}
                 />
                 <div className="singleGroup__btns">
+                { joinGroup != false ? ( 
                   <Btn
                     textBtn={"Join Group +"}
                     bgColor={"#6c3ed696"}
@@ -116,7 +160,16 @@ function SingleGroup() {
                     marginLeft={"10rem"}
                     height={"35px"}
                     onClick={handleJoinGrp}
-                  />
+                    />
+                  ) : (
+                  <Btn
+                    textBtn={"Leave Group -"}
+                    bgColor={"#6c3ed696"}
+                    textColor={"white"}
+                    marginLeft={"10rem"}
+                    height={"35px"}
+                    onClick={handleLeaveGrp}
+                  />)}
                 </div>
               </div>
             </div>
@@ -151,11 +204,11 @@ function SingleGroup() {
                 <img
                   className="singleGroup__img"
                   alt="hiking image"
-                  src={groups.image}
+                  src={groups?.image}
                 />
               </div>
 
-              <div className="singleGroup__descript">{groups.description}</div>
+              <div className="singleGroup__descript">{groups?.description}</div>
               <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView="dayGridMonth"
@@ -165,20 +218,20 @@ function SingleGroup() {
             <div className="singleGroup__col-2">
               {/* this is for the list of events */}
               <BtnList
-                groupdId={groups.id}
+                groupdId={groups?.id}
                 onClickEvents={handleJoinEvents}
                 events={events}
               />
             </div>
           </div>
-          {openModal && (
+          {/* {openModal && (
             <SingleGrpModal
               setOpenModal={setOpenModal}
               groupId={groups.id}
               groupName={groups.name}
               groupDescription={groups.description}
             />
-          )}
+          )} */}
           {openEventModal &&
             events.map((event) => (
               <SingleEventModal
