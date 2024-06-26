@@ -78,7 +78,7 @@
                 }
                 .avatar {
                     position: relative;
-                    width: 15%;
+                    width: 20%;
                     
                     .photo {
                         width: 100%;
@@ -171,6 +171,11 @@
             align-items: center;
             justify-content: center;
             column-gap: 1rem;
+
+            a {
+                width: inherit;
+                height: inherit;
+            }
 
         }
         .posts-field{

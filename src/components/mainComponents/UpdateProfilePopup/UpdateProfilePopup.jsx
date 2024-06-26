@@ -89,7 +89,7 @@ export default function UpdateProfilePopup({userInit, onClose}) {
           email: user.email,
           location: user.location,
           preferred_radius: user.preferred_radius,
-          avatar: imageURL,
+          avatar: imageURL ? imageURL : imagePreview,
         },
       ])
       .eq('id', user.id)
@@ -115,10 +115,10 @@ export default function UpdateProfilePopup({userInit, onClose}) {
         </h1>
         <button className="close-btn" onClick={onClose}>X</button>
         <label htmlFor="first_name"> First Name:
-            <input className="input name" type='text' name='first_name' value={user.first_name ?? ''} onChange={(e) => onInputChange(e)} minLength='2'/>
+            <input className="input name" type='text' name='first_name' value={user.first_name ?? ''} onChange={(e) => onInputChange(e)} minLength='2' required/>
         </label>
         <label htmlFor="last_name"> Last Name:
-            <input className="input name" type='text' name='last_name' value={user.last_name ?? ''} onChange={(e) => onInputChange(e)} minLength='2'/>
+            <input className="input name" type='text' name='last_name' value={user.last_name ?? ''} onChange={(e) => onInputChange(e)} minLength='2' required/>
         </label>
         <label htmlFor="email">Email:
             <input className="input name" type='email' name='email' value={user.email ?? ''} onChange={(e) => onInputChange(e)} minLength='2' required/>

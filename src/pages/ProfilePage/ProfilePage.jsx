@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import "./ProfilePage.scss";
 import Post from "../../components/mainComponents/Post/Post";
 import MiniGroup from "../../components/smallComponents/MiniGroup/MiniGroup";
@@ -16,6 +17,7 @@ export default function ProfilePage({ userId }) {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [userCompany, setUserCompany] = useState(null);
 
 
@@ -42,6 +44,7 @@ export default function ProfilePage({ userId }) {
   }, [userId]);
 
   useEffect(() => {
+
     const getUserCompany = async () => {
       let { data: user_company_data, error: user_company_error } =
         await supabase.from("company").select().eq("id", user.company_id);
@@ -60,7 +63,7 @@ export default function ProfilePage({ userId }) {
       let { data: posts_data, error: posts_error } = await supabase
         .from("post")
         .select("*")
-        .eq("created_by", userId);
+        .eq("created_by", user.id);
 
       if (posts_error) {
         console.error("Error fetching posts:", posts_error.message);
@@ -71,16 +74,53 @@ export default function ProfilePage({ userId }) {
         setPosts(posts_data);
       }
     }
-    
+
+    async function getGroupsIds() {
+      let { data: groups_data, error: groups_error } = await supabase
+        .from("group_members")
+        .select("*")
+        .eq("user_id", user.id);
+
+      if (groups_error) {
+        console.error("Error fetching posts:", groups_error.message);
+        return;
+      }
+
+      if (groups_data) {
+        return groups_data
+      }
+    }
+
+    async function getGroups() {
+      const groupsIdsData = await getGroupsIds();
+      const groupsIds = groupsIdsData.reduce((acc, group) => acc.concat(group.group_id), [])
+      if (groupsIds.length) {
+        let { data: groups_data, error: groups_error } = await supabase
+        .from("group")
+        .select()
+        .in("id", groupsIds);
+
+      if (groups_error) {
+        console.error("Error fetching posts:", groups_error.message);
+        return;
+      }
+
+      if (groups_data) {
+        setGroups(groups_data)
+      }
+    }
+  }
 
     if (user) {
       if (!user.company_id || !user.location){
-        setIsEditing(true)
-      }
-    } else {
-        getUserCompany();
-        getPosts();
+          setIsEditing(true)
+        } else {
+          getUserCompany();
+          getPosts();
+          getGroups();
+        }
     }
+    
   }, [user]);
 
   if(user && isEditing){
@@ -144,9 +184,13 @@ export default function ProfilePage({ userId }) {
           </div>
           <h3>Most Active Groups</h3>
           <div className="groups-field">
-            <MiniGroup name="running sunday fun day" src={groupBanner} />
-            <MiniGroup name="running sunday fun day" src={groupBanner} />
-            <MiniGroup name="running sunday fun day" src={groupBanner} />
+            {groups.length ? (
+              groups.map((group, i)=> (
+                <Link key={i} to={`/groups/${group.id}`}>
+                  <MiniGroup name={group.name} src={group.image} />
+                </Link>
+              ))
+            ) : <p className="empty-message">You have no groups</p>}
           </div>
           <h3>Recent Post</h3>
           <div className="posts-field">
