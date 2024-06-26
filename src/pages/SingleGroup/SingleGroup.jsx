@@ -78,10 +78,7 @@ function SingleGroup() {
           .from("group_members")
           .select("user_id")
           .eq("group_id", groupId);
-      if (groupMembersError) {
-        setFetchError("Could not fetch user details");
-        return;
-      }
+   
       if (groupMembersError) {
         setFetchError("Could not fetch the group members");
         return;
