@@ -3,7 +3,6 @@ import "./SingleEventModal.scss";
 import CloseIcon from "@mui/icons-material/Close";
 import Btn from "../../smallComponents/Btn/Btn";
 import Map from "../../../pages/Map/Map";
-import listavatars from "../../../data/listAvatars.json";
 import BackDrop from "../../smallComponents/BackDrop/BackDrop";
 import supabase from "../../../config/supabaseClient";
 const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
