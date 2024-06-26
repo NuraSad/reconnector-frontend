@@ -108,10 +108,13 @@ const Leaderboard = () => {
                 className="company-bubble"
                 key={company.id}
                 style={{
-                  backgroundImage: `url(${company.logo})`,
-                  maxWidth: `${company.points / 20}%`,
-                  bottom: `${Math.floor(Math.random() * 70) + 20}px`,
-                  right: `${Math.floor(Math.random() * 70) + 10}px`,
+                  // backgroundImage: `url(${company.logo})`,
+                  width: `${company.points / 20}%`,
+                  height: `${company.points / 20}%`,
+                  minHeight: "200px",
+                  minWidth: "200px",
+                  // bottom: `${Math.floor(Math.random() * 70) + 20}px`,
+                  // right: `${Math.floor(Math.random() * 70) + 10}px`,
                 }}
                 onClick={() =>
                   navigate(`/leaderboards/${company.id}`, {
@@ -127,19 +130,37 @@ const Leaderboard = () => {
                   })
                 }
               >
-                <div className="company-bubble__name">{company.name}</div>
+                <div
+                  style={{
+                    minHeight: "100px",
+                    height: `${company.points / 10}%`,
+                  }}
+                  className="company-bubble__logo-wrapper"
+                >
+                  <div
+                    className="company-bubble__logo"
+                    style={{
+                      backgroundImage: `url(${company.logo})`,
+                      minHeight: "100px",
+                      maxHeight: "500px",
+                      // height: `${company.points / 5}%`,
+                    }}
+                  />
+                  <h2 className="company-bubble__name"></h2>
+                </div>
+
                 <div className="company-bubble__stats-wrapper">
                   <div className="stats-item">
                     <img src={`${peopleGroupIcon}`} alt="Employee Count" />
-                    {company.employeeCount}
+                    {company.employeeCount !== 0 ? company.employeeCount : ""}
                   </div>
                   <div className="stats-item">
                     <img src={`${starIcon}`} alt="Company Score" />
-                    {company.points}
+                    {company.points !== 0 ? company.points : ""}
                   </div>
                   <div className="stats-item">
                     <img src={`${medalIcon}`} alt="Medals won" />
-                    {company.medal_count}
+                    {company.medal_count !== 0 ? company.medal_count : ""}
                   </div>
                 </div>
               </div>

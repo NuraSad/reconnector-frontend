@@ -61,9 +61,9 @@ function SingleGroup() {
     fetchEvent();
   }, [id]);
 
-  useEffect(() => {
-    console.log(events);
-  }, [events]);
+  // useEffect(() => {
+  //   console.log(events);
+  // }, [events]);
 
   const handleJoinEvents = () => {
     setOpenEventModal(true);
@@ -94,18 +94,17 @@ function SingleGroup() {
       if (data.length === 0) {
         setJoinGroup(true);
       }
-    }
+    };
     fetchSetJoinGroup();
-
-  },[])
+  }, []);
 
   const handleJoinGrp = async () => {
     const userId = await getUserId();
-    const { data, error } = await supabase.from('group_members').insert([
+    const { data, error } = await supabase.from("group_members").insert([
       {
-          user_id: userId,
-          group_id: id
-      }
+        user_id: userId,
+        group_id: id,
+      },
     ]);
     if (!error) {
       setJoinGroup(false);
@@ -113,10 +112,11 @@ function SingleGroup() {
   };
   const handleLeaveGrp = async () => {
     const userId = await getUserId();
-    const { data, error } = await supabase.from('group_members')
+    const { data, error } = await supabase
+      .from("group_members")
       .delete()
       .eq("user_id", userId)
-      .eq("group_id", id)
+      .eq("group_id", id);
 
     if (!error) {
       setJoinGroup(true);
@@ -152,24 +152,25 @@ function SingleGroup() {
                   marginTop={"1rem"}
                 />
                 <div className="singleGroup__btns">
-                { joinGroup != false ? ( 
-                  <Btn
-                    textBtn={"Join Group +"}
-                    bgColor={"#6c3ed696"}
-                    textColor={"white"}
-                    marginLeft={"10rem"}
-                    height={"35px"}
-                    onClick={handleJoinGrp}
+                  {joinGroup != false ? (
+                    <Btn
+                      textBtn={"Join Group +"}
+                      bgColor={"#6c3ed696"}
+                      textColor={"white"}
+                      marginLeft={"10rem"}
+                      height={"35px"}
+                      onClick={handleJoinGrp}
                     />
                   ) : (
-                  <Btn
-                    textBtn={"Leave Group -"}
-                    bgColor={"#6c3ed696"}
-                    textColor={"white"}
-                    marginLeft={"10rem"}
-                    height={"35px"}
-                    onClick={handleLeaveGrp}
-                  />)}
+                    <Btn
+                      textBtn={"Leave Group -"}
+                      bgColor={"#6c3ed696"}
+                      textColor={"white"}
+                      marginLeft={"10rem"}
+                      height={"35px"}
+                      onClick={handleLeaveGrp}
+                    />
+                  )}
                 </div>
               </div>
             </div>
