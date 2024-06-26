@@ -2,27 +2,19 @@ import './NewPost.scss';
 
 import { useState, useEffect } from 'react';
 import supabase from "../../config/supabaseClient";
-import { useSession } from '../../sessionContext';
+import {getUserId} from '../../userUtils'
 
 function NewPost() {
 
-    const session = useSession();
-    const auth_user_id = session.user.id;
-
-    const getUser = async () => {
-        const { data: user_data, user_error } = await supabase.from("user").select("id").eq("auth_user_id", auth_user_id);
-        return parseInt(user_data[0].id);
-    }
-
     useEffect(() => {
         const fetchUser = async () => {
-            const user = await getUser();
+            const user = await getUserId();
             setUserId(user);
         };
         fetchUser();
     }, []);
 
-    const [userId, setUserId] = useState(getUser()); 
+    const [userId, setUserId] = useState(); 
     const [postId, setPostId] = useState(Math.floor(Math.random()*(10**8-10**7))+10**7);
     const [groupName, setGroupName] = useState('');
     const [images, setImages] = useState(null);

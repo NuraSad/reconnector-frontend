@@ -23,15 +23,17 @@ export default function Explore() {
     }
     getPosts();
   }, []);
-
+  console.log(posts);
   return (
     <section className="explore">
       <h1 className="explore__title page-font">Explore</h1>
       <div className="explore__posts">
+        
         {posts &&
           posts.map((i) => (
             <Post
               key={i.id}
+              id={i.id}
               profileAvatar={i.profileAvatar}
               last_name={i.last_name}
               first_name={i.first_name}
