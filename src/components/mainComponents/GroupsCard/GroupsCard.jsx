@@ -51,13 +51,6 @@ export default function GroupsCard(props) {
         }
 
         if (usersData) {
-          // Combine the data
-          const combinedData = groupMembersData.map((member) => {
-            const user = usersData.find((user) => user.id === member.user_id);
-            console.log(user);
-            return { ...member, user };
-          });
-          // console.log(combinedData);
           setGroupMembers(usersData);
           setFetchError(null);
         }

@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import "./SingleGroup.scss";
 import listAvatars from "../../data/listAvatars.json";
 import { useState, useEffect } from "react";
@@ -7,16 +7,18 @@ import BtnList from "../../components/mainComponents/BtnList/BtnList";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import SingleGrpModal from "../../components/mainComponents/SingleGrpModal/SingleGrpModal";
 import ProfileIcons from "../../components/smallComponents/ProfileIcons/ProfileIcons";
 import supabase from "../../config/supabaseClient";
 import Tree from "../../assets/tree-loader";
 import SingleEventModal from "../../components/mainComponents/SingleEventModal/SingleEventModal";
 import { getUserId } from "../../userUtils.js";
+import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
 
 function SingleGroup() {
   const [groups, setGroups] = useState();
   const [fetchError, setFetchError] = useState(null);
+  const [groupMembers, setGroupMembers] = useState([]);
 
   const [events, setEvents] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -24,9 +26,11 @@ function SingleGroup() {
   const [loading, setLoading] = useState(true);
   let { id } = useParams();
   let navigate = useNavigate();
-  const [usersAvatar] = useState(listAvatars);
+  // const [usersAvatar] = useState(listAvatars);
   const [joinGroup, setJoinGroup] = useState(false);
 
+  // const location = useLocation();
+  // const { groupMembers } = location.state;
   useEffect(() => {
     const fetchGroupId = async (id) => {
       const { data, error } = await supabase
@@ -61,9 +65,52 @@ function SingleGroup() {
     fetchEvent();
   }, [id]);
 
-  // useEffect(() => {
-  //   console.log(events);
-  // }, [events]);
+  //query the users in this group
+  useEffect(() => {
+    const fetchGroupMembers = async () => {
+      const groupId = id;
+      if (!id) {
+        setFetchError("No group ID provided");
+        return;
+      }
+      const { data: groupMembersData, error: groupMembersError } =
+        await supabase
+          .from("group_members")
+          .select("user_id")
+          .eq("group_id", groupId);
+      if (groupMembersError) {
+        setFetchError("Could not fetch user details");
+        return;
+      }
+      if (groupMembersError) {
+        setFetchError("Could not fetch the group members");
+        return;
+      }
+
+      if (groupMembersData) {
+        // Extract user_ids
+        const userIds = groupMembersData.map((member) => member.user_id);
+        console.log(userIds);
+        // Fetch user details from users table
+        const { data: usersData, error: usersError } = await supabase
+          .from("user")
+          .select("first_name, avatar")
+          .in("id", userIds);
+
+        if (usersError) {
+          setFetchError("Could not fetch user details");
+          return;
+        }
+
+        if (usersData) {
+          setGroupMembers(usersData);
+          setFetchError(null);
+        }
+      }
+    };
+
+    fetchGroupMembers();
+  }, [id]);
 
   const handleJoinEvents = () => {
     setOpenEventModal(true);
@@ -75,6 +122,7 @@ function SingleGroup() {
   useEffect(() => {
     const loadData = async () => {
       await new Promise((resolved) => setTimeout(resolved, 1000));
+
       setLoading((loading) => !loading);
     };
     loadData();
@@ -145,12 +193,17 @@ function SingleGroup() {
               </div> */}
 
               <div className="singleGroup__header--icons">
-                <ProfileIcons
-                  className="singleGroup__header--days"
-                  users={usersAvatar}
-                  moveLeft={"-50%"}
-                  marginTop={"1rem"}
-                />
+                <AvatarGroup max={4}>
+                  {groupMembers &&
+                    groupMembers.map((each) => (
+                      <Avatar
+                        key={each.id}
+                        alt={each.first_name}
+                        src={each.avatar}
+                      />
+                    ))}
+                </AvatarGroup>
+
                 <div className="singleGroup__btns">
                   {joinGroup != false ? (
                     <Btn
@@ -183,7 +236,7 @@ function SingleGroup() {
                 height={"35px"}
                 onClick={goToEvent}
               />
-              <Btn
+              {/* <Btn
                 textBtn={"In-person"}
                 bgColor={"#D9D9D9"}
                 textColor={"white"}
@@ -196,7 +249,7 @@ function SingleGroup() {
                 textColor={"white"}
                 marginTop={"1rem"}
                 height={"35px"}
-              />
+              /> */}
             </div>
           </div>
           <div className="singleGroup__columns">
@@ -234,12 +287,14 @@ function SingleGroup() {
             />
           )} */}
           {openEventModal &&
-            events.map((event) => (
+            events.map((event, index) => (
               <SingleEventModal
                 setOpenEventModal={setOpenEventModal}
                 eventTitle={event.title}
                 eventDescription={event.description}
                 online={event.online}
+                image={event.image}
+                key={index}
               />
             ))}
         </section>

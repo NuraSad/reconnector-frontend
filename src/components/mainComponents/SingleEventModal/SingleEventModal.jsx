@@ -10,12 +10,12 @@ const SingleEventModal = ({
   eventTitle,
   eventDescription,
   online,
+  image,
 }) => {
   const [toggle, setToggle] = useState(true);
-
+  console.log(eventTitle);
   return (
     <>
-      <BackDrop />
       <div className="singlegrpmodal">
         <div className="singlegrpmodal__close">
           <CloseIcon onClick={() => setOpenEventModal(false)} />{" "}
