@@ -9,10 +9,10 @@ function DateInput({ labelName, name, onChangeFunction }) {
   //datepicker state
   const [startDate, setStartDate] = useState(new Date());
 
-  const handleChange = (date) => {
-    onChangeFunction(name, date);
-    setStartDate(date);
-  };
+  const handleChange = (e) => {
+		onChangeFunction(name, e.target.value);
+		setStartDate(e.target.value);
+	};
 
   return (
     <div className="dateInput">
