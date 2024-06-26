@@ -57,7 +57,7 @@ function SingleGroup() {
         setFetchError("Could not Fetch the Event");
       } else {
         setEvents(data);
-        console.log(events);
+    
         setFetchError("");
       }
     };

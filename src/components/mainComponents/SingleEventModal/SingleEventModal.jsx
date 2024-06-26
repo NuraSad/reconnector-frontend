@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import "./SingleEventModal.scss";
 import CloseIcon from "@mui/icons-material/Close";
 import Btn from "../../smallComponents/Btn/Btn";
 import Map from "../../../pages/Map/Map";
@@ -16,6 +16,7 @@ const SingleEventModal = ({
   console.log(eventTitle);
   return (
     <>
+      <BackDrop />
       <div className="singlegrpmodal">
         <div className="singlegrpmodal__close">
           <CloseIcon onClick={() => setOpenEventModal(false)} />{" "}
