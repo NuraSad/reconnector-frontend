@@ -17,13 +17,11 @@ import Root from "./pages/Root/Root";
 import SingleGroup from "./pages/SingleGroup/SingleGroup";
 import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
 import { getUserId } from "./userUtils.js";
-import { useSession, SessionProvider } from "./sessionContext.jsx";
 import NewPost from "./pages/NewPost/NewPost";
 import NewEvent from "./pages/NewEvent/NewEvent";
 
 function App() {
-  // const [session, setSession] = useState(null);
-  const session1 = useSession();
+
   const [internalUserId, setInternalUserId] = useState(null);
 
   const router = createBrowserRouter([
@@ -81,53 +79,40 @@ function App() {
     },
   ]);
 
-  // useEffect(() => {
-  // 	supabase.auth.getSession().then(({ data: { session } }) => {
-  // 		setSession(session);
-  // 	});
-  // 	const {
-  // 		data: { subscription },
-  // 	} = supabase.auth.onAuthStateChange((_event, session) => {
-  // 		setSession(session);
-  // 	});
-  // 	return () => subscription.unsubscribe();
-  // }, []);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+
+    fetchUser();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchUserId = async () => {
-      if (session1) {
+      if (user) {
         const userId = await getUserId();
         setInternalUserId(userId);
       }
     };
 
     fetchUserId();
-  }, [session1]);
-
-  // if (!session1) {
-  //   useEffect(() => {
-  //     supabase.auth.getSession().then(({ data: { session } }) => {
-  //       setSession(session);
-  //     });
-  //     const {
-  //       data: { subscription },
-  //     } = supabase.auth.onAuthStateChange((_event, session) => {
-  //       setSession(session);
-  //     });
-  //     return () => subscription.unsubscribe();
-  //   }, []);
-
-  //   useEffect(() => {
-  //     const fetchUserId = async () => {
-  //       const userId = await getUserId();
-  //       setInternalUserId(userId);
-  //     };
-
-  //     fetchUserId();
-  // }, [session]);
-
-  if (!session1) {
+  }, [user]);
+ 
     return (
+      user ? (<RouterProvider router={router} id="root" />) : (
       <div
         style={{
           width: "100vw",
@@ -145,16 +130,8 @@ function App() {
           />
         </div>
       </div>
+      )
     );
-  } else {
-    return <RouterProvider router={router} id="root" />;
-  }
 }
 
-export default function WrappedApp() {
-  return (
-    <SessionProvider>
-      <App />
-    </SessionProvider>
-  );
-}
+export default App;
