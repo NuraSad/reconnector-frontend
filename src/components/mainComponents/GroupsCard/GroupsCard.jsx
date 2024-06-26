@@ -10,8 +10,9 @@ export default function GroupsCard(props) {
   //state for the avatars coming in from the data file which will come in from the database later
   const [usersAvatar] = useState(listAvatars);
   //we need to be pulling the event information and the group information in here, does this come from the parent?
+
   return (
-    <div className="groupCard" onClick={()=> window.location.href = `/groups/${props.id}`}>
+    <div className="groupCard">
       <div className="groupCard__wrapper">
         <div className="header">
           <div className="header__group-title">{props.groups__title}</div>
