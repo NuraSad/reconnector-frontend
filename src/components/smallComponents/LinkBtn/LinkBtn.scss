@@ -8,12 +8,14 @@
     text-decoration: none;
     font-size: 1rem;
     margin-right:1rem;
-    cursor: pointer;
     &__imgDiv{
         display: flex;
         flex-direction: row-reverse;
         align-items: center;
-        justify-content: space-around;
-        
+        justify-content: space-between;
+    }
+    &:hover{
+        transform: translateY(2px);
+        cursor: pointer;
     }
 }
