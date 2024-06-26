@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import supabase from "../../../config/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
+import { WbIncandescentTwoTone } from "@mui/icons-material";
 
 const CDNURL =
   "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/";
@@ -16,8 +17,6 @@ export default function UpdateProfilePopup({userInit, onClose}) {
   const [companies, setCompanies] = useState([]);
   const [imagePreview, setImagePreview] = useState(user.avatar ?? null);
   const [imageFile, setImageFile] = useState();
-
-  // let navigate = useNavigate();
 
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.map((file) => {
@@ -78,7 +77,7 @@ export default function UpdateProfilePopup({userInit, onClose}) {
         imageURL = CDNURL + uploadData.fullPath;
       }
     }
-    // add event
+    // add user
     const { data: user_data, error: user_error } = await supabase
       .from("user")
       .update([
@@ -100,11 +99,10 @@ export default function UpdateProfilePopup({userInit, onClose}) {
     }
 
     if (user_data) {
-      const newUserData = user_data[0];
-    //   console.log("User was successfully updated.");
       profileUpdate()
-      onClose()
-      setUser(newUserData)
+    //   only way info in Root can be updated for now
+      window.location.reload()
+     
     }
   }
 //
