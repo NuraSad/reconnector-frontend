@@ -6,9 +6,15 @@ import Btn from "../../smallComponents/Btn/Btn";
 import Map from "../../../pages/Map/Map";
 import listavatars from "../../../data/listAvatars.json";
 import BackDrop from "../../smallComponents/BackDrop/BackDrop";
-const SingleGrpModal = ({ setOpenModal,groupId,groupName,groupDescription }) => {
+const SingleGrpModal = ({
+  setOpenModal,
+  groupId,
+  groupName,
+  groupDescription,
+}) => {
   const [toggle, setToggle] = useState(true);
 
+  console.log(groupName);
   return (
     <>
       <BackDrop />
