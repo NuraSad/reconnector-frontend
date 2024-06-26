@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import groupInfo from "../../data/groups.json";
 import { useParams } from "react-router-dom";
 import DateItem from "../../components/smallComponents/DateItem/DateItem";
@@ -13,6 +14,9 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import SingleGrpModal from "../../components/mainComponents/SingleGrpModal/SingleGrpModal";
 import ProfileIcons from "../../components/smallComponents/ProfileIcons/ProfileIcons";
+import { useSession } from '../../sessionContext';
+import { getUserId } from "../../userUtils.js";
+import supabase from "../../config/supabaseClient";
 
 const data = [
   {
@@ -99,6 +103,7 @@ function SingleGroup() {
   const [groups, setGroups] = useState(groupInfo);
   const [fetchError, setFetchError] = useState(null);
 
+
   const [tempGroup, setTempGroup] = useState(tempGroupData);
   //state for the avatars coming in from the data file which will come in from the database later
   const [usersAvatar] = useState(listAvatars);
@@ -124,10 +129,51 @@ function SingleGroup() {
   const [openModal, setOpenModal] = useState(false);
   const thisGroup = groups.find((el) => el.id === parseInt(id));
   const tempGroupFind = tempGroup.find((el) => el.id === parseInt(id));
+  const [joinGroup, setJoinGroup] = useState(false);
 
-  const handleJoinGrp = () => {
-    setOpenModal(true);
+  useEffect(() => {
+    const fetchSetJoinGroup = async () => {
+      const userId = await getUserId();
+      const { data, error } = await supabase
+        .from("group_members")
+        .select()
+        .eq("user_id", userId)
+        .eq("group_id", thisGroup.id);
+      if (error) {
+        console.log(error);
+      }
+      if (data.length === 0) {
+        setJoinGroup(true);
+      }
+    }
+    fetchSetJoinGroup();
+
+  },[])
+
+  const handleJoinGrp = async () => {
+    const userId = await getUserId();
+    const { data, error } = await supabase.from('group_members').insert([
+      {
+          user_id: userId,
+          group_id: thisGroup.id
+      }
+    ]);
+    if (!error) {
+      setJoinGroup(false);
+    }
   };
+  const handleLeaveGrp = async () => {
+    const userId = await getUserId();
+    const { data, error } = await supabase.from('group_members')
+      .delete()
+      .eq("user_id", userId)
+      .eq("group_id", thisGroup.id)
+
+    if (!error) {
+      setJoinGroup(true);
+    }
+  };
+
   return (
     <>
       {fetchError ? (
@@ -155,6 +201,7 @@ function SingleGroup() {
                   moveLeft={"-50%"}
                   marginTop={"1rem"}
                 />
+                { joinGroup != false ? ( 
                 <Btn
                   textBtn={"Join Group +"}
                   bgColor={"#6c3ed696"}
@@ -162,7 +209,16 @@ function SingleGroup() {
                   marginLeft={"10rem"}
                   height={"35px"}
                   onClick={handleJoinGrp}
-                />
+                  />
+                ) : (
+                <Btn
+                  textBtn={"Leave Group -"}
+                  bgColor={"#6c3ed696"}
+                  textColor={"white"}
+                  marginLeft={"10rem"}
+                  height={"35px"}
+                  onClick={handleLeaveGrp}
+                />)}
               </div>
             </div>
             <div className="singleGroup__header--right">
