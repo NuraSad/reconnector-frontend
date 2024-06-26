@@ -1,14 +1,13 @@
-import { v4 as uuidv4 } from "uuid";
-import "./SelectInput.scss";
 import PropTypes from "prop-types";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import "./SelectInput.scss";
 
 function SelectInput({
   dropDownInfo,
   labelName,
   onChangeFunction,
   name,
-  objArray,
   value,
 }) {
   //state for updated value
@@ -35,15 +34,7 @@ function SelectInput({
       >
         {dropDownInfo &&
           dropDownInfo.map((x) => (
-            // generated on demand using uuidv4, could be converted to json id
-            <option key={uuidv4()} value={x}>
-              {x}
-            </option>
-          ))}
-        {objArray &&
-          objArray.map((x) => (
-            // generated on demand using uuidv4, could be converted to json id
-            <option key={uuidv4()} value={x.name}>
+            <option key={uuidv4()} value={x.id}>
               {x.name}
             </option>
           ))}
@@ -51,12 +42,13 @@ function SelectInput({
     </div>
   );
 }
+
 SelectInput.propTypes = {
-  dropDownInfo: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  dropDownInfo: PropTypes.array,
   labelName: PropTypes.string,
   onChangeFunction: PropTypes.func,
   name: PropTypes.string,
-  objArray: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   value: PropTypes.string,
 };
+
 export default SelectInput;

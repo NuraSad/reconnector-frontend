@@ -1,20 +1,18 @@
+import PropTypes from "prop-types";
 import { useState } from "react";
-import "./DateInput.scss";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import PropTypes from "prop-types";
+import "./DateInput.scss";
 
-function DateInput({ labelName, onChangeFunction }) {
+function DateInput({ labelName, name, onChangeFunction }) {
   // Destructuring props here
   //datepicker state
   const [startDate, setStartDate] = useState(new Date());
 
-  const handleChange = (date, e) => {
-    const selectedValue = date;
-    const selectedName = e.target;
-    onChangeFunction(selectedName, selectedValue);
-    setStartDate(date);
-  };
+  const handleChange = (e) => {
+		onChangeFunction(name, e.target.value);
+		setStartDate(e.target.value);
+	};
 
   return (
     <div className="dateInput">
@@ -35,6 +33,7 @@ function DateInput({ labelName, onChangeFunction }) {
 }
 DateInput.propTypes = {
   labelName: PropTypes.string,
+  name: PropTypes.string,
   onChangeFunction: PropTypes.func,
 };
 export default DateInput;

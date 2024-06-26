@@ -26,19 +26,19 @@
             // align-items: start;
         }
         &--icons {
-            // display: flex;
-            // margin-top: 1rem;
+            display: flex;
+            margin-top: 1rem;
         }
         &--right {
             display: flex;
-            margin-top: 1.5rem;
+            // margin-top: 1.5rem;
             gap:10px;
         }
     }
     &__columns {
         display: flex;
         justify-content: space-between;
-        margin-top: 1rem;
+        // margin-top: 1rem;
     }
     
     &__allImage {

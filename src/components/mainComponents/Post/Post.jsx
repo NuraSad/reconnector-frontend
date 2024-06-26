@@ -2,7 +2,8 @@ import Avatar from "@mui/material/Avatar";
 import "./Post.scss";
 import heart from "/heart_icon.svg";
 import PropTypes from "prop-types";
-
+import { useState, useEffect } from 'react';
+import supabase from "../../../config/supabaseClient";
 export default function Post({
   profileAvatar,
   last_name,
@@ -13,7 +14,43 @@ export default function Post({
   postTitle,
   postText,
   likes,
+  id
 }) {
+
+
+  const [likeCount, setLikeCount] = useState(likes);
+  const [isLiked, setIsLiked] = useState(() => {
+    // Initialize isLiked from session storage if it exists
+    const savedIsLiked = sessionStorage.getItem(`isLiked_${id}`);
+    return savedIsLiked ? JSON.parse(savedIsLiked) : false;
+  });
+  
+  
+  useEffect(() => {
+    // Update session storage whenever isLiked changes
+    sessionStorage.setItem(`isLiked_${id}`, JSON.stringify(isLiked));
+  }, [isLiked, id]);
+  
+  const handleLike = async () => {
+    const newLikeCount = isLiked ? likeCount - 1 : likeCount + 1;
+  
+    setLikeCount(newLikeCount);
+    setIsLiked(!isLiked);
+  
+    const { data, error } = await supabase
+      .from("post")
+      .update({ likes: newLikeCount })
+      .eq("id", id);
+  
+    if (error) {
+      setLikeCount(likeCount); // Revert to the old count
+      setIsLiked(isLiked); // Revert to the old like state
+    }
+  };
+  
+  
+  
+
   return (
     <div className="post">
       <div className="post__user-info">
@@ -41,8 +78,8 @@ export default function Post({
       <div className="post__info">
         <div className="post__info--col-2">
           <div className="post__info--col-2--wrapper">
-            <p className="post__info--col-2--p">{likes}</p>
-            <img className="post__info--col-2--svg" alt={heart} src={heart} />
+            <p className="post__info--col-2--p" unselectable="on" onClick={handleLike}>{likeCount}</p>
+            <img className="post__info--col-2--svg" alt={heart} src={heart} style={{ filter: isLiked ? "none" : "brightness(50%)" }} />
           </div>
         </div>
       </div>
@@ -61,5 +98,5 @@ Post.propTypes = {
   img3: PropTypes.string,
   postTitle: PropTypes.string,
   postText: PropTypes.string,
-  likes: PropTypes.num,
+  // likes: PropTypes.num,
 };
