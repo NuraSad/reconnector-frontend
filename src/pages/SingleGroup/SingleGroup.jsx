@@ -25,6 +25,7 @@ function SingleGroup() {
   const [openEventModal, setOpenEventModal] = useState(false);
   const [loading, setLoading] = useState(true);
   let { id } = useParams();
+  const[eventTitle,setEventTitle] =useState("");
   let navigate = useNavigate();
   // const [usersAvatar] = useState(listAvatars);
   const [joinGroup, setJoinGroup] = useState(false);
@@ -57,7 +58,7 @@ function SingleGroup() {
         setFetchError("Could not Fetch the Event");
       } else {
         setEvents(data);
-        console.log(events);
+
         setFetchError("");
       }
     };
@@ -78,10 +79,7 @@ function SingleGroup() {
           .from("group_members")
           .select("user_id")
           .eq("group_id", groupId);
-      if (groupMembersError) {
-        setFetchError("Could not fetch user details");
-        return;
-      }
+
       if (groupMembersError) {
         setFetchError("Could not fetch the group members");
         return;
@@ -112,7 +110,9 @@ function SingleGroup() {
     fetchGroupMembers();
   }, [id]);
 
-  const handleJoinEvents = () => {
+  const handleJoinEvents = (e) => {
+    setEventTitle(e.target.textContent) ;
+
     setOpenEventModal(true);
   };
   async function goToEvent() {
@@ -286,17 +286,15 @@ function SingleGroup() {
               groupDescription={groups.description}
             />
           )} */}
-          {openEventModal &&
-            events.map((event, index) => (
-              <SingleEventModal
-                setOpenEventModal={setOpenEventModal}
-                eventTitle={event.title}
-                eventDescription={event.description}
-                online={event.online}
-                image={event.image}
-                key={index}
-              />
-            ))}
+          {openEventModal && (
+            <SingleEventModal
+              setOpenEventModal={setOpenEventModal}
+              eventTitle={eventTitle}
+              groupId={id}
+              online=""
+              eventDescription=""
+            />
+          )}
         </section>
       </>
     );
