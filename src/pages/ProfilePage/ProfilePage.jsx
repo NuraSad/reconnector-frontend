@@ -1,17 +1,25 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import "./ProfilePage.scss";
 import Post from "../../components/mainComponents/Post/Post";
 import MiniGroup from "../../components/smallComponents/MiniGroup/MiniGroup";
+import UpdateProfilePopup from "../../components/mainComponents/UpdateProfilePopup/UpdateProfilePopup";
 import PropTypes from "prop-types";
 import bikingMedal from "../../assets/medals/biking-medal.png";
 import hikingMedal from "../../assets/medals/hiking-medal.png";
 import groupBanner from "../../assets/running-club.jpg";
 import supabase from "../../config/supabaseClient";
+import createIcon from '../../assets/icons/create.svg';
+import fireIcon from '../../assets/icons/icon_fire.png';
+import pointsIcon from '../../assets/icons/icon_star.svg';
 
 export default function ProfilePage({ userId }) {
   const [user, setUser] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [userCompany, setUserCompany] = useState(null);
+
 
   useEffect(() => {
     async function getUser() {
@@ -36,6 +44,7 @@ export default function ProfilePage({ userId }) {
   }, [userId]);
 
   useEffect(() => {
+
     const getUserCompany = async () => {
       let { data: user_company_data, error: user_company_error } =
         await supabase.from("company").select().eq("id", user.company_id);
@@ -54,7 +63,7 @@ export default function ProfilePage({ userId }) {
       let { data: posts_data, error: posts_error } = await supabase
         .from("post")
         .select("*")
-        .eq("created_by", userId);
+        .eq("created_by", user.id);
 
       if (posts_error) {
         console.error("Error fetching posts:", posts_error.message);
@@ -66,11 +75,59 @@ export default function ProfilePage({ userId }) {
       }
     }
 
-    if (user) {
-      getUserCompany();
-      getPosts();
+    async function getGroupsIds() {
+      let { data: groups_data, error: groups_error } = await supabase
+        .from("group_members")
+        .select("*")
+        .eq("user_id", user.id);
+
+      if (groups_error) {
+        console.error("Error fetching posts:", groups_error.message);
+        return;
+      }
+
+      if (groups_data) {
+        return groups_data
+      }
     }
+
+    async function getGroups() {
+      const groupsIdsData = await getGroupsIds();
+      const groupsIds = groupsIdsData.reduce((acc, group) => acc.concat(group.group_id), [])
+      if (groupsIds.length) {
+        let { data: groups_data, error: groups_error } = await supabase
+        .from("group")
+        .select()
+        .in("id", groupsIds);
+
+      if (groups_error) {
+        console.error("Error fetching posts:", groups_error.message);
+        return;
+      }
+
+      if (groups_data) {
+        setGroups(groups_data)
+      }
+    }
+  }
+
+    if (user) {
+      if (!user.company_id || !user.location){
+          setIsEditing(true)
+        } else {
+          getUserCompany();
+          getPosts();
+          getGroups();
+        }
+    }
+    
   }, [user]);
+
+  if(user && isEditing){
+    return (
+      <UpdateProfilePopup userInit={user} onClose={() => setIsEditing(prev => !prev)}/>
+    )
+  }
 
   return (
     user && (
@@ -80,7 +137,7 @@ export default function ProfilePage({ userId }) {
           <div className="top">
             <div className="avatar-field">
               <div className="stat">
-                <p>&#128293;</p>
+                <img src={fireIcon} alt="fire"/>
                 <p>{user.streak}</p>
               </div>
               <div className="avatar">
@@ -98,13 +155,14 @@ export default function ProfilePage({ userId }) {
                 )}
               </div>
               <div className="stat">
-                <p>&#127775;</p>
+                <img src={pointsIcon} alt="star"/>
                 <p>{user.points}</p>
               </div>
             </div>
             <h4>{`${user.first_name} ${user.last_name}`}</h4>
             <p className="email">{user.email}</p>
             <p>{user.location}</p>
+            <button className="edit-btn" onClick={() => setIsEditing(true)}><img src={createIcon} alt="edit icon"/></button>
           </div>
           <h3>Featured Awards</h3>
           <div className="awards-field">
@@ -126,9 +184,13 @@ export default function ProfilePage({ userId }) {
           </div>
           <h3>Most Active Groups</h3>
           <div className="groups-field">
-            <MiniGroup name="running sunday fun day" src={groupBanner} />
-            <MiniGroup name="running sunday fun day" src={groupBanner} />
-            <MiniGroup name="running sunday fun day" src={groupBanner} />
+            {groups.length ? (
+              groups.map((group, i)=> (
+                <Link key={i} to={`/groups/${group.id}`}>
+                  <MiniGroup name={group.name} src={group.image} />
+                </Link>
+              ))
+            ) : <p className="empty-message">You have no groups</p>}
           </div>
           <h3>Recent Post</h3>
           <div className="posts-field">
