@@ -73,11 +73,13 @@ export default function ProfilePage({ userId }) {
     }
     
 
-    if (user.company_id && user.location) {
-      getUserCompany();
-      getPosts();
+    if (user) {
+      if (!user.company_id || !user.location){
+        setIsEditing(true)
+      }
     } else {
-      setIsEditing(true)
+        getUserCompany();
+        getPosts();
     }
   }, [user]);
 
