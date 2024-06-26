@@ -10,6 +10,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
   const [toggle, setToggle] = useState(true);
   const [event, setEvent] = useState();
   const [userIds, setUserIds] = useState();
+  const [userInfo, setUserInfo] = useState();
   const [fetchError, setFetchError] = useState("");
   useEffect(() => {
     const fetchEvent = async () => {
@@ -25,7 +26,6 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
         return;
       }
       setEvent(eventData);
-      console.log(eventData[0]);
 
       if (eventData && eventData.length > 0) {
         const { data: user_id, error } = await supabase
@@ -33,7 +33,6 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
           .select("user_id")
           .eq("event_id", eventData[0].id);
         if (user_id) {
-          console.log(user_id);
           setUserIds(user_id);
         } else {
           fetchError("Cannot Fetch userIds");
@@ -45,11 +44,24 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
   }, [eventTitle]);
 
   useEffect(() => {
+    const userids = userIds?.map((item) => item.user_id);
     const fetchUserInfo = async () => {
-      const userids = userIds.map((item) => item.user_id);
-      console.log(userids);
+      try {
+        const { data: userInfo, error: userInfoError } = await supabase
+          .from("user")
+          .select("avatar, first_name,last_name")
+          .in("id", userids);
+        if (userInfoError) {
+          setFetchError("Cannot fetch the Users joined");
+          console.log(error);
+          return;
+        }
+        //console.log(userInfo);
+        setUserInfo(userInfo);
+      } catch (error) {
+        console.log(error.message);
+      }
     };
-    
     fetchUserInfo();
   }, [userIds]);
   return (
@@ -122,16 +134,18 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
               <h1>Who's Joining</h1>
               <div className="singlegrpmodal-content-joiners-list">
                 {" "}
-                {listavatars.map((i, index) => (
+                {userInfo?.map((i, index) => (
                   <div
                     className="singlegrpmodal-content-joiners-list-ppl"
                     key={index}
                   >
                     <div className="avatarImage">
-                      <img src={i.src} alt="" />
+                      <img src={i.avatar} alt="" />
                     </div>
                     <div className="avatarName">
-                      <p>{i.name}</p>
+                      <p>
+                        {i.first_name} {i.last_name}
+                      </p>
                     </div>
                   </div>
                 ))}
