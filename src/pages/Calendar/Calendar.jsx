@@ -6,43 +6,64 @@ import interactionPlugin from "@fullcalendar/interaction";
 import supabase from "../../config/supabaseClient";
 import { getUserId } from "../../userUtils";
 import SingleEventModal from "../../components/mainComponents/SingleEventModal/SingleEventModal";
+import DateFormatforEvent from "../../components/smallComponents/DateFormatforEvent/DateFormatforEvent";
 
 const Calendar = () => {
   const [mapEvents, setMapEvents] = useState([]);
   const [openEventModal, setOpenEventModal] = useState(false);
   const [modalData, setModalData] = useState({});
   const [dataEvents, setDataEvents] = useState([]);
+  const [fetchError, setFetchError] = useState("");
+  useEffect(() => {
+    // const fetchDates = async () => {
+    //   const userId = await getUserId();
+    //   const { data: participants, error } = await supabase
+    //     .from("event_participants")
+    //     .select()
+    //     .eq("user_id", userId);
+    //   const { data: dataEvents, error: eventError } = await supabase
+    //     .from("event")
+    //     .select()
+    //     .in(
+    //       "id",
+    //       participants?.map((event) => event.event_id)
+    //     );
+
+    //   setDataEvents(dataEvents);
+
+    //   const data = dataEvents.map((event) => {
+    //     return {
+    //       id: event.id,
+    //       title: event.title,
+    //       date: event.event_date,
+    //       allDay: false,
+    //     };
+    //   });
+
+    //   setMapEvents(data);
+    // };
+    const fetchDates1 = async () => {
+      const { data: events, error } = await supabase.from("event").select();
+      if (error) {
+        setFetchError("Could not fetch the events from the Calendar");
+        return;
+      }
+      setDataEvents(events);
+    };
+    fetchDates1();
+  }, []);
 
   useEffect(() => {
-    const fetchDates = async () => {
-      const userId = await getUserId();
-      const { data: participants, error } = await supabase
-        .from("event_participants")
-        .select()
-        .eq("user_id", userId);
-      const { data: dataEvents, error: eventError } = await supabase
-        .from("event")
-        .select()
-        .in(
-          "id",
-          participants?.map((event) => event.event_id)
-        );
-
-      setDataEvents(dataEvents);
-
-      const data = dataEvents.map((event) => {
-        return {
-          id: event.id,
-          title: event.title,
-          date: event.event_date,
-          allDay: false,
-        };
-      });
-
-      setMapEvents(data);
-    };
-    fetchDates();
-  }, []);
+    const eventData = dataEvents.map((i) => {
+      return {
+        id: i.id,
+        title: i.title,
+        date: i.event_date,
+        allDay: false,
+      };
+    });
+    setMapEvents(eventData);
+  }, [dataEvents]);
 
   const handleEventClick = (info) => {
     const publicId = info.event._def.publicId;
@@ -51,9 +72,10 @@ const Calendar = () => {
     setModalData(event);
   };
 
-  return (
+  return fetchError ? (
+    <>{fetchError}</>
+  ) : (
     <>
-      {console.log(modalData)}
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
