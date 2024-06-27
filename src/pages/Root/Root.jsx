@@ -1,39 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
+import fireIcon from "../../assets/icons/icon_fire.png";
+import groupIcon from "../../assets/icons/icon_people-group.svg";
+import pointsIcon from "../../assets/icons/icon_star.svg";
 import logo from "../../assets/icons/reconnect-logo.svg";
 import companyLogo from "../../assets/icons/starbacks-logo.png";
-import eventImage from "../../assets/running-club.jpg";
 import CardList from "../../components/mainComponents/CardList/CardList";
 import supabase from "../../config/supabaseClient";
 import { getUserId } from "../../userUtils.js";
 import "./Root.scss";
-import fireIcon from "../../assets/icons/icon_fire.png";
-import pointsIcon from "../../assets/icons/icon_star.svg";
-import groupIcon from "../../assets/icons/icon_people-group.svg";
-
-// const events = [
-//   {
-//     event_id: "1",
-//     date: "Monday @3:30pm",
-//     name: "running sunday fun day",
-//     attendees: 25,
-//     src: eventImage,
-//   },
-//   {
-//     event_id: "2",
-//     date: "Friday @12:30pm",
-//     name: "running sunday fun day",
-//     attendees: 25,
-//     src: eventImage,
-//   },
-//   {
-//     event_id: "3",
-//     date: "Sunday @8:30am",
-//     name: "running sunday fun day",
-//     attendees: 25,
-//     src: eventImage,
-//   },
-// ];
 
 export default function Root() {
   const [internalUserId, setInternalUserId] = useState(null);
@@ -169,12 +144,13 @@ export default function Root() {
           </Link>
           <div className="user-info">
             <div className="avatar-field">
-              <img
-                id="avatar"
-                src={user.avatar ? user.avatar : ""}
-                alt={`${user.first_name}'s avatar`}
-              />
-
+              <Link to="/">
+                <img
+                  id="avatar"
+                  src={user.avatar ? user.avatar : ""}
+                  alt={`${user.first_name}'s avatar`}
+                />
+              </Link>
               <img
                 id="company-logo"
                 src={
@@ -233,7 +209,8 @@ export default function Root() {
                 Calendar
               </NavLink>
             </li>
-            <li>
+            {//commented out for now, not enough time for implementation
+            /* <li>
               <NavLink
                 to="/maps"
                 className={({ isActive, isPending }) =>
@@ -242,7 +219,7 @@ export default function Root() {
               >
                 Maps
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink
                 to="/leaderboards"

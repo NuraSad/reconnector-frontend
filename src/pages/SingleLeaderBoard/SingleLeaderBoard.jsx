@@ -15,7 +15,7 @@ const SingleLeaderBoard = () => {
   const [fetchError, setFetchError] = useState("");
   const [fetchUsers, setFetchusers] = useState([]);
   const location = useLocation();
-  console.log(location.state);
+
   const {
     logo,
     points,
@@ -46,8 +46,6 @@ const SingleLeaderBoard = () => {
   useEffect(() => {
     if (fetchUsers.length == 0) return;
     const userIds = fetchUsers.map((item) => item.id);
-    console.log("userIds", userIds);
-
     const fetchGroup = async () => {
       const { data: grpCount, error } = await supabase.rpc(`getgroupcount`, {
         user_ids: userIds,
