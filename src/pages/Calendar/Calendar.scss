@@ -10,10 +10,22 @@
         padding: 20px;
         overflow: hidden;
     }
+   
 
-    b{
-        margin-right: 5px;
-    }
   }
 
-  
+.fc-daygrid-event {
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+    gap:10px;
+   i{
+    background-color: rgba(234, 0, 255, 0.418);
+    font-size: .8rem;
+    padding:3px;
+   }
+b{
+    background-color: rgb(155, 164, 172);
+    padding:4px;
+}
+}
