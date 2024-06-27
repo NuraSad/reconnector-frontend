@@ -125,24 +125,23 @@ export default function Root() {
           return;
         }
         console.log(userInEvents);
-        // if (userInEvents) {
-        //   const userInEvents = userInEvents.map((event) => event.user_id);
-        //   // Fetch user details from event table
-        //   const { data: events, error: errorEvent } = await supabase
-        //     .from("events")
-        //     .select("first_name, avatar")
-        //     .in("id", userInEvents);
-        // }
-        //i need to select this user
-        //select the events they are in
-        // const { data: events, error: errorEvent } = await supabase
-        //   .from("event")
-        //   .select("*");
-        // if (errorEvent) {
-        //   console.log("Error fetching connecting the database", errorEvent);
-        //   return;
-        // }
-
+        if (userInEvents) {
+          const userInEvents = userInEvents.map((event) => event.user_id);
+          // Fetch user details from event table
+          const { data: events, error: errorEvent } = await supabase
+            .from("events")
+            .select("title, event_image");
+          if (errorEvent) {
+            console.log("Error fetching connecting the database", errorEvent);
+            return;
+          }
+          // i need to select this user
+          // select the events they are in
+          if (events) {
+            setEvents(events);
+            setFetchError(null);
+          }
+        }
         fetchEvents(user);
       } catch (error) {
         console.log("Error happened", error.message);
