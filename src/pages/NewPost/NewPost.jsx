@@ -1,151 +1,152 @@
-import './NewPost.scss';
-
-import { useState, useEffect } from 'react';
+import "./NewPost.scss";
+import { useState, useEffect } from "react";
 import supabase from "../../config/supabaseClient";
-import {getUserId} from '../../userUtils'
-import { v4 as uuidv4 } from 'uuid';
+import { getUserId } from "../../userUtils";
+import { v4 as uuidv4 } from "uuid";
 
 function NewPost() {
-    
-
-    useEffect(() => {
-        const getSupaUserID = async () => {
-            try {
-              const { data: { user } } = await supabase.auth.getUser()
-              if (user !== null) {
-                setSupaUserId(user.id);
-              } else {
-                setSupaUserId('');
-              }
-            } catch (error) {}
-          }
-
-        const fetchUser = async () => {
-            const user = await getUserId();
-            setUserId(user);
-        };
-        fetchUser();
-        getSupaUserID();
-    }, []);
-
-    const [userId, setUserId] = useState(); 
-    const [postId, setPostId] = useState(Math.floor(Math.random()*(10**8-10**7))+10**7);
-    const [groupName, setGroupName] = useState('');
-    const [files, setFiles] = useState([]);
-    const [postTitle, setPostTitle] = useState('');
-    const [postDescription, setPostDescription] = useState('');
-
-    const [supaUserId, setSupaUserId] = useState('');
-  
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        // Create a new post in Supabase
-        const { postData, error } = await supabase.from('post').insert([
-            {
-                id: postId,
-                created_by: userId,
-                group_name: groupName,
-                image: files,
-                title: postTitle,
-                body: postDescription
-            }
-        ]);
-
-        if (error) {
-            console.error('Error creating post:', error);
+  useEffect(() => {
+    const getSupaUserID = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user !== null) {
+          setSupaUserId(user.id);
         } else {
-            console.log('Post created successfully:', postData);
-            // Reset form fields
-            setGroupName('');
-            setFiles(null);
-            setPostTitle('');
-            setPostDescription('');
-            setPostId(Math.floor(Math.random()*(10**8-10**7))+10**7);
+          setSupaUserId("");
         }
+      } catch (error) {
+        console.log("error getting user" + error);
+      }
     };
 
-    const uploadFiles = async (files) => {
-        const uploads = [];
-      
-        for (let file of files) {
-          const { data, error } = await supabase
-            .storage
-            .from('postImages')
-            .upload(supaUserId + '/' + uuidv4(), file);
-      
-          if (error) {
-            console.error('Error uploading file:', error);
-          } else {
-            uploads.push(data);
-          }
-        }
-      
-        return uploads;
-      };
+    const fetchUser = async () => {
+      const user = await getUserId();
+      setUserId(user);
+    };
+    fetchUser();
+    getSupaUserID();
+  }, []);
 
-      const handleFileChange = (event) => {
-        setFiles([...event.target.files]);
-      };
-    
-      const handleUpload = async () => {
-        const uploadedFiles = await uploadFiles(files);
-        console.log('Uploaded files:', uploadedFiles);
-      };
+  const [userId, setUserId] = useState();
+  const [postId, setPostId] = useState(
+    Math.floor(Math.random() * (10 ** 8 - 10 ** 7)) + 10 ** 7
+  );
+  const [groupName, setGroupName] = useState("");
+  const [files, setFiles] = useState([]);
+  const [postTitle, setPostTitle] = useState("");
+  const [postDescription, setPostDescription] = useState("");
 
-    return (
-        <div className="form-wrapper">
-            <div className="form-container">
-                <h1>New Post</h1>
-                <form className="form" onSubmit={handleSubmit}>
-                    <div className="form__input-container">
-                        <label htmlFor="groupName">Group Name</label>
-                        <input
-                            type="text"
-                            name="groupName"
-                            placeholder="#ski_hooligans"
-                            value={groupName}
-                            required
-                            onChange={(e) => setGroupName(e.target.value)}
-                        />
-                        <label htmlFor="image">Image</label>
-                        <input
-                            type="file"
-                            name="image"
-                            accept="image/*"
-                            multiple
-                            onChange={handleFileChange}
-                        />
-                        <button onClick={handleUpload}>Upload Files</button>
-                    </div>
-                    <div className="form__input-container">
-                        <label htmlFor="postTitle">Title</label>
-                        <input
-                            type="text"
-                            name="postTitle"
-                            required
-                            placeholder="Made so many new friends!"
-                            value={postTitle}
-                            onChange={(e) => setPostTitle(e.target.value)}
-                        />
-                        <label htmlFor="postDescription">Description</label>
-                        <textarea
-                            className="input--large"
-                            rows="4"
-                            cols="50"
-                            type="text"
-                            name="postDescription"
-                            placeholder="I had such a blast attending this event..."
-                            value={postDescription}
-                            onChange={(e) => setPostDescription(e.target.value)}
-                        />
-                    </div>
-                    <button type="submit">Create Post</button>
-                </form>
-            </div>
-        </div>
-    );
+  const [supaUserId, setSupaUserId] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Create a new post in Supabase
+    const { postData, error } = await supabase.from("post").insert([
+      {
+        id: postId,
+        created_by: userId,
+        group_name: groupName,
+        image: files,
+        title: postTitle,
+        body: postDescription,
+      },
+    ]);
+
+    if (error) {
+      console.error("Error creating post:", error);
+    } else {
+      console.log("Post created successfully:", postData);
+      // Reset form fields
+      setGroupName("");
+      setFiles(null);
+      setPostTitle("");
+      setPostDescription("");
+      setPostId(Math.floor(Math.random() * (10 ** 8 - 10 ** 7)) + 10 ** 7);
+    }
+  };
+
+  const uploadFiles = async (files) => {
+    const uploads = [];
+
+    for (let file of files) {
+      const { data, error } = await supabase.storage
+        .from("postImages")
+        .upload(supaUserId + "/" + uuidv4(), file);
+
+      if (error) {
+        console.error("Error uploading file:", error);
+      } else {
+        uploads.push(data);
+      }
+    }
+
+    return uploads;
+  };
+
+  const handleFileChange = (event) => {
+    setFiles([...event.target.files]);
+  };
+
+  const handleUpload = async () => {
+    const uploadedFiles = await uploadFiles(files);
+    console.log("Uploaded files:", uploadedFiles);
+  };
+
+  return (
+    <div className="form-wrapper">
+      <div className="form-container">
+        <h1>New Post</h1>
+        <form className="form" onSubmit={handleSubmit}>
+          <div className="form__input-container">
+            <label htmlFor="groupName">Group Name</label>
+            <input
+              type="text"
+              name="groupName"
+              placeholder="#ski_hooligans"
+              value={groupName}
+              required
+              onChange={(e) => setGroupName(e.target.value)}
+            />
+            <label htmlFor="image">Image</label>
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              multiple
+              onChange={handleFileChange}
+            />
+            <button onClick={handleUpload}>Upload Files</button>
+          </div>
+          <div className="form__input-container">
+            <label htmlFor="postTitle">Title</label>
+            <input
+              type="text"
+              name="postTitle"
+              required
+              placeholder="Made so many new friends!"
+              value={postTitle}
+              onChange={(e) => setPostTitle(e.target.value)}
+            />
+            <label htmlFor="postDescription">Description</label>
+            <textarea
+              className="input--large"
+              rows="4"
+              cols="50"
+              type="text"
+              name="postDescription"
+              placeholder="I had such a blast attending this event..."
+              value={postDescription}
+              onChange={(e) => setPostDescription(e.target.value)}
+            />
+          </div>
+          <button type="submit">Create Post</button>
+        </form>
+      </div>
+    </div>
+  );
 }
 
 export default NewPost;

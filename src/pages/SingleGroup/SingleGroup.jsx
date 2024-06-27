@@ -1,13 +1,11 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import "./SingleGroup.scss";
-import listAvatars from "../../data/listAvatars.json";
 import { useState, useEffect } from "react";
 import Btn from "../../components/smallComponents/Btn/Btn";
 import BtnList from "../../components/mainComponents/BtnList/BtnList";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import ProfileIcons from "../../components/smallComponents/ProfileIcons/ProfileIcons";
 import supabase from "../../config/supabaseClient";
 import Tree from "../../assets/tree-loader";
 import SingleEventModal from "../../components/mainComponents/SingleEventModal/SingleEventModal";
@@ -21,17 +19,17 @@ function SingleGroup() {
   const [groupMembers, setGroupMembers] = useState([]);
 
   const [events, setEvents] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
   const [openEventModal, setOpenEventModal] = useState(false);
   const [loading, setLoading] = useState(true);
   let { id } = useParams();
-  const[eventTitle,setEventTitle] =useState("");
+  const [eventTitle, setEventTitle] = useState("");
   let navigate = useNavigate();
 
   const [joinGroup, setJoinGroup] = useState(false);
 
   useEffect(() => {
     const fetchGroupId = async (id) => {
+      //ding group select all and find id
       const { data, error } = await supabase
         .from("group")
         .select("*")
@@ -86,7 +84,6 @@ function SingleGroup() {
       if (groupMembersData) {
         // Extract user_ids
         const userIds = groupMembersData.map((member) => member.user_id);
-        console.log(userIds);
         // Fetch user details from users table
         const { data: usersData, error: usersError } = await supabase
           .from("user")
@@ -109,7 +106,7 @@ function SingleGroup() {
   }, [id]);
 
   const handleJoinEvents = (e) => {
-    setEventTitle(e.target.textContent) ;
+    setEventTitle(e.target.textContent);
 
     setOpenEventModal(true);
   };

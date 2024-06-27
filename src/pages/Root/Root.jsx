@@ -41,6 +41,7 @@ export default function Root() {
   const [userCompany, setUserCompany] = useState(null);
   const [userGroupsCount, setUserGroupsCount] = useState(0);
   const [events, setEvents] = useState([]);
+  const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -108,15 +109,41 @@ export default function Root() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const { data: events, error: errorEvent } = await supabase
-          .from("event")
-          .select("*");
-        if (errorEvent) {
-          console.log("Error fetching connecting the database", errorEvent);
+        const userId = user;
+        if (!userId) {
+          setFetchError("No user ID provided");
           return;
         }
+        //check to see what events the user is in
+        const { data: userInEvents, error: userInEventsError } = await supabase
+          .from("event_participants")
+          .select("event_id")
+          .eq("user_id", userId);
 
-        setEvents(events);
+        if (userInEventsError) {
+          setFetchError("Could not fetch the group members");
+          return;
+        }
+        console.log(userInEvents);
+        // if (userInEvents) {
+        //   const userInEvents = userInEvents.map((event) => event.user_id);
+        //   // Fetch user details from event table
+        //   const { data: events, error: errorEvent } = await supabase
+        //     .from("events")
+        //     .select("first_name, avatar")
+        //     .in("id", userInEvents);
+        // }
+        //i need to select this user
+        //select the events they are in
+        // const { data: events, error: errorEvent } = await supabase
+        //   .from("event")
+        //   .select("*");
+        // if (errorEvent) {
+        //   console.log("Error fetching connecting the database", errorEvent);
+        //   return;
+        // }
+
+        fetchEvents(user);
       } catch (error) {
         console.log("Error happened", error.message);
       }
