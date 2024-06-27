@@ -254,14 +254,7 @@ function SingleGroup() {
               />
             </div>
           </div>
-          {/* {openModal && (
-            <SingleGrpModal
-              setOpenModal={setOpenModal}
-              groupId={groups.id}
-              groupName={groups.name}
-              groupDescription={groups.description}
-            />
-          )} */}
+         
           {openEventModal && (
             <SingleEventModal
               setOpenEventModal={setOpenEventModal}
