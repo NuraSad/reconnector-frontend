@@ -11,14 +11,14 @@ import Explore from "./pages/Explore/Explore";
 import Groups from "./pages/Groups/Groups";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
 import Map from "./pages/Map/Map";
+import NewEvent from "./pages/NewEvent/NewEvent";
 import NewGroup from "./pages/NewGroup/NewGroup";
+import NewPost from "./pages/NewPost/NewPost";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import Root from "./pages/Root/Root";
 import SingleGroup from "./pages/SingleGroup/SingleGroup";
 import SingleLeaderBoard from "./pages/SingleLeaderBoard/SingleLeaderBoard";
 import { getUserId } from "./userUtils.js";
-import NewPost from "./pages/NewPost/NewPost";
-import NewEvent from "./pages/NewEvent/NewEvent";
 
 function App() {
 
@@ -79,7 +79,20 @@ function App() {
     },
   ]);
 
-  const [user, setUser] = useState(null);
+  const [session, setSession] = useState(null);
+	const [user, setUser] = useState(null);
+
+	useEffect(() => {
+		supabase.auth.getSession().then(({ data: { session } }) => {
+			setSession(session);
+		});
+		const {
+			data: { subscription },
+		} = supabase.auth.onAuthStateChange((_event, session) => {
+			setSession(session);
+		});
+		return () => subscription.unsubscribe();
+	}, []);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -89,16 +102,7 @@ function App() {
 
     fetchUser();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-      }
-    );
-
-    return () => {
-      authListener?.subscription.unsubscribe();
-    };
-  }, []);
+  }, [session]);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -112,7 +116,7 @@ function App() {
   }, [user]);
  
     return (
-      user ? (<RouterProvider router={router} id="root" />) : (
+      session ? (<RouterProvider router={router} id="root" />) : (
       <div
         style={{
           width: "100vw",
