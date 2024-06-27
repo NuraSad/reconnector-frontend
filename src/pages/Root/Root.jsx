@@ -186,6 +186,7 @@ export default function Root() {
               />
             </div>
             <h4 className="root__user">{user.first_name}</h4>
+            <h5>{user.location}</h5>
             <div className="stats-field">
               <div className="stat">
                 <img src={groupIcon} alt="group of people" />
