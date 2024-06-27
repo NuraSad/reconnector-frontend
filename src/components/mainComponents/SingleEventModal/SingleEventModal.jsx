@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./SingleEventModal.scss";
 import CloseIcon from "@mui/icons-material/Close";
 import Btn from "../../smallComponents/Btn/Btn";
-import Map from "../../../pages/Map/Map";
 import BackDrop from "../../smallComponents/BackDrop/BackDrop";
 import supabase from "../../../config/supabaseClient";
-import Tree from "../../../assets/tree-loader";
-
-import DateFormatforEvent from "../../smallComponents/DateFormatforEvent/DateFormatforEvent";
+import { getUserId } from "../../../userUtils.js";
 
 const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
   const [toggle, setToggle] = useState(true);
@@ -15,18 +12,19 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
   const [userIds, setUserIds] = useState();
   const [userInfo, setUserInfo] = useState();
   const [fetchError, setFetchError] = useState("");
+  const [joinEvent, setJoinEvent] = useState(false);
   // const timestamp = event[0].event_date;
   // const date = new Date(timestamp);
 
-  // const dateFormat = {
-  //   year: "numeric",
-  //   month: "long",
-  //   day: "numeric",
-  //   hour: "2-digit",
-  //   minute: "2-digit",
-  //   second: "2-digit",
-  //   hour12: true, // For 12-hour format with AM/PM
-  // };
+  const dateFormat = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true, // For 12-hour format with AM/PM
+  };
   // // Convert to readable format
   // const readableDate = date.toLocaleString("en-US", dateFormat);
   useEffect(() => {
@@ -82,6 +80,42 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
     fetchUserInfo();
   }, [userIds]);
 
+  const handleJoinGrp = async () => {
+    const userId = await getUserId();
+    const { data, error } = await supabase.from("event_participants").insert([
+      {
+        user_id: userId,
+        event_id: event.id,
+      },
+    ]);
+    if (!error) {
+      setJoinEvent(false);
+    }
+  };
+  const handleLeaveGrp = async () => {
+    const userId = await getUserId();
+    const { data, error } = await supabase
+      .from("event_participants")
+      .delete()
+      .eq("user_id", userId)
+      .eq("event_id", event.id);
+
+    if (!error) {
+      setJoinEvent(true);
+    }
+  };
+
+  function toggleJoin() {
+    if (joinEvent) {
+      handleJoinGrp;
+      setToggle(!toggle);
+    }
+    if (!joinEvent) {
+      handleLeaveGrp;
+      setToggle(!toggle);
+    }
+  }
+
   console.log(event);
   return (
     <>
@@ -96,7 +130,10 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
               <h1>#{eventTitle}</h1>
               <div className="singlegrpmodal-content-grp-info">
                 <p>
-                  {eventData[0].event_date}
+                  {new Date(event[0].event_date).toLocaleString(
+                    "en-US",
+                    dateFormat
+                  )}
                   {/* <DateFormatforEvent
                     date={event[0].event_date}
                   ></DateFormatforEvent> */}
@@ -115,7 +152,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
                   height={"35px"}
                   inputType={!event[0].online ? "checkbox" : "null"}
                   checked={toggle}
-                  onChange={() => setToggle(!toggle)}
+                  onChange={() => toggleJoin()}
                 />
                 <Btn
                   textBtn={"View Group"}
