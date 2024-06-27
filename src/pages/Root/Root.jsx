@@ -11,35 +11,36 @@ import fireIcon from '../../assets/icons/icon_fire.png';
 import pointsIcon from '../../assets/icons/icon_star.svg';
 import groupIcon from '../../assets/icons/icon_people-group.svg';
 
-const events = [
-  {
-    event_id: "1",
-    date: "Monday @3:30pm",
-    name: "running sunday fun day",
-    attendees: 25,
-    src: eventImage,
-  },
-  {
-    event_id: "2",
-    date: "Friday @12:30pm",
-    name: "running sunday fun day",
-    attendees: 25,
-    src: eventImage,
-  },
-  {
-    event_id: "3",
-    date: "Sunday @8:30am",
-    name: "running sunday fun day",
-    attendees: 25,
-    src: eventImage,
-  },
-];
+// const events = [
+//   {
+//     event_id: "1",
+//     date: "Monday @3:30pm",
+//     name: "running sunday fun day",
+//     attendees: 25,
+//     src: eventImage,
+//   },
+//   {
+//     event_id: "2",
+//     date: "Friday @12:30pm",
+//     name: "running sunday fun day",
+//     attendees: 25,
+//     src: eventImage,
+//   },
+//   {
+//     event_id: "3",
+//     date: "Sunday @8:30am",
+//     name: "running sunday fun day",
+//     attendees: 25,
+//     src: eventImage,
+//   },
+// ];
 
 export default function Root() {
   const [internalUserId, setInternalUserId] = useState(null);
   const [user, setUser] = useState(null);
   const [userCompany, setUserCompany] = useState(null);
   const [userGroupsCount, setUserGroupsCount] = useState(0);
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -104,9 +105,64 @@ export default function Root() {
     }
   }, [user]);
 
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const { data: events, error: errorEvent } = await supabase
+          .from("event")
+          .select("*");
+        if (errorEvent) {
+          console.log("Error fetching connecting the database", errorEvent);
+          return;
+        }
+  
+        setEvents(events);
+      } catch (error) {
+        console.log("Error happened", error.message);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  useEffect(() => {
+    const eventIds = events.map((event) => event.id);
+
+    const fetchEventParticipants = async () => {
+      try {
+        const { data: eventParticipant, error: eventParticipantError } =
+          await supabase.rpc(`geteventparticipantcount`, {
+            event_ids: eventIds,
+          });
+        if (eventParticipantError) {
+          console.log("Problem in connecting with event_participant database");
+          return;
+        }
+
+        const updatedEvents = events.map((event) => {
+          const foundEvent = eventParticipant.find(
+            (item) => event.id === item.event_id
+          );
+     
+            return {
+              ...event,
+              NumberOfParticipants: foundEvent?foundEvent.eventparticipantcount:0,
+            };
+       
+        });
+        if (JSON.stringify(updatedEvents) !== JSON.stringify(events)) {
+          setEvents(updatedEvents);
+        }
+      
+      } catch (error) {
+        console.log("Error in db connection", error.message);
+      }
+    };
+    fetchEventParticipants();
+  }, [events]);
+
   return (
     user && (
-      <div className="container">
+      <div className="container">{console.log("updated Events",events)}
         <nav>
           <Link to="/">
             <img className="root__logo" src={logo} />
