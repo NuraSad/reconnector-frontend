@@ -3,41 +3,44 @@ import { Link, NavLink, Outlet } from "react-router-dom";
 import logo from "../../assets/icons/reconnect-logo.svg";
 import companyLogo from "../../assets/icons/starbacks-logo.png";
 import eventImage from "../../assets/running-club.jpg";
-import samantha from "../../assets/samantha.png";
 import CardList from "../../components/mainComponents/CardList/CardList";
 import supabase from "../../config/supabaseClient";
 import { getUserId } from "../../userUtils.js";
 import "./Root.scss";
+import fireIcon from "../../assets/icons/icon_fire.png";
+import pointsIcon from "../../assets/icons/icon_star.svg";
+import groupIcon from "../../assets/icons/icon_people-group.svg";
 
-const events = [
-  {
-    event_id: "1",
-    date: "Monday @3:30pm",
-    name: "running sunday fun day",
-    attendees: 25,
-    src: eventImage,
-  },
-  {
-    event_id: "2",
-    date: "Friday @12:30pm",
-    name: "running sunday fun day",
-    attendees: 25,
-    src: eventImage,
-  },
-  {
-    event_id: "3",
-    date: "Sunday @8:30am",
-    name: "running sunday fun day",
-    attendees: 25,
-    src: eventImage,
-  },
-];
+// const events = [
+//   {
+//     event_id: "1",
+//     date: "Monday @3:30pm",
+//     name: "running sunday fun day",
+//     attendees: 25,
+//     src: eventImage,
+//   },
+//   {
+//     event_id: "2",
+//     date: "Friday @12:30pm",
+//     name: "running sunday fun day",
+//     attendees: 25,
+//     src: eventImage,
+//   },
+//   {
+//     event_id: "3",
+//     date: "Sunday @8:30am",
+//     name: "running sunday fun day",
+//     attendees: 25,
+//     src: eventImage,
+//   },
+// ];
 
 export default function Root() {
   const [internalUserId, setInternalUserId] = useState(null);
   const [user, setUser] = useState(null);
   const [userCompany, setUserCompany] = useState(null);
   const [userGroupsCount, setUserGroupsCount] = useState(0);
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -102,6 +105,61 @@ export default function Root() {
     }
   }, [user]);
 
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const { data: events, error: errorEvent } = await supabase
+          .from("event")
+          .select("*");
+        if (errorEvent) {
+          console.log("Error fetching connecting the database", errorEvent);
+          return;
+        }
+
+        setEvents(events);
+      } catch (error) {
+        console.log("Error happened", error.message);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  useEffect(() => {
+    const eventIds = events.map((event) => event.id);
+
+    const fetchEventParticipants = async () => {
+      try {
+        const { data: eventParticipant, error: eventParticipantError } =
+          await supabase.rpc(`geteventparticipantcount`, {
+            event_ids: eventIds,
+          });
+        if (eventParticipantError) {
+          console.log("Problem in connecting with event_participant database");
+          return;
+        }
+
+        const updatedEvents = events.map((event) => {
+          const foundEvent = eventParticipant.find(
+            (item) => event.id === item.event_id
+          );
+
+          return {
+            ...event,
+            NumberOfParticipants: foundEvent
+              ? foundEvent.eventparticipantcount
+              : 0,
+          };
+        });
+        if (JSON.stringify(updatedEvents) !== JSON.stringify(events)) {
+          setEvents(updatedEvents);
+        }
+      } catch (error) {
+        console.log("Error in db connection", error.message);
+      }
+    };
+    fetchEventParticipants();
+  }, [events]);
+
   return (
     user && (
       <div className="container">
@@ -130,15 +188,15 @@ export default function Root() {
             <h4 className="root__user">{user.first_name}</h4>
             <div className="stats-field">
               <div className="stat">
-                <p>&#128101;</p>
+                <img src={groupIcon} alt="group of people" />
                 <p>{userGroupsCount}</p>
               </div>
               <div className="stat">
-                <p>&#127775;</p>
+                <img src={pointsIcon} alt="star" />
                 <p>{user.points ? user.points : 0}</p>
               </div>
               <div className="stat">
-                <p>&#128293;</p>
+                <img src={fireIcon} alt="fire" />
                 <p>{user.streak ? user.streak : 0}</p>
               </div>
             </div>

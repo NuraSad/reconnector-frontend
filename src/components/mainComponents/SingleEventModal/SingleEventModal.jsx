@@ -5,6 +5,7 @@ import Btn from "../../smallComponents/Btn/Btn";
 import Map from "../../../pages/Map/Map";
 import BackDrop from "../../smallComponents/BackDrop/BackDrop";
 import supabase from "../../../config/supabaseClient";
+import DateFormatforEvent from "../../smallComponents/DateFormatforEvent/DateFormatforEvent";
 const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
   const [toggle, setToggle] = useState(true);
   const [event, setEvent] = useState();
@@ -75,7 +76,11 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
             <div className="singlegrpmodal-content-grp">
               <h1>#{eventTitle}</h1>
               <div className="singlegrpmodal-content-grp-info">
-                <p>Monday @ 3:30pm</p>
+                <p>
+                  <DateFormatforEvent
+                    date={event[0].created_at}
+                  ></DateFormatforEvent>
+                </p>
                 <p>{event[0].online ? "Online Event" : "In-person Event"}</p>
               </div>
               <div className="singlegrpmodal-content-grp-btns">

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { v4 as uuidv4 } from "uuid";
@@ -22,7 +23,7 @@ export default function NewEvent() {
   const [imagePreview, setImagePreview] = useState();
   const [imageFile, setImageFile] = useState();
 
-  // let navigate = useNavigate();
+  let navigate = useNavigate();
 
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.map((file) => {
@@ -198,14 +199,12 @@ export default function NewEvent() {
       console.log(event_error);
     }
 
-    if (event_data) {
-      const eventID = event_data[0].id;
-      console.log("New Event was successfully added.");
-      eventCreate();
-      //I want this to navigate to the eventID
-      //setTimeout(() => navigate(`/events/${eventID}`), 1000);
-      //redirect to event page of that id
-    }
+		if (event_data) {
+			console.log("New Event was successfully added.");
+			eventCreate();
+			setTimeout(() => navigate(`/groups/${event_data[0].created_by_group_id}`), 1000);
+			//redirect to group page of that id
+		}
   }
   console.log(newEvent);
   return (
