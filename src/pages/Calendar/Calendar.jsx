@@ -15,33 +15,7 @@ const Calendar = () => {
   const [dataEvents, setDataEvents] = useState([]);
   const [fetchError, setFetchError] = useState("");
   useEffect(() => {
-    // const fetchDates = async () => {
-    //   const userId = await getUserId();
-    //   const { data: participants, error } = await supabase
-    //     .from("event_participants")
-    //     .select()
-    //     .eq("user_id", userId);
-    //   const { data: dataEvents, error: eventError } = await supabase
-    //     .from("event")
-    //     .select()
-    //     .in(
-    //       "id",
-    //       participants?.map((event) => event.event_id)
-    //     );
-
-    //   setDataEvents(dataEvents);
-
-    //   const data = dataEvents.map((event) => {
-    //     return {
-    //       id: event.id,
-    //       title: event.title,
-    //       date: event.event_date,
-    //       allDay: false,
-    //     };
-    //   });
-
-    //   setMapEvents(data);
-    // };
+    
     const fetchDates1 = async () => {
       const { data: events, error } = await supabase.from("event").select();
       if (error) {
@@ -58,10 +32,11 @@ const Calendar = () => {
       return {
         id: i.id,
         title: i.title,
-        date: i.event_date,
+        start: new Date(i.event_date).toISOString(),
         allDay: false,
       };
     });
+    console.log(eventData)
     setMapEvents(eventData);
   }, [dataEvents]);
 
@@ -80,8 +55,11 @@ const Calendar = () => {
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         events={mapEvents}
+        eventTimeFormat={{ hour: '2-digit', minute: '2-digit', meridiem: 'short' }} // Customize time format
+        dayHeaderFormat={{ weekday: 'long' }} // Customize day header format
         eventClick={handleEventClick}
         eventContent={renderEventContent}
+        height="90vh"
       />
       {openEventModal && (
         <SingleEventModal
