@@ -1,27 +1,38 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useDropzone } from "react-dropzone";
 import { v4 as uuidv4 } from "uuid";
+
+import "react-toastify/dist/ReactToastify.css";
 import create from "../../assets/icons/create.svg";
 import Btn from "../../components/smallComponents/Btn/Btn";
-import DateInput from "../../components/smallComponents/DateInput/DateInput";
 import SelectInput from "../../components/smallComponents/SelectInput/SelectInput";
 import supabase from "../../config/supabaseClient";
-import { getAuthUserId } from "../../userUtils.js";
 import "./NewEvent.scss";
-
-const CDNURL =
-  "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import TextField from "@mui/material/TextField";
+import dayjs from "dayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 export default function NewEvent() {
   const [newEvent, setNewEvent] = useState({});
   const [toggleOnline, setToggleOnline] = useState(false);
   const [togglePerson, setTogglePerson] = useState(false);
   const [groups, setGroups] = useState({});
+  const [value, setValue] = useState(dayjs(new Date()));
+
   const [imagePreview, setImagePreview] = useState();
   const [imageFile, setImageFile] = useState();
+
+  const CDNURL =
+    "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/";
+
+  const handleChange = (newValue) => {
+    setValue(newValue);
+  };
 
   let navigate = useNavigate();
 
@@ -73,14 +84,6 @@ export default function NewEvent() {
     setNewEvent((prevState) => ({
       ...prevState,
       eventName: eventName,
-    }));
-  }
-
-  //set the event name in the newEvent object
-  function dateOnchange(name, date) {
-    setNewEvent((prevState) => ({
-      ...prevState,
-      date: date,
     }));
   }
 
@@ -156,7 +159,6 @@ export default function NewEvent() {
     if (!newEvent.eventName || !newEvent.description || !newEvent.groupList) {
       return notCreate();
     }
-
     let imageURL = null;
 
     if (imageFile) {
@@ -175,6 +177,7 @@ export default function NewEvent() {
         imageURL = CDNURL + uploadData.fullPath;
       }
     }
+
     // add event
     const { data: event_data, error: event_error } = await supabase
       .from("event")
@@ -182,15 +185,16 @@ export default function NewEvent() {
         {
           title: newEvent.eventName,
           description: newEvent.description,
-          event_image: imageURL,
           created_by_group_id: newEvent.groupList,
+          event_image: imageURL,
+
           online: newEvent.online ? true : false,
           in_person: newEvent.inperson ? true : false,
           location:
             (newEvent.address ? newEvent.address + "," : "") +
             (newEvent.city ? newEvent.city + "," : "") +
             (newEvent.country ? newEvent.country : ""),
-          event_date: newEvent.eventDate,
+          event_date: value,
         },
       ])
       .select();
@@ -199,14 +203,16 @@ export default function NewEvent() {
       console.log(event_error);
     }
 
-		if (event_data) {
-			console.log("New Event was successfully added.");
-			eventCreate();
-			setTimeout(() => navigate(`/groups/${event_data[0].created_by_group_id}`), 1000);
-			//redirect to group page of that id
-		}
+    if (event_data) {
+      eventCreate();
+      setTimeout(
+        () => navigate(`/groups/${event_data[0].created_by_group_id}`),
+        500
+      );
+      //redirect to group page of that id
+    }
   }
-  console.log(newEvent);
+  console.log(imageFile);
   return (
     <section className="newEvent">
       <h1>
@@ -219,7 +225,6 @@ export default function NewEvent() {
       </h1>
       <div className="newEvent__col-1">
         <div className="newEvent__input">
-          <label></label>
           <SelectInput
             dropDownInfo={Object.keys(groups).map((key) => ({
               id: key,
@@ -273,34 +278,19 @@ export default function NewEvent() {
           </div>
         </div>
 
-        {/*make this into a date selector */}
-        <div className="newEvent__input">
-          <div className="newEvent__dates">
-            <DateInput
-              labelName={"Select Date"}
-              onChangeFunction={dateOnchange}
-              name="eventDate"
+        <br />
+        <br />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={["DatePicker"]}>
+            <DateTimePicker
+              label="Date of Event and Start Time"
+              value={value}
+              onChange={handleChange}
+              renderInput={(params) => <TextField {...params} />}
             />
-          </div>
-        </div>
-        <div className="newEvent__input">
-          <label>Enter in the starting time.</label>
-          <input
-            className="newEvent__input--tall"
-            type="text"
-            name="eventStart"
-            // onChange={eventStart}
-          ></input>
-        </div>
-        <div className="newEvent__input">
-          <label>Enter in the ending time.</label>
-          <input
-            className="newEvent__input--tall"
-            type="text"
-            name="eventEnd"
-            // onChange={eventEnd}
-          ></input>
-        </div>
+          </DemoContainer>
+        </LocalizationProvider>
+        <br />
 
         {newEvent.inperson && newEvent.inperson ? (
           <div className="newEvent__input">
@@ -327,20 +317,20 @@ export default function NewEvent() {
             </div>
           </div>
         ) : null}
-
         <div className="newEvent__input">
           <div className="newEvent__image-wrapper" {...getRootProps()}>
             <input {...getInputProps()} />
             <Btn textBtn={"Click here to upload image"} />
-            {newEvent.imagePreview && newEvent.imagePreview !== undefined ? (
+            {imagePreview === undefined ? null : (
               <img
                 className="newEvent__imageUpload"
                 alt={`${newEvent.eventName} image`}
                 src={imagePreview}
               />
-            ) : null}
+            )}
           </div>
         </div>
+
         <div className="newEvent__input">
           <label>Describe your event, tells others what to expect. </label>
           <div className="newEvent__text">
