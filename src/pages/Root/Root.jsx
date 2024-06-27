@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
+import fireIcon from "../../assets/icons/icon_fire.png";
+import groupIcon from "../../assets/icons/icon_people-group.svg";
+import pointsIcon from "../../assets/icons/icon_star.svg";
 import logo from "../../assets/icons/reconnect-logo.svg";
 import companyLogo from "../../assets/icons/starbacks-logo.png";
 import eventImage from "../../assets/running-club.jpg";
@@ -7,9 +10,6 @@ import CardList from "../../components/mainComponents/CardList/CardList";
 import supabase from "../../config/supabaseClient";
 import { getUserId } from "../../userUtils.js";
 import "./Root.scss";
-import fireIcon from "../../assets/icons/icon_fire.png";
-import pointsIcon from "../../assets/icons/icon_star.svg";
-import groupIcon from "../../assets/icons/icon_people-group.svg";
 
 // const events = [
 //   {
@@ -233,7 +233,8 @@ export default function Root() {
                 Calendar
               </NavLink>
             </li>
-            <li>
+            {//commented out for now, not enough time for implementation
+            /* <li>
               <NavLink
                 to="/maps"
                 className={({ isActive, isPending }) =>
@@ -242,7 +243,7 @@ export default function Root() {
               >
                 Maps
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink
                 to="/leaderboards"
