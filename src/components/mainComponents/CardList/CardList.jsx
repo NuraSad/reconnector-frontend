@@ -15,6 +15,7 @@ function CardList({ events, title }) {
             attendees={event.
               NumberOfParticipants}
             date={event.event_date}
+            event={event}
           />
         ))}
     </div>

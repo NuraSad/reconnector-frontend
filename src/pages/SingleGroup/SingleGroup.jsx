@@ -27,11 +27,9 @@ function SingleGroup() {
   let { id } = useParams();
   const[eventTitle,setEventTitle] =useState("");
   let navigate = useNavigate();
-  // const [usersAvatar] = useState(listAvatars);
+
   const [joinGroup, setJoinGroup] = useState(false);
 
-  // const location = useLocation();
-  // const { groupMembers } = location.state;
   useEffect(() => {
     const fetchGroupId = async (id) => {
       const { data, error } = await supabase

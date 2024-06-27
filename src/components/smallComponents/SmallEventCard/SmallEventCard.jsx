@@ -1,49 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import "./SmallEventCard.scss";
+import SingleEventModal from "../../mainComponents/SingleEventModal/SingleEventModal";
+import DateFormatforEvent from "../DateFormatforEvent/DateFormatforEvent";
 
-function SmallEventCard({ name, src, attendees, date }) {
-  const dateTimeString = date;
-  const dateTime = new Date(dateTimeString);
-  const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  const day = dateTime.getDay();
-  const hours = String(dateTime.getHours());
-  let minutes = String(dateTime.getMinutes());
-  minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-
-  const timeString = `${daysOfWeek[dateTime.getDay()]} ${day} ${
-    months[dateTime.getMonth()]
-  } @${hours}:${minutes}`;
+function SmallEventCard({ name, src, attendees, date, event }) {
+  const [openEventModal, setOpenEventModal] = useState(false);
+  console.log(event);
+  const handleEvent = () => {
+    setOpenEventModal(true);
+  };
   return (
-    <div className="event-card">
-      <img src={src} className={src ? "" : "blankImage"} />
-
-      <p className="date">{timeString}</p>
-      <p className="num">{attendees}</p>
-      <p className="name">{`# ${name}`}</p>
-    </div>
+    <>
+      <div className="event-card" onClick={handleEvent}>
+        <img src={src} className={src ? "" : "blankImage"} />
+        <p className="date">
+          <DateFormatforEvent date={date} />
+        </p>
+        <p className="num">{attendees}</p>
+        <p className="name">{`# ${name}`}</p>
+      </div>
+      {openEventModal && (
+        <SingleEventModal
+          setOpenEventModal={setOpenEventModal}
+          eventTitle={event.title}
+          groupId={event.created_by_group_id}
+        />
+      )}
+    </>
   );
 }
 
