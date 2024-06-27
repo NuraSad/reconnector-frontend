@@ -5,10 +5,11 @@ import DateFormatforEvent from "../DateFormatforEvent/DateFormatforEvent";
 
 function SmallEventCard({ name, src, attendees, date, event }) {
   const [openEventModal, setOpenEventModal] = useState(false);
-  console.log(event);
+
   const handleEvent = () => {
     setOpenEventModal(true);
   };
+
   return (
     <>
       <div className="event-card" onClick={handleEvent}>

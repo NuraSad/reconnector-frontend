@@ -27,7 +27,7 @@ const DateFormatforEvent = ({ date }) => {
     "Dec",
   ];
 
-  const day = dateTime.getDay();
+  const day = String(dateTime.getDate());
   const hours = String(dateTime.getHours());
   let minutes = String(dateTime.getMinutes());
   minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;

@@ -7,9 +7,9 @@ import CardList from "../../components/mainComponents/CardList/CardList";
 import supabase from "../../config/supabaseClient";
 import { getUserId } from "../../userUtils.js";
 import "./Root.scss";
-import fireIcon from '../../assets/icons/icon_fire.png';
-import pointsIcon from '../../assets/icons/icon_star.svg';
-import groupIcon from '../../assets/icons/icon_people-group.svg';
+import fireIcon from "../../assets/icons/icon_fire.png";
+import pointsIcon from "../../assets/icons/icon_star.svg";
+import groupIcon from "../../assets/icons/icon_people-group.svg";
 
 // const events = [
 //   {
@@ -115,7 +115,7 @@ export default function Root() {
           console.log("Error fetching connecting the database", errorEvent);
           return;
         }
-  
+
         setEvents(events);
       } catch (error) {
         console.log("Error happened", error.message);
@@ -142,17 +142,17 @@ export default function Root() {
           const foundEvent = eventParticipant.find(
             (item) => event.id === item.event_id
           );
-     
-            return {
-              ...event,
-              NumberOfParticipants: foundEvent?foundEvent.eventparticipantcount:0,
-            };
-       
+
+          return {
+            ...event,
+            NumberOfParticipants: foundEvent
+              ? foundEvent.eventparticipantcount
+              : 0,
+          };
         });
         if (JSON.stringify(updatedEvents) !== JSON.stringify(events)) {
           setEvents(updatedEvents);
         }
-      
       } catch (error) {
         console.log("Error in db connection", error.message);
       }
@@ -162,7 +162,7 @@ export default function Root() {
 
   return (
     user && (
-      <div className="container">{console.log("updated Events",events)}
+      <div className="container">
         <nav>
           <Link to="/">
             <img className="root__logo" src={logo} />
@@ -188,15 +188,15 @@ export default function Root() {
             <h4 className="root__user">{user.first_name}</h4>
             <div className="stats-field">
               <div className="stat">
-                <img src={groupIcon} alt="group of people"/>
+                <img src={groupIcon} alt="group of people" />
                 <p>{userGroupsCount}</p>
               </div>
               <div className="stat">
-                <img src={pointsIcon} alt="star"/>
+                <img src={pointsIcon} alt="star" />
                 <p>{user.points ? user.points : 0}</p>
               </div>
               <div className="stat">
-                <img src={fireIcon} alt="fire"/>
+                <img src={fireIcon} alt="fire" />
                 <p>{user.streak ? user.streak : 0}</p>
               </div>
             </div>
