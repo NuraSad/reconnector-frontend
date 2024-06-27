@@ -19,15 +19,18 @@ import SingleEventModal from '../../components/mainComponents/SingleEventModal/S
     useEffect(() => {
         const fetchDates = async () => {
           const userId = await getUserId();
-          const { data: participants, error } = await supabase.from("event_participants").select().eq("user_id", userId);
-          const { data: dataEvents, error: eventError } = await supabase.from('event').select().in('id', participants?.map((event) => event.event_id));
+          const { data: participants, error } = await supabase.from("event_participants")
+          .select().eq("user_id", userId);
+          const { data: dataEvents, error: eventError } = await supabase.from('event')
+          .select().in('id', participants?.map((event) => event.event_id));
+          console.log(dataEvents);
           setDataEvents(dataEvents);
-          const data = await dataEvents.map((event) => {
+          
+          const data = dataEvents.map((event) => {
             return {
               id: event.id,
               title: event.title,
-              start: event.time_begin,
-              end: event.time_end,
+              date:event.event_date,
               allDay: false
             };
           });
