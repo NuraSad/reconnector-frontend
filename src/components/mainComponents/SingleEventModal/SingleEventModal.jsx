@@ -56,7 +56,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
     };
 
     fetchEvent();
-  }, [eventTitle]);
+  }, [eventTitle, fetchError, groupId]);
 
   useEffect(() => {
     const userids = userIds?.map((item) => item.user_id);
@@ -80,7 +80,26 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
     fetchUserInfo();
   }, [userIds]);
 
-  const handleJoinGrp = async () => {
+  useEffect(() => {
+    const fetchSetJoinEvent = async () => {
+      const userId = await getUserId();
+      const { data, error } = await supabase
+        .from("event_participants")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("event_id", event[0].id);
+      if (error) {
+        console.log(error);
+      }
+      if (data) {
+        console.log(data);
+        setJoinEvent(true);
+      }
+    };
+    fetchSetJoinEvent();
+  }, [event]);
+
+  const handleJoinEvent = async () => {
     const userId = await getUserId();
     const { data, error } = await supabase.from("event_participants").insert([
       {
@@ -88,11 +107,15 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
         event_id: event.id,
       },
     ]);
-    if (!error) {
-      setJoinEvent(false);
+    if (data) {
+      setJoinEvent(true);
+      console.log("you have joined the group");
+    }
+    if (error) {
+      console.log("error for joining" + error);
     }
   };
-  const handleLeaveGrp = async () => {
+  const handleLeaveEvent = async () => {
     const userId = await getUserId();
     const { data, error } = await supabase
       .from("event_participants")
@@ -100,23 +123,25 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
       .eq("user_id", userId)
       .eq("event_id", event.id);
 
-    if (!error) {
-      setJoinEvent(true);
+    if (data) {
+      setJoinEvent(false);
+      console.log("you have left the group");
+      console.log(data);
+    }
+    if (error) {
+      console.log("error for leaving group" + error);
     }
   };
 
-  function toggleJoin() {
+  const toggleJoin = async () => {
     if (joinEvent) {
-      handleJoinGrp;
-      setToggle(!toggle);
+      await handleLeaveEvent();
+    } else {
+      await handleJoinEvent();
     }
-    if (!joinEvent) {
-      handleLeaveGrp;
-      setToggle(!toggle);
-    }
-  }
+    setToggle(!toggle);
+  };
 
-  console.log(event);
   return (
     <>
       <BackDrop />
@@ -151,8 +176,8 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
                   textColor={"white"}
                   height={"35px"}
                   inputType={!event[0].online ? "checkbox" : "null"}
-                  checked={toggle}
-                  onChange={() => toggleJoin()}
+                  checked={joinEvent ? toggle : !toggle}
+                  onClick={() => toggleJoin()}
                 />
                 <Btn
                   textBtn={"View Group"}
