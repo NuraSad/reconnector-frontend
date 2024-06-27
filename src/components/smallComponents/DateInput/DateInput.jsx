@@ -15,7 +15,6 @@ function DateInput({ labelName, onChangeFunction }) {
     onChangeFunction(selectedName, selectedValue);
     setStartDate(date);
   };
-  console.log(startDate);
   return (
     <div className="dateInput">
       <label className="dateInput__label" htmlFor="labelName">

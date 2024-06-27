@@ -11,6 +11,13 @@ import SelectInput from "../../components/smallComponents/SelectInput/SelectInpu
 import supabase from "../../config/supabaseClient";
 import { getAuthUserId } from "../../userUtils.js";
 import "./NewEvent.scss";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import TextField from "@mui/material/TextField";
+import dayjs from "dayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 const CDNURL =
   "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/";
@@ -22,7 +29,17 @@ export default function NewEvent() {
   const [groups, setGroups] = useState({});
   const [imagePreview, setImagePreview] = useState();
   const [imageFile, setImageFile] = useState();
+  const [value, setValue] = useState(dayjs(new Date()));
+  const [endTime, setEndTime] = useState(null);
 
+  const handleChange = (newValue) => {
+    setValue(newValue);
+  };
+
+  const handleChangeEnd = (newValue) => {
+    setEndTime(newValue);
+  };
+  console.log(value);
   let navigate = useNavigate();
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -276,7 +293,7 @@ export default function NewEvent() {
         </div>
 
         {/*make this into a date selector */}
-        <div className="newEvent__input">
+        {/* <div className="newEvent__input">
           <div className="newEvent__dates">
             <DateInput
               labelName={"Select Date"}
@@ -284,25 +301,31 @@ export default function NewEvent() {
               name="date"
             />
           </div>
-        </div>
-        <div className="newEvent__input">
-          <label>Enter in the starting time.</label>
-          <input
-            className="newEvent__input--tall"
-            type="text"
-            name="eventStart"
-            // onChange={eventStart}
-          ></input>
-        </div>
-        <div className="newEvent__input">
-          <label>Enter in the ending time.</label>
-          <input
-            className="newEvent__input--tall"
-            type="text"
-            name="eventEnd"
-            // onChange={eventEnd}
-          ></input>
-        </div>
+        </div> */}
+        <br />
+        <br />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={["DatePicker"]}>
+            <DateTimePicker
+              label="Date of event and Start Time"
+              value={value}
+              onChange={handleChange}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+        <br />
+
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={["TimePicker"]}>
+            <TimePicker
+              label="Enter in the ending time."
+              value={endTime}
+              onChange={handleChangeEnd}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
 
         {newEvent.inperson && newEvent.inperson ? (
           <div className="newEvent__input">
