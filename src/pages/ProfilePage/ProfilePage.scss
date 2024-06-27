@@ -168,11 +168,14 @@
             width: 90%;
             margin: auto;
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
-            justify-content: center;
-            column-gap: 1rem;
+            justify-content: flex-start;
+            gap: 1rem;
+
 
             a {
+                flex-basis: 30%;
                 width: inherit;
                 height: inherit;
             }
