@@ -9,11 +9,13 @@ function CardList({ events, title }) {
       {events &&
         events.map((event) => (
           <SmallEventCard
-            key={event.event_id}
-            name={event.name}
-            src={event.src}
-            attendees={event.attendees}
-            date={event.date}
+            key={event.id}
+            name={event.title}
+            src={event.event_image}
+            attendees={event.
+              NumberOfParticipants}
+            date={event.event_date}
+            event={event}
           />
         ))}
     </div>
