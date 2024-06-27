@@ -21,11 +21,10 @@ function SingleGroup() {
   const [groupMembers, setGroupMembers] = useState([]);
 
   const [events, setEvents] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
   const [openEventModal, setOpenEventModal] = useState(false);
   const [loading, setLoading] = useState(true);
   let { id } = useParams();
-  const[eventTitle,setEventTitle] =useState("");
+  const [eventTitle, setEventTitle] = useState("");
   let navigate = useNavigate();
 
   const [joinGroup, setJoinGroup] = useState(false);
@@ -86,7 +85,6 @@ function SingleGroup() {
       if (groupMembersData) {
         // Extract user_ids
         const userIds = groupMembersData.map((member) => member.user_id);
-        console.log(userIds);
         // Fetch user details from users table
         const { data: usersData, error: usersError } = await supabase
           .from("user")
@@ -109,7 +107,7 @@ function SingleGroup() {
   }, [id]);
 
   const handleJoinEvents = (e) => {
-    setEventTitle(e.target.textContent) ;
+    setEventTitle(e.target.textContent);
 
     setOpenEventModal(true);
   };
@@ -184,12 +182,6 @@ function SingleGroup() {
           <h1 className="singleGroup__title">#{groups?.name}</h1>
           <div className="singleGroup__header">
             <div className="singleGroup__header--left">
-              {/* <div className="singleGroup__header--days">
-                <DateItem date={"Mon"} />
-                <DateItem date={"Tues"} />
-                <DateItem date={"Wed"} />
-              </div> */}
-
               <div className="singleGroup__header--icons">
                 <AvatarGroup max={4}>
                   {groupMembers &&
@@ -234,20 +226,6 @@ function SingleGroup() {
                 height={"35px"}
                 onClick={goToEvent}
               />
-              {/* <Btn
-                textBtn={"In-person"}
-                bgColor={"#D9D9D9"}
-                textColor={"white"}
-                marginTop={"1rem"}
-                height={"35px"}
-              />
-              <Btn
-                textBtn={"Vancouver"}
-                bgColor={"#D9D9D9"}
-                textColor={"white"}
-                marginTop={"1rem"}
-                height={"35px"}
-              /> */}
             </div>
           </div>
           <div className="singleGroup__columns">
