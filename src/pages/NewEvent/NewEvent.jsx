@@ -77,10 +77,10 @@ export default function NewEvent() {
   }
 
   //set the event name in the newEvent object
-  function dateOnchange(name, date) {
+  function dateOnchange(name, value) {
     setNewEvent((prevState) => ({
       ...prevState,
-      date: date,
+      [name]: value,
     }));
   }
 
@@ -199,12 +199,15 @@ export default function NewEvent() {
       console.log(event_error);
     }
 
-		if (event_data) {
-			console.log("New Event was successfully added.");
-			eventCreate();
-			setTimeout(() => navigate(`/groups/${event_data[0].created_by_group_id}`), 1000);
-			//redirect to group page of that id
-		}
+    if (event_data) {
+      console.log("New Event was successfully added.");
+      eventCreate();
+      setTimeout(
+        () => navigate(`/groups/${event_data[0].created_by_group_id}`),
+        500
+      );
+      //redirect to group page of that id
+    }
   }
   console.log(newEvent);
   return (
@@ -219,7 +222,6 @@ export default function NewEvent() {
       </h1>
       <div className="newEvent__col-1">
         <div className="newEvent__input">
-          <label></label>
           <SelectInput
             dropDownInfo={Object.keys(groups).map((key) => ({
               id: key,
@@ -279,7 +281,7 @@ export default function NewEvent() {
             <DateInput
               labelName={"Select Date"}
               onChangeFunction={dateOnchange}
-              name="eventDate"
+              name="date"
             />
           </div>
         </div>
