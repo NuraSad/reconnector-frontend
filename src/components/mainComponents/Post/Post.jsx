@@ -2,8 +2,9 @@ import Avatar from "@mui/material/Avatar";
 import "./Post.scss";
 import heart from "/heart_icon.svg";
 import PropTypes from "prop-types";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import supabase from "../../../config/supabaseClient";
+
 export default function Post({
   profileAvatar,
   last_name,
@@ -14,53 +15,73 @@ export default function Post({
   postTitle,
   postText,
   likes,
-  id
+  id,
 }) {
-
-
+  const [fetchError, setFetchError] = useState("");
   const [likeCount, setLikeCount] = useState(likes);
+  const [thisAuthor, setThisAuthor] = useState({});
   const [isLiked, setIsLiked] = useState(() => {
     // Initialize isLiked from session storage if it exists
     const savedIsLiked = sessionStorage.getItem(`isLiked_${id}`);
     return savedIsLiked ? JSON.parse(savedIsLiked) : false;
   });
-  
-  
+
+  console.log(thisAuthor);
   useEffect(() => {
     // Update session storage whenever isLiked changes
     sessionStorage.setItem(`isLiked_${id}`, JSON.stringify(isLiked));
   }, [isLiked, id]);
-  
+
   const handleLike = async () => {
     const newLikeCount = isLiked ? likeCount - 1 : likeCount + 1;
-  
+
     setLikeCount(newLikeCount);
     setIsLiked(!isLiked);
-  
+
     const { data, error } = await supabase
       .from("post")
       .update({ likes: newLikeCount })
       .eq("id", id);
-  
+
     if (error) {
       setLikeCount(likeCount); // Revert to the old count
       setIsLiked(isLiked); // Revert to the old like state
     }
   };
-  
-  
-  
+
+  // username is the id
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const { data: userInfo, error: userInfoError } = await supabase
+          .from("user")
+          .select("avatar, first_name, last_name, username")
+          .eq("id", username);
+        if (userInfoError) {
+          setFetchError("Cannot fetch the Users joined");
+          // console.log(userInfoError);
+          return;
+        }
+        console.log(userInfo);
+        setThisAuthor(userInfo[0] || {});
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchUserInfo();
+  }, [username]);
 
   return (
     <div className="post">
       <div className="post__user-info">
         <div className="post__user-info--userWrap">
-          <Avatar alt={username} src={profileAvatar} />
+          <Avatar alt={username} src={thisAuthor.avatar} />
           <div className="post__user-info--nameWrap">
             <h3 className="post__user-info--name">
-              {first_name} {last_name}
+              {thisAuthor.first_name} {thisAuthor.last_name}
             </h3>
-            <h4 className="post__user-info--user">@{username} </h4>
+            {/* we don't have a username */}
+            {/* <h4 className="post__user-info--user">@{thisAuthor.username} </h4> */}
           </div>
         </div>
 
@@ -78,8 +99,19 @@ export default function Post({
       <div className="post__info">
         <div className="post__info--col-2">
           <div className="post__info--col-2--wrapper">
-            <p className="post__info--col-2--p" unselectable="on" onClick={handleLike}>{likeCount}</p>
-            <img className="post__info--col-2--svg" alt={heart} src={heart} style={{ filter: isLiked ? "none" : "brightness(50%)" }} />
+            <p
+              className="post__info--col-2--p"
+              unselectable="on"
+              onClick={handleLike}
+            >
+              {likeCount}
+            </p>
+            <img
+              className="post__info--col-2--svg"
+              alt={heart}
+              src={heart}
+              style={{ filter: isLiked ? "none" : "brightness(50%)" }}
+            />
           </div>
         </div>
       </div>

@@ -24,6 +24,7 @@ export default function Explore() {
     getPosts();
   }, []);
 
+  console.log(posts);
   return (
     <section className="explore">
       <h1 className="explore__title page-font">Explore</h1>
