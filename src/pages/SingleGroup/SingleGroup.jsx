@@ -21,11 +21,10 @@ function SingleGroup() {
   const [groupMembers, setGroupMembers] = useState([]);
 
   const [events, setEvents] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
   const [openEventModal, setOpenEventModal] = useState(false);
   const [loading, setLoading] = useState(true);
   let { id } = useParams();
-  const[eventTitle,setEventTitle] =useState("");
+  const [eventTitle, setEventTitle] = useState("");
   let navigate = useNavigate();
 
   const [joinGroup, setJoinGroup] = useState(false);
@@ -109,7 +108,7 @@ function SingleGroup() {
   }, [id]);
 
   const handleJoinEvents = (e) => {
-    setEventTitle(e.target.textContent) ;
+    setEventTitle(e.target.textContent);
 
     setOpenEventModal(true);
   };

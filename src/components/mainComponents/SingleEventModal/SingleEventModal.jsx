@@ -5,13 +5,30 @@ import Btn from "../../smallComponents/Btn/Btn";
 import Map from "../../../pages/Map/Map";
 import BackDrop from "../../smallComponents/BackDrop/BackDrop";
 import supabase from "../../../config/supabaseClient";
+import Tree from "../../../assets/tree-loader";
+
 import DateFormatforEvent from "../../smallComponents/DateFormatforEvent/DateFormatforEvent";
+
 const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
   const [toggle, setToggle] = useState(true);
   const [event, setEvent] = useState();
   const [userIds, setUserIds] = useState();
   const [userInfo, setUserInfo] = useState();
   const [fetchError, setFetchError] = useState("");
+  // const timestamp = event[0].event_date;
+  // const date = new Date(timestamp);
+
+  // const dateFormat = {
+  //   year: "numeric",
+  //   month: "long",
+  //   day: "numeric",
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  //   second: "2-digit",
+  //   hour12: true, // For 12-hour format with AM/PM
+  // };
+  // // Convert to readable format
+  // const readableDate = date.toLocaleString("en-US", dateFormat);
   useEffect(() => {
     const fetchEvent = async () => {
       const { data: eventData, error } = await supabase
@@ -49,7 +66,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
       try {
         const { data: userInfo, error: userInfoError } = await supabase
           .from("user")
-          .select("avatar, first_name,last_name")
+          .select("avatar, first_name, last_name")
           .in("id", userids);
         if (userInfoError) {
           setFetchError("Cannot fetch the Users joined");
@@ -64,6 +81,8 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
     };
     fetchUserInfo();
   }, [userIds]);
+
+  console.log(event);
   return (
     <>
       <BackDrop />
@@ -77,9 +96,10 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
               <h1>#{eventTitle}</h1>
               <div className="singlegrpmodal-content-grp-info">
                 <p>
-                  <DateFormatforEvent
-                    date={event[0].created_at}
-                  ></DateFormatforEvent>
+                  {eventData[0].event_date}
+                  {/* <DateFormatforEvent
+                    date={event[0].event_date}
+                  ></DateFormatforEvent> */}
                 </p>
                 <p>{event[0].online ? "Online Event" : "In-person Event"}</p>
               </div>
@@ -104,34 +124,17 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
                   fontWeight={"Bold"}
                   textColor={"white"}
                   height={"35px"}
+                  onClick={() => setOpenEventModal(false)}
                 />
               </div>
               <p className="singlegrpmodal-content-grp-stmt">
                 {event[0].description}
               </p>
-              <h3>Gear You Need</h3>
-              <p className="singlegrpmodal-content-grp-gear">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Suspendisse lacinia eros vitae nunc feugiat sollicitudin.
-                <ul>
-                  <li>
-                    Donec suscipit, erat a rhoncus cursus, orci dui varius
-                    augue, vel blandit augue magna ut orci.
-                  </li>
-                  <li>
-                    Pellentesque in lorem volutpat, blandit urna eu, laoreet
-                    magna. Pellentesque sed eros tellus. Donec gravida porta
-                    nibh ac luctus.
-                  </li>
-                  <li>
-                    Aliquam eu magna vel lorem tincidunt faucibus ac vitae
-                    felis. Nam in sodales felis, nec dictum ex.
-                  </li>
-                </ul>
-              </p>
+
               <div className="singlegrpmodal-content-grp-map">
                 <h3>Location</h3>
-                <Map />
+                {event[0].location}
+                {/* <Map /> */}
               </div>
             </div>
             <div className="singlegrpmodal-content-joiners">
