@@ -78,7 +78,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
       }
     };
     fetchUserInfo();
-  }, [userIds]);
+  }, [userIds, joinEvent, event]);
 
   useEffect(() => {
     const fetchSetJoinEvent = async () => {
@@ -91,7 +91,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
       if (error) {
         console.log(error);
       }
-      if (data) {
+      if (data.length > 0) {
         console.log(data);
         setJoinEvent(true);
       }
@@ -104,7 +104,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
     const { data, error } = await supabase.from("event_participants").insert([
       {
         user_id: userId,
-        event_id: event.id,
+        event_id: event[0].id,
       },
     ]);
     if (data) {
@@ -121,7 +121,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
       .from("event_participants")
       .delete()
       .eq("user_id", userId)
-      .eq("event_id", event.id);
+      .eq("event_id", event[0].id);
 
     if (data) {
       setJoinEvent(false);
@@ -175,7 +175,8 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
                   fontWeight={"Bold"}
                   textColor={"white"}
                   height={"35px"}
-                  inputType={!event[0].online ? "checkbox" : "null"}
+                  inputType={"checkbox"}
+                  // inputType={!event[0].online ? "checkbox" : "null"}
                   checked={joinEvent ? toggle : !toggle}
                   onClick={() => toggleJoin()}
                 />
