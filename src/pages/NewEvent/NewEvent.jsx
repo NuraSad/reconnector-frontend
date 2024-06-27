@@ -301,18 +301,21 @@ export default function NewEvent() {
                 name="address"
                 placeholder={"Street Address"}
                 onChange={addressOnchange}
+                required
               ></input>
               <input
                 type="text"
                 name="city"
                 placeholder={"City"}
                 onChange={cityOnchange}
+                required
               ></input>
               <input
                 type="text"
                 name="country"
                 placeholder={"Country"}
                 onChange={countryOnchange}
+                required
               ></input>
             </div>
           </div>

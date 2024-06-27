@@ -23,30 +23,32 @@ export default function Explore() {
     }
     getPosts();
   }, []);
+
   console.log(posts);
   return (
     <section className="explore">
       <h1 className="explore__title page-font">Explore</h1>
       <div className="explore__posts">
-        
         {posts &&
-          posts.map((i) => (
-            <Post
-              key={i.id}
-              id={i.id}
-              profileAvatar={i.profileAvatar}
-              last_name={i.last_name}
-              first_name={i.first_name}
-              username={i.created_by}
-              tag={i.group_name}
-              img1={i.images}
-              img2={i.img_sec}
-              img3={i.img_third}
-              postTitle={i.title}
-              postText={i.body}
-              likes={i.likes}
-            />
-          ))}
+          posts
+            .reverse()
+            .map((i) => (
+              <Post
+                key={i.id}
+                id={i.id}
+                profileAvatar={i.profileAvatar}
+                last_name={i.last_name}
+                first_name={i.first_name}
+                username={i.created_by}
+                tag={i.group_name}
+                img1={i.images}
+                img2={i.img_sec}
+                img3={i.img_third}
+                postTitle={i.title}
+                postText={i.body}
+                likes={i.likes}
+              />
+            ))}
       </div>
     </section>
   );
