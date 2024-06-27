@@ -11,8 +11,8 @@ import { WbIncandescentTwoTone } from "@mui/icons-material";
 const CDNURL =
   "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/";
 
-export default function UpdateProfilePopup({userInit, onClose}) {
-  const [user, setUser] = useState(userInit)
+export default function UpdateProfilePopup({ userInit, onClose }) {
+  const [user, setUser] = useState(userInit);
   const [fetchError, setFetchError] = useState(null);
   const [companies, setCompanies] = useState([]);
   const [imagePreview, setImagePreview] = useState(user.avatar ?? null);
@@ -33,12 +33,11 @@ export default function UpdateProfilePopup({userInit, onClose}) {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   function onInputChange(e) {
-    setUser({...user, [e.target.name]: e.target.value})
+    setUser({ ...user, [e.target.name]: e.target.value });
   }
 
   const profileUpdate = () => toast.success("Profile Updated!");
-  const notUpdated = () =>
-    toast.warn("Location AND company are required!");
+  const notUpdated = () => toast.warn("Location AND company are required!");
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -58,7 +57,7 @@ export default function UpdateProfilePopup({userInit, onClose}) {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!user.location || !user.company_id ) {
+    if (!user.location || !user.company_id) {
       return notUpdated();
     }
     let imageURL = null;
@@ -91,59 +90,113 @@ export default function UpdateProfilePopup({userInit, onClose}) {
           avatar: imageURL ? imageURL : imagePreview,
         },
       ])
-      .eq('id', user.id)
-      .select()
-    
+      .eq("id", user.id)
+      .select();
+
     if (user_error) {
       console.log(user_error);
     }
 
     if (user_data) {
-      profileUpdate()
-    //   only way info in Root can be updated for now
-      window.location.reload()
-     
+      profileUpdate();
+      //   only way info in Root can be updated for now
+      window.location.reload();
     }
   }
-//
+  //
   return (
     <section className="profile-popup">
-        <h1>
-            Profile Info
-        </h1>
-        <button className="close-btn" onClick={onClose}>X</button>
-        <label htmlFor="first_name"> First Name:
-            <input className="input name" type='text' name='first_name' value={user.first_name ?? ''} onChange={(e) => onInputChange(e)} minLength='2' required/>
-        </label>
-        <label htmlFor="last_name"> Last Name:
-            <input className="input name" type='text' name='last_name' value={user.last_name ?? ''} onChange={(e) => onInputChange(e)} minLength='2' required/>
-        </label>
-        <label htmlFor="email">Email:
-            <input className="input name" type='email' name='email' value={user.email ?? ''} onChange={(e) => onInputChange(e)} minLength='2' required/>
-        </label>
-        <label htmlFor="company_id">Choose your company:
-            <select value={user.company_id ?? ''} name="company_id" onChange={(e) => onInputChange(e)} required>
-                { companies && companies.map((company, i) => (
-                    <option key={i} value={company.id}>{company.name}</option>
-                ))}
-            </select>
-        </label>
-        <label htmlFor="location">Enter your city:
-            <input className="input name" type='text' name='location' value={user.location ?? ''} onChange={(e) => onInputChange(e)} minLength='2' required/>
-        </label>
-        <label htmlFor="preferred_radius">Preferred radius:
-            <input name="preferred_radius" type="number" value={user.preferred_radius ?? 5} onChange={(e) => onInputChange(e)} min="5"/>
-        </label>
-        <div className="image-wrapper" {...getRootProps()}>
-            <input {...getInputProps()} />
-            <Btn textBtn={"Click here to upload image"} />
-            <img
-            alt={`${user.first_name}'s avatar`}
-            src={imagePreview}
-            />
-        </div>
-        <button className="btn submit" onClick={handleSubmit}>Update profile</button>
-       <ToastContainer position="top-center" />
+      <h1>Profile Info</h1>
+      <button className="close-btn" onClick={onClose}>
+        X
+      </button>
+      <label htmlFor="first_name">
+        {" "}
+        First Name:
+        <input
+          className="input name"
+          type="text"
+          name="first_name"
+          value={user.first_name ?? ""}
+          onChange={(e) => onInputChange(e)}
+          minLength="2"
+          required
+        />
+      </label>
+      <label htmlFor="last_name">
+        {" "}
+        Last Name:
+        <input
+          className="input name"
+          type="text"
+          name="last_name"
+          value={user.last_name ?? ""}
+          onChange={(e) => onInputChange(e)}
+          minLength="2"
+          required
+        />
+      </label>
+      <label htmlFor="email">
+        Email:
+        <input
+          className="input name"
+          type="email"
+          name="email"
+          value={user.email ?? ""}
+          onChange={(e) => onInputChange(e)}
+          minLength="2"
+          required
+        />
+      </label>
+      <label htmlFor="company_id">
+        Choose your company:
+        <select
+          value={user.company_id ?? ""}
+          name="company_id"
+          onChange={(e) => onInputChange(e)}
+          required
+        >
+          {companies &&
+            companies.map((company, i) => (
+              <option key={i} value={company.id}>
+                {company.name}
+              </option>
+            ))}
+        </select>
+      </label>
+      <label htmlFor="location">
+        Enter your city:
+        <input
+          className="input name"
+          type="text"
+          name="location"
+          value={user.location ?? ""}
+          onChange={(e) => onInputChange(e)}
+          minLength="2"
+          required
+        />
+      </label>
+      <label htmlFor="preferred_radius">
+        Preferred radius:
+        <input
+          name="preferred_radius"
+          type="number"
+          value={user.preferred_radius ?? 5}
+          onChange={(e) => onInputChange(e)}
+          min="5"
+        />
+      </label>
+      <div className="image-wrapper" {...getRootProps()}>
+        <input {...getInputProps()} />
+        <Btn textBtn={"Click here to upload image"} />
+        {imagePreview === undefined ? null : (
+          <img alt={`${user.first_name}'s avatar`} src={imagePreview} />
+        )}
+      </div>
+      <button className="btn submit" onClick={handleSubmit}>
+        Update profile
+      </button>
+      <ToastContainer position="top-center" />
     </section>
   );
 }
