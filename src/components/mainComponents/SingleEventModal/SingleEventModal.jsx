@@ -179,7 +179,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
                   inputType={"checkbox"}
                   // inputType={!event[0].online ? "checkbox" : "null"}
                   checked={joinEvent ? toggle : !toggle}
-                  onClick={() => toggleJoin()}
+                  onClick={toggleJoin}
                 />
                 <Btn
                   textBtn={"View Group"}

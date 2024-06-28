@@ -165,6 +165,9 @@ function SingleGroup() {
     if (!error) {
       setJoinGroup(true);
     }
+
+
+    
   };
 
   if (loading) {
