@@ -34,6 +34,8 @@ function NewPost() {
     embedId: 10597199340,
     style: "standard",
   });
+  const [files, setFiles] = useState(null);
+
   let navigate = useNavigate();
   const CDNURL =
     "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/";
@@ -45,7 +47,7 @@ function NewPost() {
         setImagePreview(e.target.result);
       };
       reader.readAsDataURL(file);
-      setImageFile(file);
+      setFiles(file);
       return file;
     });
   }, []);
@@ -89,6 +91,33 @@ function NewPost() {
     }
   };
 
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const user = await getUserId();
+  //     setUserId(user);
+  //   };
+  //   const fetchGroups = async () => {
+  //     const { data, error } = await supabase.from("group").select("id, name");
+  //     if (error) {
+  //       console.log(error);
+  //     } else {
+  //       const map = [];
+  //       data.forEach((group) => {
+  //         map.push({ name: group.name });
+  //       });
+  //       setGroups(map);
+  //     }
+  //   };
+  //   const fetchAuthId = async () => {
+  //     const auth_user_id = await getAuthUserId();
+  //     setSupaUserId(auth_user_id);
+  //   };
+  //   fetchUser();
+  //   fetchAuthId();
+  //   fetchGroups();
+  //   getSupaUserID();
+  // }, []);
+
   useEffect(() => {
     const fetchUser = async () => {
       const user = await getUserId();
@@ -110,10 +139,10 @@ function NewPost() {
       const auth_user_id = await getAuthUserId();
       setSupaUserId(auth_user_id);
     };
+
     fetchUser();
     fetchAuthId();
     fetchGroups();
-    getSupaUserID();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -125,18 +154,15 @@ function NewPost() {
 
     let imageURL = null;
 
-    if (imageFile) {
-      console.log("file!!");
-      console.log(imageFile);
+    if (files) {
       // supabase storage uses authenticated user id instead of our internal id
-      const auth_user_id = await getSupaUserID();
 
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from("postImages")
-        .upload(auth_user_id + "/" + uuidv4(), imageFile);
+        .upload(supaUserId + "/" + uuidv4(), files);
 
       if (uploadError) {
-        console.log("Unable to upload image file." + uploadError);
+        console.log("Unable to upload image file.");
       }
 
       if (uploadData) {
@@ -146,10 +172,9 @@ function NewPost() {
     // Create a new post in Supabase
     const { postData, error } = await supabase.from("post").insert([
       {
-        id: postId,
         created_by: userId,
         group_name: groupName,
-        image: imageURL.path,
+        images: imageURL,
         title: postTitle,
         body: postDescription,
       },
@@ -201,7 +226,7 @@ function NewPost() {
               type="text"
               name="km"
               placeholder="km..."
-              value={groupName}
+              value={KM}
               required
               onChange={(e) => setKM(e.target.value)}
             />
@@ -211,7 +236,7 @@ function NewPost() {
               type="text"
               name="activityLength"
               placeholder="how long did were you active..."
-              value={groupName}
+              value={actLength}
               required
               onChange={(e) => setActLength(e.target.value)}
             />
