@@ -32,10 +32,11 @@
             align-items: flex-start;
             width: 100%;
             gap: 1rem;
+            width: 380px;
 
+           
             .input--large{
-                min-height: 200px;
-                max-height: 300px;
+                height: 150px;
                 max-width: 380px;
             }
             
@@ -63,4 +64,8 @@
         }
 
     }
+}
+
+.embedLabel {
+    margin-top: .75rem;
 }

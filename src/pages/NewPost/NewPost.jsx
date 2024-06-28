@@ -8,9 +8,12 @@ import SelectInput from "../../components/smallComponents/SelectInput/SelectInpu
 import Btn from "../../components/smallComponents/Btn/Btn";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import StravaEmbed from "../../components/smallComponents/StravaEmbed/StravaEmbed";
 
 function NewPost() {
   const [userId, setUserId] = useState();
+  const [embedCode, setEmbedCode] = useState("");
+
   const [postId, setPostId] = useState(
     Math.floor(Math.random() * (10 ** 8 - 10 ** 7)) + 10 ** 7
   );
@@ -23,7 +26,14 @@ function NewPost() {
   const [imagePreview, setImagePreview] = useState();
   const [groups, setGroups] = useState([]);
   const [imageFile, setImageFile] = useState();
-
+  const [isValid, setIsValid] = useState(true);
+  const [KM, setKM] = useState(0);
+  const [actLength, setActLength] = useState(0);
+  const [embed, setEmbed] = useState({
+    embedType: "activity",
+    embedId: 10597199340,
+    style: "standard",
+  });
   let navigate = useNavigate();
   const CDNURL =
     "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/";
@@ -44,6 +54,25 @@ function NewPost() {
   const notCreate = () =>
     toast.warn("Event name AND description are Required!");
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+  const isValidEmbedCode = (code) => {
+    // Basic validation for an iframe tag (you can extend this for other types of embeds)
+    const iframePattern = /<iframe.*<\/iframe>/;
+    return iframePattern.test(code);
+  };
+
+  const handleInputChange = (e) => {
+    const code = e.target.value;
+    if (isValidEmbedCode(code)) {
+      setEmbedCode(code);
+      //cut up the string and find the type, id and style all as a state of objects and send
+      //that back to the component
+      // setIsValid(true);
+    } else {
+      // setIsValid(false);
+      console.log("no code in embed");
+    }
+  };
 
   const getSupaUserID = async () => {
     try {
@@ -158,7 +187,6 @@ function NewPost() {
                   </option>
                 ))}
             </select> */}
-
             <label htmlFor="groupName">Group Name</label>
             <input
               type="text"
@@ -167,6 +195,25 @@ function NewPost() {
               value={groupName}
               required
               onChange={(e) => setGroupName(e.target.value)}
+            />
+            <label htmlFor="groupName">Kilometers Completed</label>
+            <input
+              type="text"
+              name="km"
+              placeholder="km..."
+              value={groupName}
+              required
+              onChange={(e) => setKM(e.target.value)}
+            />
+
+            <label htmlFor="groupName">Length of Activity</label>
+            <input
+              type="text"
+              name="activityLength"
+              placeholder="how long did were you active..."
+              value={groupName}
+              required
+              onChange={(e) => setActLength(e.target.value)}
             />
             {/* <label htmlFor="image">Image</label>
             <input
@@ -177,7 +224,6 @@ function NewPost() {
               onChange={handleFileChange}
             />
             <button onClick={handleUpload}>Upload Files</button> */}
-
             <div className="newEvent__image-wrapper" {...getRootProps()}>
               <input {...getInputProps()} />
               <Btn textBtn={"Upload Image"} />
@@ -211,10 +257,36 @@ function NewPost() {
               value={postDescription}
               onChange={(e) => setPostDescription(e.target.value)}
             />
+            <div>
+              <label className="embedLabel" htmlFor="embedInput">
+                Paste Embed Code
+              </label>
+              <textarea
+                className="input--large embedLabel"
+                id="embedInput"
+                value={embedCode}
+                onChange={(e) => setEmbedCode(e.target.value)}
+                placeholder="Paste your embed code here"
+                rows="4"
+                cols="50"
+              />
+              {!isValid && <p style={{ color: "red" }}>Invalid embed code</p>}
+              <StravaEmbed
+                embedType={embed.embedType}
+                embedId={embed.embedId}
+                style={embed.style}
+              />
+            </div>
+            <button
+              style={{ marginLeft: "auto", padding: "0 1rem" }}
+              type="submit"
+            >
+              Create Post
+            </button>
           </div>
-          <button type="submit">Create Post</button>
         </form>
       </div>
+
       <ToastContainer position="top-center" />
     </div>
   );
