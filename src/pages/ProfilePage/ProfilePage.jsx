@@ -113,7 +113,6 @@ export default function ProfilePage({ userId }) {
   }
 
     if (user) {
-      console.log(user.avatar)
       if (!user.company_id || !user.location){
           setIsEditing(true)
         } else {
