@@ -140,29 +140,6 @@ export default function NewEvent() {
   }
 
   useEffect(() => {
-    const getSupaUserID = async () => {
-      try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user !== null) {
-          setSupaUserId(user.id);
-        } else {
-          setSupaUserId("");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchUser = async () => {
-      const user = await getUserId();
-      setUserId(user);
-    };
-    fetchUser();
-    getSupaUserID();
-  }, []);
-  useEffect(() => {
     const fetchGroups = async () => {
       const { data, error } = await supabase.from("group").select("id, name");
       if (error) {
@@ -182,7 +159,7 @@ export default function NewEvent() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!newEvent.eventName || !newEvent.description || !newEvent.groupList) {
+    if (!newEvent.eventName || !newEvent.description) {
       return notCreate();
     }
     let imageURL = null;
@@ -192,7 +169,7 @@ export default function NewEvent() {
       const auth_user_id = await getAuthUserId();
 
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("eventImages")
+        .from("groupImages")
         .upload(auth_user_id + "/" + uuidv4(), imageFile);
 
       if (uploadError) {
@@ -208,6 +185,11 @@ export default function NewEvent() {
     }
 
     // add event
+    // get internal user id
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const auth_user_id = user.id;
 
     const { data: event_data, error: event_error } = await supabase
       .from("event")
@@ -217,7 +199,7 @@ export default function NewEvent() {
           description: newEvent.description,
           created_by_group_id: newEvent.groupList,
           event_image: imageURL,
-          created_by_user: userId,
+          created_by_user_id: user.id,
           online: newEvent.online ? true : false,
           in_person: newEvent.inperson ? true : false,
           location:
@@ -234,15 +216,66 @@ export default function NewEvent() {
     }
 
     if (event_data) {
+      const eventID = event_data[0].id;
       eventCreate();
       setTimeout(
         () => navigate(`/groups/${event_data[0].created_by_group_id}`),
         500
       );
       //redirect to group page of that id
+
+      let { data: user_data, user_error } = await supabase
+        .from("user")
+        .select("id")
+        .eq("auth_user_id", auth_user_id);
+
+      if (user_error) {
+        console.log("Could not retrieve logged in user id " + user_error);
+      }
+
+      if (user_data) {
+        const userID = user_data[0].id;
+
+        // add user to event admin
+        const { data: event_admin_data, error: event_admin_error } =
+          await supabase
+            .from("event_admin")
+            .insert([{ event_id: eventID, user_id: userID }])
+            .select();
+
+        if (event_admin_data) {
+          console.log(
+            "Failed to add user to event admin table " + event_admin_error
+          );
+        }
+
+        if (event_admin_data) {
+          console.log("User was successfully added to event admin table.");
+        }
+
+        // add user to event members
+        const { data: event_members_data, error: event_members_error } =
+          await supabase
+            .from("event_members")
+            .insert([{ event_id: eventID, user_id: userID }])
+            .select();
+
+        if (event_members_error) {
+          console.log(
+            "Failed to add user to event member table " + event_members_error
+          );
+        }
+
+        if (event_members_data) {
+          console.log("User was successfully added to event member table.");
+          eventCreate();
+          //I want this to navigate to the eventID
+          //setTimeout(() => navigate(`/events/${eventID}`), 1000);
+          //redirect to event page of that id
+        }
+      }
     }
   }
-
   console.log(newEvent);
   return (
     <section className="newEvent">
