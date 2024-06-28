@@ -59,7 +59,7 @@ export default function NewEvent() {
 
   const eventCreate = () => toast.success("Event is Created");
   const notCreate = () =>
-    toast.warn("Event name AND description are Required!");
+    toast.warn("Event name, description, and complete address are Required!");
 
   //location street, city, country
   function addressOnchange(e) {
@@ -208,8 +208,11 @@ export default function NewEvent() {
       );
 
       if (data.results.length > 0) {
-        setLat(data.results[0].geometry.location.lat);
-        setLng(data.results[0].geometry.location.lng);
+				const fetchedLat = data.results[0].geometry.location.lat;
+				const fetchedLng = data.results[0].geometry.location.lng;
+				setLat(fetchedLat);
+				setLng(fetchedLng);
+        return { lat: fetchedLat, lng: fetchedLng };
       } else {
         alert("No results found for the provided address.");
       }
@@ -221,11 +224,12 @@ export default function NewEvent() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    getGeoCode();
 
-    if (!newEvent.eventName || !newEvent.description) {
-      return notCreate();
-    }
+    if (!newEvent.eventName || !newEvent.description || !newEvent.address || !newEvent.city || !newEvent.country) {
+			return notCreate();
+		}
+
+    const { lat, lng } = await getGeoCode();
 
     let imageURL = null;
 
@@ -253,7 +257,6 @@ export default function NewEvent() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    console.log(user);
 
     const { data: event_data, error: event_error } = await supabase
       .from("event")
@@ -342,7 +345,6 @@ export default function NewEvent() {
       }
     }
   }
-  console.log(lat, lng);
 
   return (
     <section className="newEvent">
