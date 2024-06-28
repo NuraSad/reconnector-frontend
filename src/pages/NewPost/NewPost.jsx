@@ -169,12 +169,14 @@ function NewPost() {
         imageURL = CDNURL + uploadData.fullPath;
       }
     }
+    console.log(postDescription);
     // Create a new post in Supabase
     const { postData, error } = await supabase.from("post").insert([
       {
+        id: postId,
         created_by: userId,
         group_name: groupName,
-        images: imageURL,
+        image: imageURL,
         title: postTitle,
         body: postDescription,
       },
@@ -184,13 +186,12 @@ function NewPost() {
       console.error("Error creating post:", error);
     }
     if (postData) {
-      setPostId(Math.floor(Math.random() * (10 ** 8 - 10 ** 7)) + 10 ** 7);
+      setPostId(Math.floor(Math.random() * (uuidv4() - 10 ** 7)) + 10 ** 7);
       eventCreate();
       setTimeout(() => navigate(`/explore`), 500);
       console.log("Post created successfully:", postData);
     }
   };
-  console.log(groupName);
   return (
     <div className="form-wrapper">
       <div className="form-container">
