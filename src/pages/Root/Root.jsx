@@ -98,6 +98,7 @@ export default function Root() {
           );
           return;
         }
+   
         const eventIds = eventParticipants.map((event) => event.event_id);
         const { data: events, error } = await supabase
           .from("event")
@@ -107,6 +108,7 @@ export default function Root() {
           console.log("The database cannot fetch the events");
           return;
         }
+  
 
         const { data: eventParticipant, error: eventParticipantError } =
           await supabase.rpc(`geteventparticipantcount`, {
@@ -129,7 +131,7 @@ export default function Root() {
               : 0,
           };
         });
-
+        console.log("updatedEvents", updatedEvents);
         if (JSON.stringify(updatedEvents) !== JSON.stringify(events)) {
           setEvents(updatedEvents);
         }
@@ -143,7 +145,6 @@ export default function Root() {
   return (
     user && (
       <div className="container">
-     
         <nav>
           <Link to="/">
             <img className="root__logo" src={logo} />
