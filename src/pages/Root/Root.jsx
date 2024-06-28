@@ -209,8 +209,7 @@ export default function Root() {
                 Calendar
               </NavLink>
             </li>
-            {//commented out for now, not enough time for implementation
-            /* <li>
+            <li>
               <NavLink
                 to="/maps"
                 className={({ isActive, isPending }) =>
@@ -219,7 +218,7 @@ export default function Root() {
               >
                 Maps
               </NavLink>
-            </li> */}
+            </li> 
             <li>
               <NavLink
                 to="/leaderboards"
