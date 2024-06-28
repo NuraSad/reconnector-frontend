@@ -280,7 +280,7 @@ export default function NewEvent() {
         // add user to event members
         const { data: event_members_data, error: event_members_error } =
           await supabase
-            .from("event_members")
+            .from("event_participants")
             .insert([{ event_id: eventID, user_id: userID.id }])
             .select();
 

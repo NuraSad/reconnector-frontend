@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./SmallEventCard.scss";
 import SingleEventModal from "../../mainComponents/SingleEventModal/SingleEventModal";
 import DateFormatforEvent from "../DateFormatforEvent/DateFormatforEvent";
-
+import noImage from "../../../../public/images/no-image.jpg";
 function SmallEventCard({ name, src, attendees, date, event }) {
   const [openEventModal, setOpenEventModal] = useState(false);
 
@@ -13,7 +13,7 @@ function SmallEventCard({ name, src, attendees, date, event }) {
   return (
     <>
       <div className="event-card" onClick={handleEvent}>
-        <img src={src} className={src ? "" : "blankImage"} />
+        <img src={src ? src : noImage} />
         <p className="date">
           <DateFormatforEvent date={date} />
         </p>
