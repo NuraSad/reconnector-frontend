@@ -131,7 +131,6 @@ export default function Root() {
               : 0,
           };
         });
-        console.log("updatedEvents", updatedEvents);
         if (JSON.stringify(updatedEvents) !== JSON.stringify(events)) {
           setEvents(updatedEvents);
         }
