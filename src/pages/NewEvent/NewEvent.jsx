@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { useDropzone } from "react-dropzone";
 import { v4 as uuidv4 } from "uuid";
-
+import { getAuthUserId, getUserId } from "../../userUtils.js";
 import "react-toastify/dist/ReactToastify.css";
 import create from "../../assets/icons/create.svg";
 import Btn from "../../components/smallComponents/Btn/Btn";
@@ -23,19 +23,13 @@ export default function NewEvent() {
   const [togglePerson, setTogglePerson] = useState(false);
   const [groups, setGroups] = useState({});
   const [value, setValue] = useState(dayjs(new Date()));
-
+  const [supaUserId, setSupaUserId] = useState("");
+  const [userId, setUserId] = useState();
   const [imagePreview, setImagePreview] = useState();
   const [imageFile, setImageFile] = useState();
 
   const CDNURL =
     "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/";
-
-  const handleChange = (newValue) => {
-    setValue(newValue);
-  };
-
-  let navigate = useNavigate();
-
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.map((file) => {
       const reader = new FileReader();
@@ -47,7 +41,17 @@ export default function NewEvent() {
       return file;
     });
   }, []);
+
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
+  let navigate = useNavigate();
+
+  //fill image is one is not given
+  const defaultImage =
+    "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/eventImages/b7bfba08-3b2d-4a0d-bf07-82cb49dc2142/priscilla-du-preez-nF8xhLMmg0c-unsplash.jpg?t=2024-06-28T02%3A03%3A27.752Z";
+
+  const handleChange = (newValue) => {
+    setValue(newValue);
+  };
 
   const eventCreate = () => toast.success("Event is Created");
   const notCreate = () =>
@@ -77,32 +81,6 @@ export default function NewEvent() {
       country: country,
     }));
   }
-
-  //set the event name in the newEvent object
-  function eventNaming(e) {
-    let eventName = e.target.value;
-    setNewEvent((prevState) => ({
-      ...prevState,
-      eventName: eventName,
-    }));
-  }
-
-  useEffect(() => {
-    const fetchGroups = async () => {
-      const { data, error } = await supabase.from("group").select("id, name");
-      if (error) {
-        console.log(error);
-      } else {
-        const map = {};
-        data.forEach((group) => {
-          map[group.id] = group.name;
-        });
-        setGroups(map);
-      }
-    };
-
-    fetchGroups();
-  }, []);
 
   //set the online
   function onlineOnchange() {
@@ -152,13 +130,61 @@ export default function NewEvent() {
       setDataFunction(parsedItems);
     }
   }
+  //set the event name in the newEvent object
+  function eventNaming(e) {
+    let eventName = e.target.value;
+    setNewEvent((prevState) => ({
+      ...prevState,
+      eventName: eventName,
+    }));
+  }
+
+  useEffect(() => {
+    const getSupaUserID = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user !== null) {
+          setSupaUserId(user.id);
+        } else {
+          setSupaUserId("");
+        }
+      } catch (error) {}
+    };
+
+    const fetchUser = async () => {
+      const user = await getUserId();
+      setUserId(user);
+    };
+    fetchUser();
+    getSupaUserID();
+  }, []);
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      const { data, error } = await supabase.from("group").select("id, name");
+      if (error) {
+        console.log(error);
+      } else {
+        const map = {};
+        data.forEach((group) => {
+          map[group.id] = group.name;
+        });
+        setGroups(map);
+      }
+    };
+
+    fetchGroups();
+  }, []);
 
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!newEvent.eventName || !newEvent.description || !newEvent.groupList) {
+    if (!newEvent.eventName || !newEvent.description) {
       return notCreate();
     }
+
     let imageURL = null;
 
     if (imageFile) {
@@ -166,7 +192,7 @@ export default function NewEvent() {
       const auth_user_id = await getAuthUserId();
 
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("eventImages")
+        .from("groupImages")
         .upload(auth_user_id + "/" + uuidv4(), imageFile);
 
       if (uploadError) {
@@ -177,8 +203,17 @@ export default function NewEvent() {
         imageURL = CDNURL + uploadData.fullPath;
       }
     }
+    if (!imageFile) {
+      setImageFile(defaultImage);
+    }
 
     // add event
+    // get internal user id
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    console.log(user);
+
     const { data: event_data, error: event_error } = await supabase
       .from("event")
       .insert([
@@ -187,7 +222,7 @@ export default function NewEvent() {
           description: newEvent.description,
           created_by_group_id: newEvent.groupList,
           event_image: imageURL,
-
+          created_by_user_id: userId,
           online: newEvent.online ? true : false,
           in_person: newEvent.inperson ? true : false,
           location:
@@ -204,15 +239,70 @@ export default function NewEvent() {
     }
 
     if (event_data) {
+      const eventID = event_data[0].id;
       eventCreate();
       setTimeout(
         () => navigate(`/groups/${event_data[0].created_by_group_id}`),
         500
       );
       //redirect to group page of that id
+
+      let { data: user_data, user_error } = await supabase
+        .from("user")
+        .select("*");
+
+      if (user_error) {
+        console.log("Could not retrieve logged in user id " + user_error);
+      }
+
+      if (user_data) {
+        const userID = user_data;
+        console.log(userID);
+        // add user to event admin
+        const { data: event_admin_data, error: event_admin_error } =
+          await supabase
+            .from("event_admin")
+            .insert([{ event_id: eventID, user_id: userID.id }])
+            .select();
+
+        if (event_admin_data) {
+          console.log(
+            "Failed to add user to event admin table " + event_admin_error
+          );
+        } else {
+          console.log("User was successfully added to event admin table.");
+        }
+
+        if (event_admin_data) {
+          console.log("User was successfully added to event admin table.");
+        }
+
+        // add user to event members
+        const { data: event_members_data, error: event_members_error } =
+          await supabase
+            .from("event_members")
+            .insert([{ event_id: eventID, user_id: userID.id }])
+            .select();
+
+        if (event_members_error) {
+          console.log(
+            "Failed to add user to event member table " + event_members_error
+          );
+        } else {
+          console.log("User was successfully added to event members table.");
+        }
+
+        if (event_members_data) {
+          console.log("User was successfully added to event member table.");
+          eventCreate();
+          //I want this to navigate to the eventID
+          //setTimeout(() => navigate(`/events/${eventID}`), 1000);
+          //redirect to event page of that id
+        }
+      }
     }
   }
-  console.log(imageFile);
+  console.log(newEvent);
   return (
     <section className="newEvent">
       <h1>
@@ -244,11 +334,13 @@ export default function NewEvent() {
             type="text"
             name="eventName"
             onChange={eventNaming}
+            required
           ></input>
         </div>
         <div className="newEvent__input">
           <label>How can people attend {newEvent.eventName}?</label>
           <div className="newEvent__check">
+            {/* make something so one of these is required */}
             <Btn
               textBtn={"In-person?"}
               bgColor={"#6c3ed64f"}
@@ -287,6 +379,7 @@ export default function NewEvent() {
               value={value}
               onChange={handleChange}
               renderInput={(params) => <TextField {...params} />}
+              required
             />
           </DemoContainer>
         </LocalizationProvider>
@@ -342,6 +435,7 @@ export default function NewEvent() {
               name="descript"
               placeholder={"This activity will be enjoyable..."}
               onChange={description}
+              required
             ></textarea>
           </div>
         </div>
