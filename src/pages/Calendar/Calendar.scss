@@ -17,21 +17,18 @@
   border-radius: 3px;
   position: relative;
   gap: 10px;
+
   i {
     background-color: rgba(234, 0, 255, 0.418);
     font-size: 0.8rem;
-    padding: 3px;
-    white-space: nowrap; /* Prevents text wrapping */
-    overflow: hidden; /* Hides overflow text */
-    max-width: 100px;
-    transition: max-width 1s ease; /* Adds transition for smooth expansion */
-    position: relative; /* Required for absolute positioning of hover content */
+    transition: opacity 0.5s ease; /* Adds transition for smooth expansion */
+    opacity: 0; /* Start with invisible */
   }
-  i:hover {
-    max-width: none;
+  &:hover i {
     white-space: normal; /* Allows text wrapping on hover */
     padding: 5px; /* Optional: add padding on hover */
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Optional: add shadow on hover */
+    opacity: 1; /* Make element visible */
   }
   b {
     background-color: rgb(155, 164, 172);
