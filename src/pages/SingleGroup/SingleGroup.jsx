@@ -14,6 +14,11 @@ import SingleEventModal from "../../components/mainComponents/SingleEventModal/S
 import { getUserId } from "../../userUtils.js";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
+import { renderEventContent } from "../Calendar/Calendar.jsx";
+import * as bootstrap from "bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 
 function SingleGroup() {
   const [groups, setGroups] = useState();
@@ -21,6 +26,7 @@ function SingleGroup() {
   const [groupMembers, setGroupMembers] = useState([]);
 
   const [events, setEvents] = useState([]);
+  const [calendarEvents, setCalendarEvents] = useState([]);
   const [openEventModal, setOpenEventModal] = useState(false);
   const [loading, setLoading] = useState(true);
   let { id } = useParams();
@@ -55,13 +61,25 @@ function SingleGroup() {
         setFetchError("Could not Fetch the Event");
       } else {
         setEvents(data);
-
         setFetchError("");
       }
     };
     fetchGroupId(id);
     fetchEvent();
   }, [id]);
+
+  //query to get Calendar data
+  useEffect(() => {
+    const calendarEvents = events.map((i) => {
+      return {
+        id: i.id,
+        title: i.title,
+        start: new Date(i.event_date).toISOString(),
+        allDay: false,
+      };
+    });
+    setCalendarEvents(calendarEvents);
+  }, [events]);
 
   //query the users in this group
   useEffect(() => {
@@ -162,7 +180,7 @@ function SingleGroup() {
 
     if (!error) {
       setJoinGroup(true);
-    } 
+    }
   };
 
   if (loading) {
@@ -240,7 +258,23 @@ function SingleGroup() {
               <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView="dayGridMonth"
-                events={events}
+                events={calendarEvents}
+                eventTimeFormat={{
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  meridiem: "short",
+                }}
+                eventContent={renderEventContent}
+                eventDidMount={(info)=>{
+                  new bootstrap.Popover(info.el, {
+                    title: info.event.title,
+                    placement: "auto",
+                    trigger: "hover",
+                    customClass: "popoverStyle",
+                    content: info.event.title,
+                    html: true,
+                  })
+                }}
               />
             </div>
             <div className="singleGroup__col-2">

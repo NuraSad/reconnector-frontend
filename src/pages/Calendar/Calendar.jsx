@@ -31,14 +31,7 @@ const Calendar = () => {
 
       setDataEvents(dataEvents);
     };
-    // const fetchDates1 = async () => {
-    //   const { data: events, error } = await supabase.from("event").select();
-    //   if (error) {
-    //     setFetchError("Could not fetch the events from the Calendar");
-    //     return;
-    //   }
-    //   setDataEvents(events);
-    // };
+
     fetchDates();
   }, []);
 
@@ -91,7 +84,7 @@ const Calendar = () => {
   );
 };
 
-function renderEventContent(eventInfo) {
+export function renderEventContent(eventInfo) {
   return (
     <>
       <b>{eventInfo.timeText}</b>
