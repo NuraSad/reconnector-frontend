@@ -14,9 +14,6 @@ function NewPost() {
   const [userId, setUserId] = useState();
   const [embedCode, setEmbedCode] = useState("");
 
-  const [postId, setPostId] = useState(
-    Math.floor(Math.random() * (10 ** 8 - 10 ** 7)) + 10 ** 7
-  );
   const [groupName, setGroupName] = useState("");
   // const [files, setFiles] = useState();
   const [postTitle, setPostTitle] = useState("");
@@ -25,7 +22,6 @@ function NewPost() {
   const [supaUserId, setSupaUserId] = useState("");
   const [imagePreview, setImagePreview] = useState();
   const [groups, setGroups] = useState([]);
-  const [imageFile, setImageFile] = useState();
   const [isValid, setIsValid] = useState(true);
   const [KM, setKM] = useState(0);
   const [actLength, setActLength] = useState(0);
@@ -189,7 +185,6 @@ function NewPost() {
       // setPostId(Math.floor(Math.random() * (uuidv4() - 10 ** 7)) + 10 ** 7);
       eventCreate();
       setTimeout(() => navigate(`/explore`), 500);
-      console.log("Post created successfully:", postData);
     }
   };
   return (
