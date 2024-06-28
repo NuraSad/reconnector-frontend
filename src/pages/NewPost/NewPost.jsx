@@ -120,7 +120,7 @@ function NewPost() {
         id: postId,
         created_by: userId,
         group_name: groupName,
-        image: imageURL,
+        image: imageURL.path,
         title: postTitle,
         body: postDescription,
       },
