@@ -51,7 +51,7 @@ const Calendar = () => {
         allDay: false,
       };
     });
-    // console.log(eventData)
+
     setMapEvents(eventData);
   }, [dataEvents]);
 

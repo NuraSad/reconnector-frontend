@@ -1,6 +1,6 @@
 import Avatar from "@mui/material/Avatar";
 import "./Post.scss";
-import heart from "/heart_icon.svg";
+import heart from "../../../assets/icons/heart_icon.svg";
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import supabase from "../../../config/supabaseClient";
