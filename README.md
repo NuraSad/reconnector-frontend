@@ -1,8 +1,27 @@
-# React + Vite
+# Reconnect
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Introduction
 
-Currently, two official plugins are available:
+## Tech Stack
+![Logo](https://skillicons.dev/icons?i=html,scss,materialui,vite,supabase,postgres)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Setup
+### Initial setup
+1. Clone this repository.
+2. Run `npm i` to install all dependancies.
+3. Make a local .env file by copying the env.sample file.
+
+### Setting up Supabase
+1. Fill in `VITE_SUPABASE_URL` and `VITE_ANON_KEY` in your local .env file.
+
+### Run the Application
+```Run Application
+npm run dev
+```
+
+## Author
+Kayle Robson [@revyrob](https://github.com/revyrob)
+Aparna Dhara [@AD9-1](https://github.com/AD9-1)
+Angela Kwok [@angelatyk](https://www.github.com/angelatyk)
+Ainur Saduova [@NuraSad](https://github.com/NuraSad)
+Henry Bellman [@hheennrryyb](https://github.com/hheennrryyb)
