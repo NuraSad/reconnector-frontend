@@ -267,7 +267,6 @@ function SingleGroup() {
                 eventContent={renderEventContent}
                 eventDidMount={(info)=>{
                   new bootstrap.Popover(info.el, {
-                    title: info.event.title,
                     placement: "auto",
                     trigger: "hover",
                     customClass: "popoverStyle",
