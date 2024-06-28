@@ -101,7 +101,7 @@ function NewPost() {
       {
         created_by: userId,
         group_name: groupName,
-        images: imageURL,
+        image: imageURL,
         title: postTitle,
         body: postDescription,
       },
