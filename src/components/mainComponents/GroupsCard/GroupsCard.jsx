@@ -38,7 +38,7 @@ export default function GroupsCard(props) {
       if (groupMembersData) {
         // Extract user_ids
         const userIds = groupMembersData.map((member) => member.user_id);
-        console.log(userIds);
+        // console.log(userIds);
         // Fetch user details from users table
         const { data: usersData, error: usersError } = await supabase
           .from("user")
@@ -85,13 +85,14 @@ export default function GroupsCard(props) {
         </div>
         <div className="content">
           <div className="content__description">
-            {props.groups__description}
+            {props.groups__description?.slice(0, 150)}
           </div>
-          <Link to={`/groups/${props.id}`}>
+          <div className="content__read-more">Read More</div>
+          {/* <Link to={`/groups/${props.id}`}>
             <div className="content__join-button">
               <img src={plus} alt="join group" />
             </div>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>

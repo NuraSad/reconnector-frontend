@@ -7,11 +7,12 @@ import UpdateProfilePopup from "../../components/mainComponents/UpdateProfilePop
 import PropTypes from "prop-types";
 import bikingMedal from "../../assets/medals/biking-medal.png";
 import hikingMedal from "../../assets/medals/hiking-medal.png";
-import groupBanner from "../../assets/running-club.jpg";
 import supabase from "../../config/supabaseClient";
+
 import createIcon from '../../assets/icons/create.svg';
 import fireIcon from '../../assets/icons/icon_fire.png';
 import pointsIcon from '../../assets/icons/icon_star.svg';
+import userIcon from '../../assets/icons/profile.png';
 
 export default function ProfilePage({ userId }) {
   const [user, setUser] = useState(null);
@@ -143,7 +144,7 @@ export default function ProfilePage({ userId }) {
               <div className="avatar">
                 <img
                   className="photo"
-                  src={user.avatar}
+                  src={user.avatar?.length ? user.avatar : userIcon}
                   alt={`${user.first_name} avatar`}
                 />
                 {userCompany && (
@@ -203,9 +204,7 @@ export default function ProfilePage({ userId }) {
                   first_name={i.first_name}
                   username={i.created_by}
                   tag={i.group_name}
-                  img1={i.images}
-                  img2={i.img_sec}
-                  img3={i.img_third}
+                  img1={i.image}
                   postTitle={i.title}
                   postText={i.body}
                   likes={i.likes}

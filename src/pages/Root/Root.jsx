@@ -1,39 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
+import fireIcon from "../../assets/icons/icon_fire.png";
+import groupIcon from "../../assets/icons/icon_people-group.svg";
+import pointsIcon from "../../assets/icons/icon_star.svg";
 import logo from "../../assets/icons/reconnect-logo.svg";
 import companyLogo from "../../assets/icons/starbacks-logo.png";
-import eventImage from "../../assets/running-club.jpg";
 import CardList from "../../components/mainComponents/CardList/CardList";
 import supabase from "../../config/supabaseClient";
 import { getUserId } from "../../userUtils.js";
 import "./Root.scss";
-import fireIcon from "../../assets/icons/icon_fire.png";
-import pointsIcon from "../../assets/icons/icon_star.svg";
-import groupIcon from "../../assets/icons/icon_people-group.svg";
-
-// const events = [
-//   {
-//     event_id: "1",
-//     date: "Monday @3:30pm",
-//     name: "running sunday fun day",
-//     attendees: 25,
-//     src: eventImage,
-//   },
-//   {
-//     event_id: "2",
-//     date: "Friday @12:30pm",
-//     name: "running sunday fun day",
-//     attendees: 25,
-//     src: eventImage,
-//   },
-//   {
-//     event_id: "3",
-//     date: "Sunday @8:30am",
-//     name: "running sunday fun day",
-//     attendees: 25,
-//     src: eventImage,
-//   },
-// ];
 
 export default function Root() {
   const [internalUserId, setInternalUserId] = useState(null);
@@ -41,13 +16,16 @@ export default function Root() {
   const [userCompany, setUserCompany] = useState(null);
   const [userGroupsCount, setUserGroupsCount] = useState(0);
   const [events, setEvents] = useState([]);
-
+  const [eventsInfo, setEventsInfo] = useState([]);
   useEffect(() => {
     const fetchUserId = async () => {
-      const userId = await getUserId();
-      setInternalUserId(userId);
+      try {
+        const userId = await getUserId();
+        setInternalUserId(userId);
+      } catch (error) {
+        console.log("Error fetching userId:", error.message);
+      }
     };
-
     fetchUserId();
   }, []);
 
@@ -108,27 +86,30 @@ export default function Root() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const { data: events, error: errorEvent } = await supabase
-          .from("event")
-          .select("*");
+        const userid = await getUserId();
+        const { data: eventParticipants, error: errorEvent } = await supabase
+          .from("event_participants")
+          .select("*")
+          .eq("user_id", userid);
         if (errorEvent) {
-          console.log("Error fetching connecting the database", errorEvent);
+          console.log(
+            "Error fetching connecting the database",
+            errorEvent.message
+          );
           return;
         }
+   
+        const eventIds = eventParticipants.map((event) => event.event_id);
+        const { data: events, error } = await supabase
+          .from("event")
+          .select("*")
+          .in("id", eventIds);
+        if (error) {
+          console.log("The database cannot fetch the events");
+          return;
+        }
+  
 
-        setEvents(events);
-      } catch (error) {
-        console.log("Error happened", error.message);
-      }
-    };
-    fetchEvents();
-  }, []);
-
-  useEffect(() => {
-    const eventIds = events.map((event) => event.id);
-
-    const fetchEventParticipants = async () => {
-      try {
         const { data: eventParticipant, error: eventParticipantError } =
           await supabase.rpc(`geteventparticipantcount`, {
             event_ids: eventIds,
@@ -150,15 +131,16 @@ export default function Root() {
               : 0,
           };
         });
+        console.log("updatedEvents", updatedEvents);
         if (JSON.stringify(updatedEvents) !== JSON.stringify(events)) {
           setEvents(updatedEvents);
         }
       } catch (error) {
-        console.log("Error in db connection", error.message);
+        console.log("Error happened ", error.message);
       }
     };
-    fetchEventParticipants();
-  }, [events]);
+    fetchEvents();
+  }, []);
 
   return (
     user && (
@@ -169,12 +151,13 @@ export default function Root() {
           </Link>
           <div className="user-info">
             <div className="avatar-field">
-              <img
-                id="avatar"
-                src={user.avatar ? user.avatar : ""}
-                alt={`${user.first_name}'s avatar`}
-              />
-
+              <Link to="/">
+                <img
+                  id="avatar"
+                  src={user.avatar ? user.avatar : ""}
+                  alt={`${user.first_name}'s avatar`}
+                />
+              </Link>
               <img
                 id="company-logo"
                 src={
@@ -186,6 +169,7 @@ export default function Root() {
               />
             </div>
             <h4 className="root__user">{user.first_name}</h4>
+            <h5>{user.location}</h5>
             <div className="stats-field">
               <div className="stat">
                 <img src={groupIcon} alt="group of people" />
@@ -232,7 +216,9 @@ export default function Root() {
                 Calendar
               </NavLink>
             </li>
-            <li>
+            {
+              //commented out for now, not enough time for implementation
+              /* <li>
               <NavLink
                 to="/maps"
                 className={({ isActive, isPending }) =>
@@ -241,7 +227,8 @@ export default function Root() {
               >
                 Maps
               </NavLink>
-            </li>
+            </li> */
+            }
             <li>
               <NavLink
                 to="/leaderboards"
@@ -271,7 +258,11 @@ export default function Root() {
           <Outlet />
         </div>
 
-        <CardList events={events} title={"Upcoming Events"} />
+        {events.length > 0 ? (
+          <CardList events={events} title={"Upcoming Events"} />
+        ) : (
+          <p>No events found.</p>
+        )}
       </div>
     )
   );

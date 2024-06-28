@@ -4,12 +4,12 @@
   position: absolute;
   width: 60vw;
   padding: 2rem;
-  top: 20%;
+  top: 10%;
   left: 20%;
   background-color: white;
   z-index: 5;
-  height: 70vh;
-  overflow-y: scroll;
+ 
+  border-radius: 20px;
   &__close {
     display: flex;
     justify-content: flex-end;
@@ -35,6 +35,9 @@
           font-size: $font-base-sm;
           font-weight: bold;
         }
+      }
+      img { 
+        margin-top: 1rem;
       }
       &-btns {
         display: flex;
@@ -70,7 +73,7 @@
       }
       &-list {
         height: 60vh;
-        overflow-y: scroll;
+        overflow-y: auto;
         &-ppl {
           display: flex;
           justify-content: flex-end;

@@ -4,16 +4,17 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./DateInput.scss";
 
-function DateInput({ labelName, name, onChangeFunction }) {
+function DateInput({ labelName, onChangeFunction }) {
   // Destructuring props here
   //datepicker state
   const [startDate, setStartDate] = useState(new Date());
 
-  const handleChange = (e) => {
-		onChangeFunction(name, e.target.value);
-		setStartDate(e.target.value);
-	};
-
+  const handleChange = (date, e) => {
+    const selectedValue = date;
+    const selectedName = e.target;
+    onChangeFunction(selectedName, selectedValue);
+    setStartDate(date);
+  };
   return (
     <div className="dateInput">
       <label className="dateInput__label" htmlFor="labelName">

@@ -5,7 +5,6 @@ import icon_medal from "../../assets/icons/icon_medal.svg";
 import icon_star from "../../assets/icons/icon_star.svg";
 import icon_people from "../../assets/icons/icon_people-group.svg";
 import icon_fire from "../../assets/icons/icon_fire.png";
-import posts from "../../data/postData.json";
 import Post from "../../components/mainComponents/Post/Post";
 import supabase from "../../config/supabaseClient";
 
@@ -13,9 +12,9 @@ const SingleLeaderBoard = () => {
   const { id } = useParams();
 
   const [fetchError, setFetchError] = useState("");
-  const [fetchUsers, setFetchusers] = useState([]);
+  const [users, setUsers] = useState([]);
   const location = useLocation();
-  console.log(location.state);
+
   const {
     logo,
     points,
@@ -31,23 +30,23 @@ const SingleLeaderBoard = () => {
         .from("user")
         .select("*")
         .eq("company_id", id);
+
       if (error) {
         setFetchError("Could not Fetch the Company");
       }
       if (data) {
-        setFetchusers(data);
-        setFetchError(null);
+        setUsers(data);
+        
       }
     };
 
     fetchUser(id);
+
   }, [id]);
 
   useEffect(() => {
-    if (fetchUsers.length == 0) return;
-    const userIds = fetchUsers.map((item) => item.id);
-    console.log("userIds", userIds);
-
+    if (users.length == 0) return;
+    const userIds = users.map((item) => item.id);
     const fetchGroup = async () => {
       const { data: grpCount, error } = await supabase.rpc(`getgroupcount`, {
         user_ids: userIds,
@@ -55,30 +54,31 @@ const SingleLeaderBoard = () => {
       if (error) {
         setFetchError("Error fetching in group");
       } else {
-        const updatedUsers = fetchUsers.map((item) => {
+        const updatedUsers = users.map((item) => {
           const foundgrp = grpCount.find((data) => data.user_id === item.id);
           if (foundgrp) return { ...item, groupCount: foundgrp.groupcount };
           else {
             return item;
           }
         });
-        if (JSON.stringify(updatedUsers) !== JSON.stringify(fetchUsers)) {
-          setFetchusers(updatedUsers);
-          setFetchError("");
+        if (JSON.stringify(updatedUsers) !== JSON.stringify(users)) {
+          setUsers(updatedUsers);
         }
       }
     };
 
     fetchGroup();
-  }, [fetchUsers]);
+  }, [users]);
 
   const [posts, setPosts] = useState();
 
   useEffect(() => {
     async function getPosts() {
+      const userIds = users.map((item) => item.id);
       let { data: posts_data, error: posts_error } = await supabase
         .from("post")
-        .select("*");
+        .select()
+        .in("created_by", userIds);
 
       if (posts_error) {
         console.error("Error fetching posts:", posts_error.message);
@@ -90,7 +90,8 @@ const SingleLeaderBoard = () => {
       }
     }
     getPosts();
-  }, []);
+  }, [users]);
+
   return (
     <div className="singleleaderboard">
       {fetchError ? (
@@ -142,7 +143,7 @@ const SingleLeaderBoard = () => {
             <h5 className="activegroup">Most Active Groups</h5>
           </div>
         </section>
-        {fetchUsers?.map((item, index) => (
+        {users?.map((item, index) => (
           <section className="singleleaderboard-second-data" key={index}>
             <div className="author">
               <img className="author-image" src={`${item.avatar}`} alt="" />
@@ -183,9 +184,7 @@ const SingleLeaderBoard = () => {
               first_name={post.first_name}
               username={post.created_by}
               tag={post.group_name}
-              img1={post.images}
-              img2={post.img_sec}
-              img3={post.img_third}
+              img1={post.image}
               postTitle={post.title}
               postText={post.body}
               likes={post.likes}
