@@ -140,6 +140,28 @@ export default function NewEvent() {
   }
 
   useEffect(() => {
+    const getSupaUserID = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user !== null) {
+          setSupaUserId(user.id);
+        } else {
+          setSupaUserId("");
+        }
+      } catch (error) {}
+    };
+
+    const fetchUser = async () => {
+      const user = await getUserId();
+      setUserId(user);
+    };
+    fetchUser();
+    getSupaUserID();
+  }, []);
+
+  useEffect(() => {
     const fetchGroups = async () => {
       const { data, error } = await supabase.from("group").select("id, name");
       if (error) {
@@ -200,7 +222,7 @@ export default function NewEvent() {
           description: newEvent.description,
           created_by_group_id: newEvent.groupList,
           event_image: imageURL,
-          //created_by_user_id: userID.id,
+          created_by_user_id: userId,
           online: newEvent.online ? true : false,
           in_person: newEvent.inperson ? true : false,
           location:
