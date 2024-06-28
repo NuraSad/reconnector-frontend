@@ -49,8 +49,7 @@ function NewPost() {
   }, []);
 
   const eventCreate = () => toast.success("Post is Created");
-  const notCreate = () =>
-    toast.warn("Group name and Title are required!");
+  const notCreate = () => toast.warn("Group name and Title are required!");
   const notCreateFile = () => toast.warn("File uploading issue");
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
@@ -60,10 +59,25 @@ function NewPost() {
     return iframePattern.test(code);
   };
 
-  const handleInputChange = (e) => {
-    const code = e.target.value;
-    if (isValidEmbedCode(code)) {
-      setEmbedCode(code);
+  const handleInputChange = (embed) => {
+    if (isValidEmbedCode(embed)) {
+      setEmbedCode(embed);
+      const substringEmbedType = "data-embed-type=";
+      const substringEmbedID = "data-embed-id=";
+      const substringStyle = "data-style=";
+      if (
+        embed.includes(substringEmbedType, substringEmbedID, substringStyle)
+      ) {
+        //splice after each of them
+        console.log("it is an embed from strata");
+        let indexType = embed.indexOf(substringEmbedType);
+        let indexID = embed.indexOf(substringEmbedID);
+        let indexStyle = embed.indexOf(substringStyle);
+        let embedString = embed.splice(indexType, indexID);
+        let embedID = embed.splice(indexID, indexStyle);
+        let embedStyle = embed.splice(embedString, embedID);
+        console.log(embedString, embedID, embedStyle);
+      }
       //cut up the string and find the type, id and style all as a state of objects and send
       //that back to the component
       // setIsValid(true);
@@ -72,6 +86,7 @@ function NewPost() {
       console.log("no code in embed");
     }
   };
+
   useEffect(() => {
     const getSupaUserID = async () => {
       try {
@@ -141,7 +156,7 @@ function NewPost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    handleInputChange();
     if (!groupName || !postTitle) {
       return notCreate();
     }
@@ -188,7 +203,7 @@ function NewPost() {
       console.error("Error creating post:", error);
       return notCreateFile();
     }
-  
+
     if (postData) {
       // setPostId(Math.floor(Math.random() * (uuidv4() - 10 ** 7)) + 10 ** 7);
       eventCreate();
@@ -213,7 +228,7 @@ function NewPost() {
               <option value=""></option>
               {groups.length &&
                 groups.map((group, i) => (
-                  <option key={i+1} value={group.name}>
+                  <option key={i + 1} value={group.name}>
                     {group.name}
                   </option>
                 ))}
