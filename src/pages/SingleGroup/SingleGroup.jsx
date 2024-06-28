@@ -108,7 +108,6 @@ function SingleGroup() {
 
   const handleJoinEvents = (e) => {
     setEventTitle(e.target.textContent);
-
     setOpenEventModal(true);
   };
   async function goToEvent() {
@@ -117,8 +116,7 @@ function SingleGroup() {
 
   useEffect(() => {
     const loadData = async () => {
-      await new Promise((resolved) => setTimeout(resolved, 1000));
-
+      await new Promise((resolved) => setTimeout(resolved, 100));
       setLoading((loading) => !loading);
     };
     loadData();
@@ -164,10 +162,7 @@ function SingleGroup() {
 
     if (!error) {
       setJoinGroup(true);
-    }
-
-
-    
+    } 
   };
 
   if (loading) {
