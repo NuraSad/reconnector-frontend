@@ -63,7 +63,7 @@ export default function Post({
           // console.log(userInfoError);
           return;
         }
-        console.log(userInfo);
+        // console.log(userInfo);
         setThisAuthor(userInfo[0] || {});
       } catch (error) {
         console.log(error.message);
@@ -102,37 +102,42 @@ export default function Post({
         </div>
       </div>
       <div className="post__images">
-        <img className="post__images--main" alt="main image" src={`https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/${img1}`} />
+        <img
+          className="post__images--main"
+          alt="main image"
+          src={`https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/${img1}`}
+        />
 
         <div className="post__images--col-2">
-            <h2 className="post__info--title">{postTitle}</h2>
+          <h2 className="post__info--title">{postTitle}</h2>
           <div className="post__info--col-1">
             {postText.length > 150 && !showFullText ? (
               <>
-                <p className="post__info--text">
-                  {postText.slice(0, 150)}...
-                </p>
+                <p className="post__info--text">{postText.slice(0, 150)}...</p>
                 <div className="post__info--wrap">
-                <button
-                  className="post__info--read-more"
-                  onClick={() => setShowFullText(true)}
-                >
-                  Read More
-                </button>
-                <p className="post__user-info--tags">#{tag}</p>
-              </div>
+                  <button
+                    className="post__info--read-more"
+                    onClick={() => setShowFullText(true)}
+                  >
+                    Read More
+                  </button>
+                  <p className="post__user-info--tags">#{tag}</p>
+                </div>
               </>
             ) : (
               <>
                 <p className="post__info--text">{postText}</p>
                 <div className="post__info--wrap">
-                {postText.length > 150 ?( 
-                  <button
-                    className="post__info--read-more"
-                    onClick={() => setShowFullText(false)}
-                  >
-                    Hide
-                  </button>): <div></div>}
+                  {postText.length > 150 ? (
+                    <button
+                      className="post__info--read-more"
+                      onClick={() => setShowFullText(false)}
+                    >
+                      Hide
+                    </button>
+                  ) : (
+                    <div></div>
+                  )}
                   <p className="post__user-info--tags">#{tag}</p>
                 </div>
               </>

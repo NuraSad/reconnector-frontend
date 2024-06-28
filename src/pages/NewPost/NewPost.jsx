@@ -2,9 +2,9 @@ import "./NewPost.scss";
 import { useDropzone } from "react-dropzone";
 import { useState, useEffect, useCallback } from "react";
 import supabase from "../../config/supabaseClient";
-import { getUserId } from "../../userUtils";
+import { getUserId, getAuthUserId } from "../../userUtils";
 import { v4 as uuidv4 } from "uuid";
-// import SelectInput from "../../components/smallComponents/SelectInput/SelectInput";
+import SelectInput from "../../components/smallComponents/SelectInput/SelectInput";
 import Btn from "../../components/smallComponents/Btn/Btn";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -15,12 +15,14 @@ function NewPost() {
     Math.floor(Math.random() * (10 ** 8 - 10 ** 7)) + 10 ** 7
   );
   const [groupName, setGroupName] = useState("");
-  const [files, setFiles] = useState([]);
+  // const [files, setFiles] = useState();
   const [postTitle, setPostTitle] = useState("");
   const [postDescription, setPostDescription] = useState("");
   // const [groups, setGroups] = useState({});
   const [supaUserId, setSupaUserId] = useState("");
   const [imagePreview, setImagePreview] = useState();
+  const [groups, setGroups] = useState([]);
+  const [imageFile, setImageFile] = useState();
 
   let navigate = useNavigate();
   const CDNURL =
@@ -33,10 +35,14 @@ function NewPost() {
         setImagePreview(e.target.result);
       };
       reader.readAsDataURL(file);
-      setFiles(file);
+      setImageFile(file);
       return file;
     });
   }, []);
+
+  const eventCreate = () => toast.success("Event is Created");
+  const notCreate = () =>
+    toast.warn("Event name AND description are Required!");
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const getSupaUserID = async () => {
@@ -59,45 +65,49 @@ function NewPost() {
       const user = await getUserId();
       setUserId(user);
     };
+    const fetchGroups = async () => {
+      const { data, error } = await supabase.from("group").select("id, name");
+      if (error) {
+        console.log(error);
+      } else {
+        const map = [];
+        data.forEach((group) => {
+          map.push({ name: group.name });
+        });
+        setGroups(map);
+      }
+    };
+    const fetchAuthId = async () => {
+      const auth_user_id = await getAuthUserId();
+      setSupaUserId(auth_user_id);
+    };
     fetchUser();
+    fetchAuthId();
+    fetchGroups();
     getSupaUserID();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchGroups = async () => {
-  //     const { data, error } = await supabase.from("group").select("id, name");
-  //     if (error) {
-  //       console.log(error);
-  //     } else {
-  //       const map = {};
-  //       data.forEach((group) => {
-  //         map[group.id] = group.name;
-  //       });
-  //       setGroups(map);
-  //     }
-  //   };
-
-  //   fetchGroups();
-  // }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!groupName || !postTitle) {
       return notCreate();
     }
 
     let imageURL = null;
 
-    if (files) {
+    if (imageFile) {
+      console.log("file!!");
+      console.log(imageFile);
       // supabase storage uses authenticated user id instead of our internal id
       const auth_user_id = await getSupaUserID();
 
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("eventImages")
-        .upload(auth_user_id + "/" + uuidv4(), files);
+        .from("postImages")
+        .upload(auth_user_id + "/" + uuidv4(), imageFile);
 
       if (uploadError) {
-        console.log("Unable to upload image file.");
+        console.log("Unable to upload image file." + uploadError);
       }
 
       if (uploadData) {
@@ -118,82 +128,37 @@ function NewPost() {
 
     if (error) {
       console.error("Error creating post:", error);
-    } else {
-      console.log("Post created successfully:", postData);
-      // Reset form fields
-      setGroupName("");
-      setFiles(null);
-      setPostTitle("");
-      setPostDescription("");
+    }
+    if (postData) {
       setPostId(Math.floor(Math.random() * (10 ** 8 - 10 ** 7)) + 10 ** 7);
       eventCreate();
       setTimeout(() => navigate(`/explore`), 500);
+      console.log("Post created successfully:", postData);
     }
   };
-
-  // const uploadFiles = async (files) => {
-  //   const uploads = [];
-
-  //   for (let file of files) {
-  //     const { data, error } = await supabase.storage
-  //       .from("postImages")
-  //       .upload(supaUserId + "/" + uuidv4(), file);
-
-  //     if (error) {
-  //       console.error("Error uploading file:", error);
-  //     } else {
-  //       uploads.push(data);
-  //     }
-  //   }
-
-  //   return uploads;
-  // };
-
-  // const handleFileChange = (event) => {
-  //   setFiles([...event.target.files]);
-  // };
-
-  // const handleUpload = async () => {
-  //   const uploadedFiles = await uploadFiles(files);
-  //   console.log("Uploaded files:", uploadedFiles);
-  // };
-
-  //if I use idName, I am using the name within the Input not the label
-  // function onChange(name, value, idName, setDataFunction, parsedItems) {
-  //   if (name !== undefined && value !== undefined) {
-  //     // Check if the value is being erased by the user
-  //     const newValue = value === "" ? "" : value;
-
-  //     setDataFunction((prevState) => ({
-  //       ...prevState,
-  //       [idName]: newValue,
-  //     }));
-  //   } else {
-  //     // Otherwise, it's called to set the form data from local storage
-  //     setDataFunction(parsedItems);
-  //   }
-  // }
-  const eventCreate = () => toast.success("Event is Created");
-  const notCreate = () =>
-    toast.warn("Event name AND description are Required!");
-
+  console.log(groupName);
   return (
     <div className="form-wrapper">
       <div className="form-container">
-        <h1>Group Name</h1>
+        <h1>Create Post</h1>
         <form className="form" onSubmit={handleSubmit}>
           <div className="form__input-container">
-            {/* <SelectInput
-              dropDownInfo={Object.keys(groups).map((key) => ({
-                id: key,
-                name: groups[key],
-              }))}
-              labelName={"What group is this event under?"}
-              name="groupList"
-              onChangeFunction={(name, value) =>
-                onChange(name, value, "groupList", setGroupName)
-              }
-            /> */}
+            {/* <label htmlFor="groupName">Group Name</label> */}
+            {/* <select
+              className="selectInput__input"
+              value={groupName}
+              name="groupName"
+              onChange={(e) => setGroupName(e.target.value)}
+              required
+            >
+              {groups.length &&
+                groups.map((group, i) => (
+                  <option key={i} value={group.name}>
+                    {group.name}
+                  </option>
+                ))}
+            </select> */}
+
             <label htmlFor="groupName">Group Name</label>
             <input
               type="text"

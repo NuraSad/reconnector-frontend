@@ -190,7 +190,7 @@ export default function NewEvent() {
     if (imageFile) {
       // supabase storage uses authenticated user id instead of our internal id
       const auth_user_id = await getAuthUserId();
-
+      console.log(imageFile);
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from("groupImages")
         .upload(auth_user_id + "/" + uuidv4(), imageFile);
@@ -302,7 +302,6 @@ export default function NewEvent() {
       }
     }
   }
-  console.log(newEvent);
   return (
     <section className="newEvent">
       <h1>

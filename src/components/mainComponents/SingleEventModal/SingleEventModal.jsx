@@ -92,7 +92,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
         console.log(error);
       }
       if (data.length > 0) {
-        console.log(data);
+        // console.log(data);
         setJoinEvent(true);
       }
     };
@@ -126,7 +126,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
     if (data) {
       setJoinEvent(false);
       console.log("you have left the group");
-      console.log(data);
+      // console.log(data);
     }
     if (error) {
       console.log("error for leaving group" + error);
