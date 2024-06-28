@@ -173,7 +173,7 @@ function NewPost() {
     // Create a new post in Supabase
     const { postData, error } = await supabase.from("post").insert([
       {
-        id: postId,
+        // id: postId,
         created_by: userId,
         group_name: groupName,
         image: imageURL,
@@ -186,7 +186,7 @@ function NewPost() {
       console.error("Error creating post:", error);
     }
     if (postData) {
-      setPostId(Math.floor(Math.random() * (uuidv4() - 10 ** 7)) + 10 ** 7);
+      // setPostId(Math.floor(Math.random() * (uuidv4() - 10 ** 7)) + 10 ** 7);
       eventCreate();
       setTimeout(() => navigate(`/explore`), 500);
       console.log("Post created successfully:", postData);
