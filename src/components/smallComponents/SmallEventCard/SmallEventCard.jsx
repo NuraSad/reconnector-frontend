@@ -20,13 +20,13 @@ function SmallEventCard({ name, src, attendees, date, event }) {
         <p className="num">{attendees}</p>
         <p className="name">{`# ${name}`}</p>
       </div>
-      {/* {openEventModal && (
+      {openEventModal && (
         <SingleEventModal
           setOpenEventModal={setOpenEventModal}
           eventTitle={event.title}
           groupId={event.created_by_group_id}
         />
-      )} */}
+      )}
     </>
   );
 }
