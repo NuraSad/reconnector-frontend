@@ -115,7 +115,7 @@ function App() {
 				}}
 			>
 				<div>
-					<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={["discord", "github", "google"]} />
+					<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa, style: { label: { color: "black" } } }} providers={["discord", "github", "google"]} />
 				</div>
 			</div>
 		);
