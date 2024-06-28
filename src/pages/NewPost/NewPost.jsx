@@ -31,23 +31,50 @@ function NewPost() {
     const [userId, setUserId] = useState(); 
     const [postId, setPostId] = useState(Math.floor(Math.random()*(10**8-10**7))+10**7);
     const [groupName, setGroupName] = useState('');
-    const [files, setFiles] = useState([]);
+    const [files, setFiles] = useState();
     const [postTitle, setPostTitle] = useState('');
     const [postDescription, setPostDescription] = useState('');
 
+    const [message, setMessage] = useState('');
+
     const [supaUserId, setSupaUserId] = useState('');
+
+
+    const uploadFiles = async (files) => {
+      const uploads = [];
+    
+      for (let file of files) {
+        const { data, error } = await supabase
+          .storage
+          .from('postImages')
+          .upload(supaUserId + '/' + uuidv4(), file);
+    
+        if (error) {
+          console.error('Error uploading file:', error);
+        } else {
+          uploads.push(data);
+        }
+      }
+    
+      return uploads;
+    };
+
+    const handleFileChange = (event) => {
+      setFiles([...event.target.files]);
+    };
   
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        setMessage(`Uploading...`);
+        const uploadedFile = await uploadFiles(files)
         // Create a new post in Supabase
         const { postData, error } = await supabase.from('post').insert([
             {
                 id: postId,
                 created_by: userId,
                 group_name: groupName,
-                image: files,
+                image: uploadedFile[0].fullPath,
                 title: postTitle,
                 body: postDescription
             }
@@ -55,44 +82,23 @@ function NewPost() {
 
         if (error) {
             console.error('Error creating post:', error);
+            setMessage(`There was an error creating the post: ${error.message}`);
+            setTimeout(() => {
+                setMessage('');
+            }, 3000);
         } else {
-            console.log('Post created successfully:', postData);
-            // Reset form fields
+            setMessage(`Post ${postTitle} created successfully!`);
+            setTimeout(() => {
+                setMessage('');
+            }, 3000);
             setGroupName('');
             setFiles(null);
             setPostTitle('');
             setPostDescription('');
             setPostId(Math.floor(Math.random()*(10**8-10**7))+10**7);
+            document.getElementById('file-upload').value = '';
         }
     };
-
-    const uploadFiles = async (files) => {
-        const uploads = [];
-      
-        for (let file of files) {
-          const { data, error } = await supabase
-            .storage
-            .from('postImages')
-            .upload(supaUserId + '/' + uuidv4(), file);
-      
-          if (error) {
-            console.error('Error uploading file:', error);
-          } else {
-            uploads.push(data);
-          }
-        }
-      
-        return uploads;
-      };
-
-      const handleFileChange = (event) => {
-        setFiles([...event.target.files]);
-      };
-    
-      const handleUpload = async () => {
-        const uploadedFiles = await uploadFiles(files);
-        console.log('Uploaded files:', uploadedFiles);
-      };
 
     return (
         <div className="form-wrapper">
@@ -114,10 +120,9 @@ function NewPost() {
                             type="file"
                             name="image"
                             accept="image/*"
-                            multiple
                             onChange={handleFileChange}
+                            id='file-upload'
                         />
-                        <button onClick={handleUpload}>Upload Files</button>
                     </div>
                     <div className="form__input-container">
                         <label htmlFor="postTitle">Title</label>
@@ -143,6 +148,7 @@ function NewPost() {
                     </div>
                     <button type="submit">Create Post</button>
                 </form>
+                <p>{message}</p>
             </div>
         </div>
     );

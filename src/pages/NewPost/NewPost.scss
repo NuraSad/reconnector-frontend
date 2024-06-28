@@ -23,6 +23,7 @@
         display: grid;
         grid-template-columns: 0.8fr 1fr;
         grid-gap: 1rem;
+        margin-bottom: 10px;
 
         &__input-container{
             display: flex;
@@ -58,6 +59,7 @@
             font-weight: bold;
             border: none;
             border-radius: 10px;
+            cursor: pointer;
         }
 
     }
