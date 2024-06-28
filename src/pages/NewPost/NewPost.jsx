@@ -48,9 +48,9 @@ function NewPost() {
     });
   }, []);
 
-  const eventCreate = () => toast.success("Event is Created");
+  const eventCreate = () => toast.success("Post is Created");
   const notCreate = () =>
-    toast.warn("Event name AND description are Required!");
+    toast.warn("Group name and Title are required!");
   const notCreateFile = () => toast.warn("File uploading issue");
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
@@ -171,11 +171,10 @@ function NewPost() {
     //   data: { user },
     // } = await supabase.auth.getUser();
     // Create a new post in Supabase
-    const { postData, error } = await supabase
+    const { data: postData, error } = await supabase
       .from("post")
       .insert([
         {
-          // id: postId,
           created_by: userId,
           group_name: groupName,
           image: imageURL,
@@ -184,21 +183,24 @@ function NewPost() {
         },
       ])
       .select();
+
     if (error) {
       console.error("Error creating post:", error);
       return notCreateFile();
     }
+  
     if (postData) {
       // setPostId(Math.floor(Math.random() * (uuidv4() - 10 ** 7)) + 10 ** 7);
       eventCreate();
-      setTimeout(() => navigate(`/explore`), 500);
+      setTimeout(() => navigate(`/explore`), 5000);
     }
   };
+
   return (
     <div className="form-wrapper">
       <div className="form-container">
         <h1>Create Post</h1>
-        <form className="form" onSubmit={handleSubmit}>
+        <form className="form">
           <div className="form__input-container">
             <label htmlFor="groupName">Group Name</label>
             <select
@@ -208,9 +210,10 @@ function NewPost() {
               onChange={(e) => setGroupName(e.target.value)}
               required
             >
+              <option value=""></option>
               {groups.length &&
                 groups.map((group, i) => (
-                  <option key={i} value={group.name}>
+                  <option key={i+1} value={group.name}>
                     {group.name}
                   </option>
                 ))}
@@ -308,6 +311,7 @@ function NewPost() {
             <button
               style={{ marginLeft: "auto", padding: "0 1rem" }}
               type="submit"
+              onClick={handleSubmit}
             >
               Create Post
             </button>
