@@ -182,11 +182,19 @@
 
         }
         .posts-field{
-            margin: auto;
-            display: flex;
-            flex-direction: column;
+            // margin: auto;
+            // display: flex;
+            // flex-direction: column;
+            // justify-content: center;
+            // align-items: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(325px, 1fr));
             justify-content: center;
-            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0rem 1rem 1rem;
+            
         }
         .empty-message{
             font-size: 1.2rem;
