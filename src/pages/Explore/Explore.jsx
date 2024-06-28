@@ -41,9 +41,7 @@ export default function Explore() {
                 first_name={i.first_name}
                 username={i.created_by}
                 tag={i.group_name}
-                img1={i.images}
-                img2={i.img_sec}
-                img3={i.img_third}
+                img1={i.image}
                 postTitle={i.title}
                 postText={i.body}
                 likes={i.likes}

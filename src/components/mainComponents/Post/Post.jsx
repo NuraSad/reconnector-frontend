@@ -102,7 +102,8 @@ export default function Post({
         </div>
       </div>
       <div className="post__images">
-        <img className="post__images--main" alt="main image" src={img1} />
+        <img className="post__images--main" alt="main image" src={`https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/${img1}`} />
+
         <div className="post__images--col-2">
             <h2 className="post__info--title">{postTitle}</h2>
           <div className="post__info--col-1">
