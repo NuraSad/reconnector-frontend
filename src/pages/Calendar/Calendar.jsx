@@ -15,16 +15,31 @@ const Calendar = () => {
   const [dataEvents, setDataEvents] = useState([]);
   const [fetchError, setFetchError] = useState("");
   useEffect(() => {
-    
-    const fetchDates1 = async () => {
-      const { data: events, error } = await supabase.from("event").select();
-      if (error) {
-        setFetchError("Could not fetch the events from the Calendar");
-        return;
-      }
-      setDataEvents(events);
-    };
-    fetchDates1();
+    const fetchDates = async () => {
+        const userId = await getUserId();
+        const { data: participants, error } = await supabase
+          .from("event_participants")
+          .select()
+          .eq("user_id", userId);
+        const { data: dataEvents, error: eventError } = await supabase
+          .from("event")
+          .select()
+          .in(
+            "id",
+            participants?.map((event) => event.event_id)
+          );
+  
+        setDataEvents(dataEvents);
+    }
+    // const fetchDates1 = async () => {
+    //   const { data: events, error } = await supabase.from("event").select();
+    //   if (error) {
+    //     setFetchError("Could not fetch the events from the Calendar");
+    //     return;
+    //   }
+    //   setDataEvents(events);
+    // };
+    fetchDates();
   }, []);
 
   useEffect(() => {
