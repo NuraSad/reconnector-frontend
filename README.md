@@ -20,8 +20,8 @@ npm run dev
 ```
 
 ## Author
-Kayle Robson [@revyrob](https://github.com/revyrob)
-Aparna Dhara [@AD9-1](https://github.com/AD9-1)
-Angela Kwok [@angelatyk](https://www.github.com/angelatyk)
-Ainur Saduova [@NuraSad](https://github.com/NuraSad)
+Kayle Robson [@revyrob](https://github.com/revyrob)  
+Aparna Dhara [@AD9-1](https://github.com/AD9-1)  
+Angela Kwok [@angelatyk](https://www.github.com/angelatyk)  
+Ainur Saduova [@NuraSad](https://github.com/NuraSad)  
 Henry Bellman [@hheennrryyb](https://github.com/hheennrryyb)
