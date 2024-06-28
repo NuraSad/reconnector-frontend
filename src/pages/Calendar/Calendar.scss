@@ -15,15 +15,15 @@
 
 .fc-daygrid-event {
   border-radius: 3px;
-  position: relative;
-  gap: 10px;
+  // position: relative;
+  // gap: 10px;
   i {
     background-color: rgba(234, 0, 255, 0.418);
     font-size: 0.8rem;
     padding: 3px;
     white-space: nowrap; /* Prevents text wrapping */
     overflow: hidden; /* Hides overflow text */
-    max-width: 100px;
+    white-space: normal;
     transition: max-width 1s ease; /* Adds transition for smooth expansion */
     position: relative; /* Required for absolute positioning of hover content */
   }
