@@ -71,7 +71,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
           console.log(error);
           return;
         }
-   
+
         setUserInfo(userInfo);
       } catch (error) {
         console.log(error.message);
@@ -126,7 +126,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
     if (data) {
       setJoinEvent(false);
       console.log("you have left the group");
-      
+
       console.log(data);
     }
     if (error) {
@@ -198,9 +198,15 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
               <div className="singlegrpmodal-content-grp-map">
                 <h3>Location</h3>
                 {event[0].location}
-                {/* <Map /> */}
               </div>
-              {event[0].event_image && <img src={event[0].event_image} alt={`${event[0].title}'s banner`}/>}
+              <div className="singlegrpmodal-content-grp-img">
+                {event[0].event_image && (
+                  <img
+                    src={event[0].event_image}
+                    alt={`${event[0].title}'s banner`}
+                  />
+                )}
+              </div>
             </div>
             <div className="singlegrpmodal-content-joiners">
               <h1>Who's Joining</h1>
