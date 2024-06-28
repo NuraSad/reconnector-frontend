@@ -56,7 +56,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
     };
 
     fetchEvent();
-  }, [eventTitle, fetchError, groupId]);
+  }, [eventTitle, groupId]);
 
   useEffect(() => {
     const userids = userIds?.map((item) => item.user_id);
@@ -71,7 +71,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
           console.log(error);
           return;
         }
-        //console.log(userInfo);
+   
         setUserInfo(userInfo);
       } catch (error) {
         console.log(error.message);
