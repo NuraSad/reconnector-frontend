@@ -51,6 +51,7 @@ function NewPost() {
   const eventCreate = () => toast.success("Event is Created");
   const notCreate = () =>
     toast.warn("Event name AND description are Required!");
+  const notCreateFile = () => toast.warn("File uploading issue");
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const isValidEmbedCode = (code) => {
@@ -71,21 +72,28 @@ function NewPost() {
       console.log("no code in embed");
     }
   };
-
-  const getSupaUserID = async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user !== null) {
-        setSupaUserId(user.id);
-      } else {
-        setSupaUserId("");
+  useEffect(() => {
+    const getSupaUserID = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user !== null) {
+          setSupaUserId(user.id);
+        } else {
+          setSupaUserId("");
+        }
+      } catch (error) {
+        console.log("Error for obtaining SupabaseUserID" + error);
       }
-    } catch (error) {
-      console.log("Error for obtaining SupabaseUserID" + error);
-    }
-  };
+    };
+    const fetchUser = async () => {
+      const user = await getUserId();
+      setUserId(user);
+    };
+    fetchUser();
+    getSupaUserID();
+  }, []);
 
   // useEffect(() => {
   //   const fetchUser = async () => {
@@ -115,10 +123,6 @@ function NewPost() {
   // }, []);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const user = await getUserId();
-      setUserId(user);
-    };
     const fetchGroups = async () => {
       const { data, error } = await supabase.from("group").select("id, name");
       if (error) {
@@ -131,13 +135,7 @@ function NewPost() {
         setGroups(map);
       }
     };
-    const fetchAuthId = async () => {
-      const auth_user_id = await getAuthUserId();
-      setSupaUserId(auth_user_id);
-    };
 
-    fetchUser();
-    fetchAuthId();
     fetchGroups();
   }, []);
 
@@ -152,34 +150,43 @@ function NewPost() {
 
     if (files) {
       // supabase storage uses authenticated user id instead of our internal id
+      const auth_user_id = await getAuthUserId();
 
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from("postImages")
-        .upload(supaUserId + "/" + uuidv4(), files);
+        .upload(auth_user_id + "/" + uuidv4(), files);
 
       if (uploadError) {
         console.log("Unable to upload image file.");
+        return;
       }
 
       if (uploadData) {
         imageURL = CDNURL + uploadData.fullPath;
       }
     }
-    console.log(postDescription);
+    // add event
+    // get internal user id
+    // const {
+    //   data: { user },
+    // } = await supabase.auth.getUser();
     // Create a new post in Supabase
-    const { postData, error } = await supabase.from("post").insert([
-      {
-        // id: postId,
-        created_by: userId,
-        group_name: groupName,
-        image: imageURL,
-        title: postTitle,
-        body: postDescription,
-      },
-    ]);
-
+    const { postData, error } = await supabase
+      .from("post")
+      .insert([
+        {
+          // id: postId,
+          created_by: userId,
+          group_name: groupName,
+          image: imageURL,
+          title: postTitle,
+          body: postDescription,
+        },
+      ])
+      .select();
     if (error) {
       console.error("Error creating post:", error);
+      return notCreateFile();
     }
     if (postData) {
       // setPostId(Math.floor(Math.random() * (uuidv4() - 10 ** 7)) + 10 ** 7);
@@ -193,8 +200,8 @@ function NewPost() {
         <h1>Create Post</h1>
         <form className="form" onSubmit={handleSubmit}>
           <div className="form__input-container">
-            {/* <label htmlFor="groupName">Group Name</label> */}
-            {/* <select
+            <label htmlFor="groupName">Group Name</label>
+            <select
               className="selectInput__input"
               value={groupName}
               name="groupName"
@@ -207,8 +214,8 @@ function NewPost() {
                     {group.name}
                   </option>
                 ))}
-            </select> */}
-            <label htmlFor="groupName">Group Name</label>
+            </select>
+            {/* <label htmlFor="groupName">Group Name</label>
             <input
               type="text"
               name="groupName"
@@ -216,7 +223,7 @@ function NewPost() {
               value={groupName}
               required
               onChange={(e) => setGroupName(e.target.value)}
-            />
+            /> */}
             <label htmlFor="groupName">Kilometers Completed</label>
             <input
               type="text"

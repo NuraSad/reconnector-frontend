@@ -19,6 +19,7 @@ export default function Explore() {
 
       if (posts_data) {
         setPosts(posts_data);
+        console.log(posts_data);
       }
     }
     getPosts();
