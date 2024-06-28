@@ -16,21 +16,21 @@ const Calendar = () => {
   const [fetchError, setFetchError] = useState("");
   useEffect(() => {
     const fetchDates = async () => {
-        const userId = await getUserId();
-        const { data: participants, error } = await supabase
-          .from("event_participants")
-          .select()
-          .eq("user_id", userId);
-        const { data: dataEvents, error: eventError } = await supabase
-          .from("event")
-          .select()
-          .in(
-            "id",
-            participants?.map((event) => event.event_id)
-          );
-  
-        setDataEvents(dataEvents);
-    }
+      const userId = await getUserId();
+      const { data: participants, error } = await supabase
+        .from("event_participants")
+        .select()
+        .eq("user_id", userId);
+      const { data: dataEvents, error: eventError } = await supabase
+        .from("event")
+        .select()
+        .in(
+          "id",
+          participants?.map((event) => event.event_id)
+        );
+
+      setDataEvents(dataEvents);
+    };
     // const fetchDates1 = async () => {
     //   const { data: events, error } = await supabase.from("event").select();
     //   if (error) {
@@ -51,7 +51,7 @@ const Calendar = () => {
         allDay: false,
       };
     });
-    console.log(eventData)
+    // console.log(eventData)
     setMapEvents(eventData);
   }, [dataEvents]);
 
@@ -70,8 +70,12 @@ const Calendar = () => {
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         events={mapEvents}
-        eventTimeFormat={{ hour: '2-digit', minute: '2-digit', meridiem: 'short' }} // Customize time format
-        dayHeaderFormat={{ weekday: 'long' }} // Customize day header format
+        eventTimeFormat={{
+          hour: "2-digit",
+          minute: "2-digit",
+          meridiem: "short",
+        }} // Customize time format
+        dayHeaderFormat={{ weekday: "long" }} // Customize day header format
         eventClick={handleEventClick}
         eventContent={renderEventContent}
         height="90vh"

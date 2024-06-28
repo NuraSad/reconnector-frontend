@@ -92,7 +92,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
         console.log(error);
       }
       if (data.length > 0) {
-        console.log(data);
+        // console.log(data);
         setJoinEvent(true);
       }
     };
@@ -200,6 +200,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
                 {event[0].location}
                 {/* <Map /> */}
               </div>
+              {event[0].event_image && <img src={event[0].event_image} alt={`${event[0].title}'s banner`}/>}
             </div>
             <div className="singlegrpmodal-content-joiners">
               <h1>Who's Joining</h1>

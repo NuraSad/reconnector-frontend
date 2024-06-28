@@ -112,7 +112,11 @@
     }
     &-posts {
       overflow-y: auto;
-      height: 70vh;
+      display: flex;
+      flex-direction: column;
+      row-gap: 0.8rem;
+      justify-content: center;
+      align-items: center;
     }
   }
 }
