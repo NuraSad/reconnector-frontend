@@ -126,6 +126,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
     if (data) {
       setJoinEvent(false);
       console.log("you have left the group");
+      
       console.log(data);
     }
     if (error) {
