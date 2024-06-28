@@ -16,8 +16,7 @@ import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import { renderEventContent } from "../Calendar/Calendar.jsx";
 import * as bootstrap from "bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 
 
 function SingleGroup() {
