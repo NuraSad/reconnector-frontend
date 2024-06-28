@@ -162,6 +162,7 @@ export default function NewEvent() {
     if (!newEvent.eventName || !newEvent.description) {
       return notCreate();
     }
+
     let imageURL = null;
 
     if (imageFile) {
@@ -189,7 +190,7 @@ export default function NewEvent() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    const auth_user_id = user.id;
+    console.log(user);
 
     const { data: event_data, error: event_error } = await supabase
       .from("event")
@@ -199,7 +200,7 @@ export default function NewEvent() {
           description: newEvent.description,
           created_by_group_id: newEvent.groupList,
           event_image: imageURL,
-          created_by_user_id: user.id,
+          //created_by_user_id: userID.id,
           online: newEvent.online ? true : false,
           in_person: newEvent.inperson ? true : false,
           location:
@@ -226,27 +227,28 @@ export default function NewEvent() {
 
       let { data: user_data, user_error } = await supabase
         .from("user")
-        .select("id")
-        .eq("auth_user_id", auth_user_id);
+        .select("*");
 
       if (user_error) {
         console.log("Could not retrieve logged in user id " + user_error);
       }
 
       if (user_data) {
-        const userID = user_data[0].id;
-
+        const userID = user_data;
+        console.log(userID);
         // add user to event admin
         const { data: event_admin_data, error: event_admin_error } =
           await supabase
             .from("event_admin")
-            .insert([{ event_id: eventID, user_id: userID }])
+            .insert([{ event_id: eventID, user_id: userID.id }])
             .select();
 
         if (event_admin_data) {
           console.log(
             "Failed to add user to event admin table " + event_admin_error
           );
+        } else {
+          console.log("User was successfully added to event admin table.");
         }
 
         if (event_admin_data) {
@@ -257,13 +259,15 @@ export default function NewEvent() {
         const { data: event_members_data, error: event_members_error } =
           await supabase
             .from("event_members")
-            .insert([{ event_id: eventID, user_id: userID }])
+            .insert([{ event_id: eventID, user_id: userID.id }])
             .select();
 
         if (event_members_error) {
           console.log(
             "Failed to add user to event member table " + event_members_error
           );
+        } else {
+          console.log("User was successfully added to event members table.");
         }
 
         if (event_members_data) {
