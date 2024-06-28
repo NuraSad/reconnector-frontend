@@ -16,6 +16,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import TextField from "@mui/material/TextField";
 import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import axios from "axios";
 
 export default function NewEvent() {
   const [newEvent, setNewEvent] = useState({});
@@ -27,6 +28,9 @@ export default function NewEvent() {
   const [userId, setUserId] = useState();
   const [imagePreview, setImagePreview] = useState();
   const [imageFile, setImageFile] = useState();
+  const [lat, setLat] = useState();
+  const [lng, setLng] = useState();
+  const VITE_GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
   const CDNURL =
     "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/";
@@ -66,6 +70,11 @@ export default function NewEvent() {
     }));
   }
 
+  // const address = newEvent.location;
+  // const encodedAddress = encodeURIComponent(address);
+  // const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${VITE_GOOGLE_API_KEY}`;
+  // console.log(geocodeUrl);
+
   function cityOnchange(e) {
     let city = e.target.value;
     setNewEvent((prevState) => ({
@@ -82,6 +91,15 @@ export default function NewEvent() {
     }));
   }
 
+  // / function to get the data from the API
+  // let getLatLong = async (location) => {
+  //   //function on load
+  //   let response = await axios(
+  //     `https://maps.googleapis.com/maps/api/geocode/json?address=${location.address},${location.city},${location.country}&key=${VITE_GOOGLEKEY}`
+  //   );
+  //   console.log(response);
+  //   //return response;
+  // };
   //set the online
   function onlineOnchange() {
     setToggleOnline((prevState) => {
@@ -178,8 +196,32 @@ export default function NewEvent() {
     fetchGroups();
   }, []);
 
+  const getGeoCode = async () => {
+    // Replace spaces with plus signs
+    const newAddress = newEvent.address.replace(/ /g, "+");
+    const newCity = newEvent.city.replace(/ /g, "+");
+    const newCountry = newEvent.country.replace(/ /g, "+");
+
+    try {
+      const { data } = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${newAddress},+${newCity},+${newCountry}&key=${VITE_GOOGLE_API_KEY}`
+      );
+
+      if (data.results.length > 0) {
+        setLat(data.results[0].geometry.location.lat);
+        setLng(data.results[0].geometry.location.lng);
+      } else {
+        alert("No results found for the provided address.");
+      }
+    } catch (error) {
+      console.error("Error fetching geocode data:", error);
+      alert("Error fetching geocode data.");
+    }
+  };
+
   async function handleSubmit(event) {
     event.preventDefault();
+    getGeoCode();
 
     if (!newEvent.eventName || !newEvent.description) {
       return notCreate();
@@ -190,7 +232,6 @@ export default function NewEvent() {
     if (imageFile) {
       // supabase storage uses authenticated user id instead of our internal id
       const auth_user_id = await getAuthUserId();
-      console.log(imageFile);
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from("groupImages")
         .upload(auth_user_id + "/" + uuidv4(), imageFile);
@@ -230,6 +271,8 @@ export default function NewEvent() {
             (newEvent.city ? newEvent.city + "," : "") +
             (newEvent.country ? newEvent.country : ""),
           event_date: value,
+          lat: lat,
+          long: lng,
         },
       ])
       .select();
@@ -241,10 +284,7 @@ export default function NewEvent() {
     if (event_data) {
       const eventID = event_data[0].id;
       eventCreate();
-      setTimeout(
-        () => navigate(`/groups/${event_data[0].created_by_group_id}`),
-        500
-      );
+      setTimeout(() => navigate(`/groups/${eventID}`), 500);
       //redirect to group page of that id
 
       let { data: user_data, user_error } = await supabase
@@ -302,6 +342,8 @@ export default function NewEvent() {
       }
     }
   }
+  console.log(lat, lng);
+
   return (
     <section className="newEvent">
       <h1>
