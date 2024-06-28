@@ -16,7 +16,7 @@ function BtnPlus({
   return (
     <>
       {image ? (
-        <a
+        <button
           className="btnPlus"
           style={{
             backgroundColor: bgColor,
@@ -29,19 +29,12 @@ function BtnPlus({
           onClick={onClickFunction}
         >
           <div className="btnPlus__imgDiv">
-            {/* <img style={{ height: imgHeight }} src={image} alt={image} /> */}
+            <img style={{ height: imgHeight }} src={image} alt={image} />
             {textBtn} +
-            {/* <div
-              style={{
-                backgroundImage: `url(${image})`,
-                height: imgHeight,
-                width: imgHeight,
-              }}
-            /> */}
           </div>
-        </a>
+        </button>
       ) : (
-        <a
+        <button
           className="btnPlus"
           style={{
             backgroundColor: bgColor,
@@ -54,7 +47,7 @@ function BtnPlus({
           onClick={onClickFunction}
         >
           {textBtn}
-        </a>
+        </button>
       )}
     </>
   );
