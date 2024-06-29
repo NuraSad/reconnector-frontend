@@ -49,8 +49,7 @@ function NewPost() {
   }, []);
 
   const eventCreate = () => toast.success("Post is Created");
-  const notCreate = () =>
-    toast.warn("Group name and Title are required!");
+  const notCreate = () => toast.warn("Group name and Title are required!");
   const notCreateFile = () => toast.warn("File uploading issue");
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
@@ -188,7 +187,7 @@ function NewPost() {
       console.error("Error creating post:", error);
       return notCreateFile();
     }
-  
+
     if (postData) {
       // setPostId(Math.floor(Math.random() * (uuidv4() - 10 ** 7)) + 10 ** 7);
       eventCreate();
@@ -200,7 +199,8 @@ function NewPost() {
     <div className="form-wrapper">
       <div className="form-container">
         <h1>Create Post</h1>
-        <form className="form">
+        {/* <form className="form" onSubmit={handleSubmit}> */}
+        <div className="form">
           <div className="form__input-container">
             <label htmlFor="groupName">Group Name</label>
             <select
@@ -213,7 +213,7 @@ function NewPost() {
               <option value=""></option>
               {groups.length &&
                 groups.map((group, i) => (
-                  <option key={i+1} value={group.name}>
+                  <option key={i + 1} value={group.name}>
                     {group.name}
                   </option>
                 ))}
@@ -256,11 +256,11 @@ function NewPost() {
             />
             <button onClick={handleUpload}>Upload Files</button> */}
             <div className="image-wrapper" {...getRootProps()}>
-                <input {...getInputProps()} />
-                <Btn textBtn={"Upload image"} />
-                {imagePreview === undefined ? null : (
-                  <img alt={`post picture`} src={imagePreview} />
-                )}
+              <input {...getInputProps()} />
+              <Btn textBtn={"Upload image"} />
+              {imagePreview === undefined ? null : (
+                <img alt={`post picture`} src={imagePreview} />
+              )}
             </div>
           </div>
           <div className="form__input-container">
@@ -312,7 +312,8 @@ function NewPost() {
               Create Post
             </button>
           </div>
-        </form>
+          {/* </form> */}
+        </div>
       </div>
 
       <ToastContainer position="top-center" />
