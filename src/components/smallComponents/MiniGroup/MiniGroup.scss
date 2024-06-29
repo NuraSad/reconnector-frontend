@@ -2,10 +2,13 @@
     position: relative;
     width: 100%;
     height: auto;
-    aspect-ratio: 640 / 427;
+    aspect-ratio: 16 / 9;
     
     img{
         width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
         position: absolute;
         top: 0;
         left: 0;

@@ -15,7 +15,8 @@
     align-items: center;
     
     &:hover {
-        background-color:aqua;
+        background-color:$color-medium;
+        color: white;
     }
     @include desktop {
         margin-bottom: 0;
@@ -28,6 +29,7 @@
         display: flex;
         align-items: center;
         gap:5px;
+       
     }
     &__showHover{
         display: none;  
