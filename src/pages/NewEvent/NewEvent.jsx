@@ -191,8 +191,8 @@ export default function NewEvent() {
       );
 
       if (data.results.length > 0) {
-				const fetchedLat = data.results[0].geometry.location.lat;
-				const fetchedLng = data.results[0].geometry.location.lng;
+        const fetchedLat = data.results[0].geometry.location.lat;
+        const fetchedLng = data.results[0].geometry.location.lng;
         return { lat: fetchedLat, lng: fetchedLng };
       } else {
         alert("No results found for the provided address.");
@@ -206,9 +206,15 @@ export default function NewEvent() {
   async function handleSubmit(event) {
 		event.preventDefault();
 
-		if (!newEvent.eventName || !newEvent.description || !newEvent.address || !newEvent.city || !newEvent.country) {
-			return notCreate();
-		}
+    if (
+      !newEvent.eventName ||
+      !newEvent.description ||
+      !newEvent.address ||
+      !newEvent.city ||
+      !newEvent.country
+    ) {
+      return notCreate();
+    }
 
 		const { lat, lng } = await getGeoCode();
 
