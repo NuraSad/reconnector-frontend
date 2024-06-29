@@ -98,6 +98,10 @@ Create Group
 ## ⚒️ Tech Stack
 ![Logo](https://skillicons.dev/icons?i=html,scss,materialui,vite,supabase,postgres)
 
+## Video Demo
+https://www.loom.com/share/86dcf28cce6c4021ba549375bfb8eb76?sid=a9870daa-52c4-4c69-a7b3-ad86d45f8deb
+https://www.loom.com/share/cee81c0a5af84b0f80bab70295999e0a?sid=5148e5f3-4937-40c9-9a3c-bffdace6377f
+https://www.loom.com/share/5d84a510665b4fa88bfd34bcbf7b229c?sid=0f9857f8-b270-4156-b886-fa83969b38a1
 
 ## 👩‍💻 Local Installation : Frontend
 
