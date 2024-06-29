@@ -19,7 +19,6 @@ const Leaderboard = () => {
       }
       if (data) {
         setLeaderboardData(data);
-        //console.log(data);
         setFetchError(null);
       }
     };

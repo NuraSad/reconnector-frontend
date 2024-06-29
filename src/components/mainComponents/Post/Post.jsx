@@ -27,7 +27,6 @@ export default function Post({
     return savedIsLiked ? JSON.parse(savedIsLiked) : false;
   });
 
-  console.log(thisAuthor);
   useEffect(() => {
     // Update session storage whenever isLiked changes
     sessionStorage.setItem(`isLiked_${id}`, JSON.stringify(isLiked));
@@ -71,13 +70,12 @@ export default function Post({
     };
     fetchUserInfo();
   }, [username]);
-  console.log(img1);
   return (
     <div className="post">
       <div className="post__user-info">
         <div className="post__user-info--userWrap">
           <div className="post__user-info-group">
-            <Avatar alt={username} src={thisAuthor.avatar} />
+            <Avatar alt={String(username)} src={thisAuthor.avatar} />
             <div className="post__user-info--nameWrap">
               <h3 className="post__user-info--name">
                 {thisAuthor.first_name} {thisAuthor.last_name}
@@ -149,12 +147,12 @@ Post.propTypes = {
   profileAvatar: PropTypes.string,
   last_name: PropTypes.string,
   first_name: PropTypes.string,
-  username: PropTypes.string,
-  tag: PropTypes.array,
+  username: PropTypes.number,
+  tag: PropTypes.string,
   img1: PropTypes.string,
   img2: PropTypes.string,
   img3: PropTypes.string,
   postTitle: PropTypes.string,
   postText: PropTypes.string,
-  // likes: PropTypes.num,
+  alt: PropTypes.string,
 };

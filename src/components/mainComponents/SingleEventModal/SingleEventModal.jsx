@@ -96,7 +96,6 @@ const SingleEventModal = ({
         console.log(error);
       }
       if (data.length > 0) {
-        // console.log(data);
         setJoinEvent(true);
       }
     };
@@ -125,7 +124,6 @@ const SingleEventModal = ({
       if (group_members_error) {
         console.log("Cannot connect to Db group_members");
       } else {
-        console.log(group_members);
         if (group_members.length == 0) {
           await handleJoinGrp();
         } else {
@@ -148,8 +146,6 @@ const SingleEventModal = ({
     if (data) {
       setJoinEvent(false);
       console.log("you have left the group");
-
-      console.log(data);
     }
     if (error) {
       console.log("error for leaving group" + error);

@@ -14,7 +14,6 @@ const SingleGrpModal = ({
 }) => {
   const [toggle, setToggle] = useState(true);
 
-  // console.log(groupName);
   return (
     <>
       <BackDrop />

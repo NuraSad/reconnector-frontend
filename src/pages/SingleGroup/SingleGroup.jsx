@@ -216,7 +216,7 @@ function SingleGroup() {
                       textBtn={"Join Group +"}
                       bgColor={"#6c3ed696"}
                       textColor={"white"}
-                      marginLeft={"10rem"}
+                      marginLeft={"1rem"}
                       height={"35px"}
                       onClick={handleJoinGrp}
                     />
@@ -225,7 +225,7 @@ function SingleGroup() {
                       textBtn={"Leave Group -"}
                       bgColor={"#6c3ed696"}
                       textColor={"white"}
-                      marginLeft={"10rem"}
+                      marginLeft={"1rem"}
                       height={"35px"}
                       onClick={handleLeaveGrp}
                     />

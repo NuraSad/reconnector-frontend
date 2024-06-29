@@ -19,13 +19,11 @@ export default function Explore() {
 
       if (posts_data) {
         setPosts(posts_data);
-        console.log(posts_data);
       }
     }
     getPosts();
   }, []);
 
-  // console.log(posts);
   return (
     <section className="explore">
       <h1 className="explore__title page-font">Explore</h1>

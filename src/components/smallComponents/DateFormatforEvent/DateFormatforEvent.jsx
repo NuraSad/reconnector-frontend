@@ -35,7 +35,7 @@ const DateFormatforEvent = ({ date }) => {
   const timeString = `${daysOfWeek[dateTime.getDay()]} ${day} ${
     months[dateTime.getMonth()]
   } @${hours}:${minutes}`;
-  return <div>{timeString}</div>;
+  return <span>{timeString}</span>;
 };
 
 export default DateFormatforEvent;

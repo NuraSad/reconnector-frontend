@@ -38,7 +38,6 @@ export default function GroupsCard(props) {
       if (groupMembersData) {
         // Extract user_ids
         const userIds = groupMembersData.map((member) => member.user_id);
-        // console.log(userIds);
         // Fetch user details from users table
         const { data: usersData, error: usersError } = await supabase
           .from("user")
