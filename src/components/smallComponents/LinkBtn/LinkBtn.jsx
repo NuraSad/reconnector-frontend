@@ -16,29 +16,34 @@ function LinkBtn({
   event,
 }) {
   return (
-		<a
-			className="linkBtn"
-			style={{
-				backgroundColor: bgColor,
-				color: textColor,
-				right: rightPos,
-				bottom: bottomPos,
-				padding: padding,
-				fontSize: fontSize,
-			}}
-			href={link}
-			onClick={(e) => onClickFunction(e, event)}
-		>
-			{image ? (
-				<div className="linkBtn__imgDiv">
-					<img style={{ height: imgHeight }} src={image} alt={image} onClick={(e) => onClickFunction(e, event)} />
-					{textBtn}
-				</div>
-			) : (
-				textBtn // Render textBtn directly
-			)}
-		</a>
-	);
+    <a
+      className="linkBtn"
+      style={{
+        backgroundColor: bgColor,
+        color: textColor,
+        right: rightPos,
+        bottom: bottomPos,
+        padding: padding,
+        fontSize: fontSize,
+      }}
+      href={link}
+      onClick={(e) => onClickFunction(e, event)}
+    >
+      {image ? (
+        <div className="linkBtn__imgDiv">
+          <img
+            style={{ height: imgHeight }}
+            src={image}
+            alt={image}
+            onClick={(e) => onClickFunction(e, event)}
+          />
+          {textBtn}
+        </div>
+      ) : (
+        textBtn // Render textBtn directly
+      )}
+    </a>
+  );
 }
 LinkBtn.propTypes = {
   bgColor: PropTypes.string,
@@ -52,6 +57,6 @@ LinkBtn.propTypes = {
   padding: PropTypes.string,
   image: PropTypes.string,
   imgHeight: PropTypes.string,
-  event: PropTypes.object
+  event: PropTypes.object,
 };
 export default LinkBtn;
