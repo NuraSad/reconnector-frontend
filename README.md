@@ -46,7 +46,7 @@ Henry Bellman [@hheennrryyb](https://github.com/hheennrryyb)
 
 ## Deployed Site
 
-<p>We deployed using Netlify and Heroku</p>
+<p>We deployed using Vercel</p>
 <p>Check it out 👉 <a href="https://reconnector.vercel.app/" target="_blank">HERE</a></p>
 
 ## ⚒️ Tech Stack
