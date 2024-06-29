@@ -230,9 +230,8 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
               </div>
             </div>
           </section>
-        ) : (
-          <>fetchError</>
-        )}
+        ) : // <>fetchError</>
+        null}
       </div>
     </>
   );

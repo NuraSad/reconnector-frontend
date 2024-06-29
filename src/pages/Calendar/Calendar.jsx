@@ -55,9 +55,8 @@ const Calendar = () => {
     setModalData(event);
   };
 
-  return fetchError ? (
-    <>{fetchError}</>
-  ) : (
+  return fetchError ? // <>{fetchError}</>
+  null : (
     <>
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}

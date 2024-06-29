@@ -98,74 +98,73 @@ const Leaderboard = () => {
     <section className="leaderboard">
       <h1 className="leaderboard__title page-font">Leaderboard</h1>
       <div className="leaderboard__bubble-container">
-        {fetchError ? (
-          <>{fetchError}</>
-        ) : (
-          leaderboardData
-            .sort((a, b) => b.points - a.points)
-            .map((company, index) => (
-              <div
-                className="company-bubble"
-                key={company.id}
-                style={{
-                  // backgroundImage: `url(${company.logo})`,
-                  width: `${company.points / 20}%`,
-                  height: `${company.points / 20}%`,
-                  minHeight: "200px",
-                  minWidth: "200px",
-                  // bottom: `${Math.floor(Math.random() * 70) + 20}px`,
-                  // right: `${Math.floor(Math.random() * 70) + 10}px`,
-                }}
-                onClick={() =>
-                  navigate(`/leaderboards/${company.id}`, {
-                    state: {
-                      companyId: company.id,
-                      companyName: company.name,
-                      logo: company.logo,
-                      points: company.points,
-                      medals: company.medal_count,
-                      employeeCount: company.employeeCount,
-                      description: company.description,
-                    },
-                  })
-                }
-              >
+        {fetchError
+          ? // <>{fetchError}</>
+            null
+          : leaderboardData
+              .sort((a, b) => b.points - a.points)
+              .map((company, index) => (
                 <div
+                  className="company-bubble"
+                  key={company.id}
                   style={{
-                    minHeight: "100px",
-                    height: `${company.points / 10}%`,
+                    // backgroundImage: `url(${company.logo})`,
+                    width: `${company.points / 20}%`,
+                    height: `${company.points / 20}%`,
+                    minHeight: "200px",
+                    minWidth: "200px",
+                    // bottom: `${Math.floor(Math.random() * 70) + 20}px`,
+                    // right: `${Math.floor(Math.random() * 70) + 10}px`,
                   }}
-                  className="company-bubble__logo-wrapper"
+                  onClick={() =>
+                    navigate(`/leaderboards/${company.id}`, {
+                      state: {
+                        companyId: company.id,
+                        companyName: company.name,
+                        logo: company.logo,
+                        points: company.points,
+                        medals: company.medal_count,
+                        employeeCount: company.employeeCount,
+                        description: company.description,
+                      },
+                    })
+                  }
                 >
                   <div
-                    className="company-bubble__logo"
                     style={{
-                      backgroundImage: `url(${company.logo})`,
                       minHeight: "100px",
-                      maxHeight: "500px",
-                      // height: `${company.points / 5}%`,
+                      height: `${company.points / 10}%`,
                     }}
-                  />
-                  <h2 className="company-bubble__name"></h2>
-                </div>
+                    className="company-bubble__logo-wrapper"
+                  >
+                    <div
+                      className="company-bubble__logo"
+                      style={{
+                        backgroundImage: `url(${company.logo})`,
+                        minHeight: "100px",
+                        maxHeight: "500px",
+                        // height: `${company.points / 5}%`,
+                      }}
+                    />
+                    <h2 className="company-bubble__name"></h2>
+                  </div>
 
-                <div className="company-bubble__stats-wrapper">
-                  <div className="stats-item">
-                    <img src={`${peopleGroupIcon}`} alt="Employee Count" />
-                    {company.employeeCount !== 0 ? company.employeeCount : ""}
-                  </div>
-                  <div className="stats-item">
-                    <img src={`${starIcon}`} alt="Company Score" />
-                    {company.points !== 0 ? company.points : ""}
-                  </div>
-                  <div className="stats-item">
-                    <img src={`${medalIcon}`} alt="Medals won" />
-                    {company.medal_count !== 0 ? company.medal_count : ""}
+                  <div className="company-bubble__stats-wrapper">
+                    <div className="stats-item">
+                      <img src={`${peopleGroupIcon}`} alt="Employee Count" />
+                      {company.employeeCount !== 0 ? company.employeeCount : ""}
+                    </div>
+                    <div className="stats-item">
+                      <img src={`${starIcon}`} alt="Company Score" />
+                      {company.points !== 0 ? company.points : ""}
+                    </div>
+                    <div className="stats-item">
+                      <img src={`${medalIcon}`} alt="Medals won" />
+                      {company.medal_count !== 0 ? company.medal_count : ""}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
-        )}
+              ))}
       </div>
     </section>
   );

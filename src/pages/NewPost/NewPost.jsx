@@ -31,6 +31,7 @@ function NewPost() {
     style: "standard",
   });
   const [files, setFiles] = useState(null);
+  const [points, setPoints] = useState(0);
 
   let navigate = useNavigate();
   const CDNURL =
@@ -53,24 +54,27 @@ function NewPost() {
   const notCreateFile = () => toast.warn("File uploading issue");
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-  const isValidEmbedCode = (code) => {
-    // Basic validation for an iframe tag (you can extend this for other types of embeds)
-    const iframePattern = /<iframe.*<\/iframe>/;
-    return iframePattern.test(code);
-  };
+  // const isValidEmbedCode = (code) => {
+  //   // Basic validation for an iframe tag (you can extend this for other types of embeds)
+  //   const iframePattern = /<iframe.*<\/iframe>/;
+  //   return iframePattern.test(code);
+  // };
 
-  const handleInputChange = (e) => {
-    const code = e.target.value;
-    if (isValidEmbedCode(code)) {
-      setEmbedCode(code);
-      //cut up the string and find the type, id and style all as a state of objects and send
-      //that back to the component
-      // setIsValid(true);
-    } else {
-      // setIsValid(false);
-      console.log("no code in embed");
-    }
-  };
+  // const handleInputChange = (e) => {
+  //   const code = e.target.value;
+  //   if (isValidEmbedCode(code)) {
+  //     setEmbedCode(code);
+  //     //cut up the string and find the type, id and style all as a state of objects and send
+  //     //that back to the component
+  //     // setIsValid(true);
+  //   } else {
+  //     // setIsValid(false);
+  //     console.log("no code in embed");
+  //   }
+  // };
+
+  useEffect(() => {}, []);
+
   useEffect(() => {
     const getSupaUserID = async () => {
       try {
@@ -94,33 +98,6 @@ function NewPost() {
     getSupaUserID();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     const user = await getUserId();
-  //     setUserId(user);
-  //   };
-  //   const fetchGroups = async () => {
-  //     const { data, error } = await supabase.from("group").select("id, name");
-  //     if (error) {
-  //       console.log(error);
-  //     } else {
-  //       const map = [];
-  //       data.forEach((group) => {
-  //         map.push({ name: group.name });
-  //       });
-  //       setGroups(map);
-  //     }
-  //   };
-  //   const fetchAuthId = async () => {
-  //     const auth_user_id = await getAuthUserId();
-  //     setSupaUserId(auth_user_id);
-  //   };
-  //   fetchUser();
-  //   fetchAuthId();
-  //   fetchGroups();
-  //   getSupaUserID();
-  // }, []);
-
   useEffect(() => {
     const fetchGroups = async () => {
       const { data, error } = await supabase.from("group").select("id, name");
@@ -138,12 +115,32 @@ function NewPost() {
     fetchGroups();
   }, []);
 
+  //if you create a post you get a point
+  //per km you get a point
+  //per hour you get a point and they get rounded to the highest integer
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!groupName || !postTitle) {
       return notCreate();
     }
+
+    const sendData = async () => {
+      //const userId = await getUserId();
+      const { data, error } = await supabase.from("user").insert([
+        {
+          points: points,
+        },
+      ]);
+      //if you create a post you get a point
+      //per km you get a point
+      //per hour you get a point and they get rounded to the highest integer
+      if (error) {
+        return alert(error);
+      }
+    };
+    sendData();
 
     let imageURL = null;
 
@@ -241,7 +238,7 @@ function NewPost() {
             <input
               type="text"
               name="activityLength"
-              placeholder="how long did were you active..."
+              placeholder="how long did were you active (hourly)"
               value={actLength}
               required
               onChange={(e) => setActLength(e.target.value)}
@@ -297,12 +294,12 @@ function NewPost() {
                 rows="4"
                 cols="50"
               />
-              {!isValid && <p style={{ color: "red" }}>Invalid embed code</p>}
+              {/* {!isValid && <p style={{ color: "red" }}>Invalid embed code</p>}
               <StravaEmbed
                 embedType={embed.embedType}
                 embedId={embed.embedId}
                 style={embed.style}
-              />
+              /> */}
             </div>
             <button
               style={{ marginLeft: "auto", padding: "0 1rem" }}

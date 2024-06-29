@@ -36,12 +36,10 @@ const SingleLeaderBoard = () => {
       }
       if (data) {
         setUsers(data);
-        
       }
     };
 
     fetchUser(id);
-
   }, [id]);
 
   useEffect(() => {
@@ -94,9 +92,8 @@ const SingleLeaderBoard = () => {
 
   return (
     <div className="singleleaderboard">
-      {fetchError ? (
-        <p>{fetchError}</p>
-      ) : (
+      {fetchError ? // <p>{fetchError}</p>
+      null : (
         <div className="singleleaderboard-first">
           <section className="singleleaderboard-first-companyLogo">
             <img src={logo} alt="" />
