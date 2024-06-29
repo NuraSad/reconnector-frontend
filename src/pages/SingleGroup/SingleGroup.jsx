@@ -19,6 +19,7 @@ import * as bootstrap from "bootstrap";
 
 function SingleGroup() {
   const [groups, setGroups] = useState();
+  const [groupId, setGroupId] = useState();
   const [fetchError, setFetchError] = useState(null);
   const [groupMembers, setGroupMembers] = useState([]);
 
@@ -121,10 +122,12 @@ function SingleGroup() {
     fetchGroupMembers();
   }, [id]);
 
-  const handleJoinEvents = (e) => {
-    setEventTitle(e.target.textContent);
-    setOpenEventModal(true);
-  };
+  const handleJoinEvents = (e, selectedEvent) => {
+		setEventTitle(selectedEvent.title);
+		setGroupId(selectedEvent.created_by_group_id);
+		setOpenEventModal(true);
+	};
+
   async function goToEvent() {
     navigate("/createEvent", { state: { groupId: id } });
   }
@@ -287,7 +290,7 @@ function SingleGroup() {
             <SingleEventModal
               setOpenEventModal={setOpenEventModal}
               eventTitle={eventTitle}
-              groupId={id}
+              groupId={groupId}
               online=""
               eventDescription=""
               handleJoinGrp={handleJoinGrp}

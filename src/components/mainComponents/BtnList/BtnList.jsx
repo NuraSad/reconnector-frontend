@@ -139,6 +139,7 @@ function BtnList({ groupdId,onClickEvents,events}) {
           image={plus}
           imgHeight={"15px"}
           onClickFunction={onClickEvents}
+          event={each}
         />
       ))}
     </section>
