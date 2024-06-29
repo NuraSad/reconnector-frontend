@@ -6,7 +6,12 @@ import BackDrop from "../../smallComponents/BackDrop/BackDrop";
 import supabase from "../../../config/supabaseClient";
 import { getUserId } from "../../../userUtils.js";
 
-const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
+const SingleEventModal = ({
+  setOpenEventModal,
+  eventTitle,
+  groupId,
+  handleJoinGrp,
+}) => {
   const [toggle, setToggle] = useState(true);
   const [event, setEvent] = useState();
   const [userIds, setUserIds] = useState();
@@ -25,8 +30,7 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
     second: "2-digit",
     hour12: true, // For 12-hour format with AM/PM
   };
-  // // Convert to readable format
-  // const readableDate = date.toLocaleString("en-US", dateFormat);
+
   useEffect(() => {
     const fetchEvent = async () => {
       const { data: eventData, error } = await supabase
@@ -107,14 +111,32 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
         event_id: event[0].id,
       },
     ]);
-    if (data) {
-      setJoinEvent(true);
-      console.log("you have joined the group");
-    }
     if (error) {
       console.log("error for joining" + error);
     }
+    else {
+      setJoinEvent(true);
+      const { data: group_members, error: group_members_error } = await supabase
+        .from("group_members")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("group_id", groupId);
+
+      if (group_members_error) {
+        console.log("Cannot connect to Db group_members");
+      } else {
+        console.log(group_members);
+        if (group_members.length == 0) {
+          await handleJoinGrp();
+        } else {
+          console.log("user_id and group_id already present in group_members table")
+          return;
+        }
+      }
+    }
+   
   };
+
   const handleLeaveEvent = async () => {
     const userId = await getUserId();
     const { data, error } = await supabase
@@ -137,10 +159,12 @@ const SingleEventModal = ({ setOpenEventModal, eventTitle, groupId }) => {
   const toggleJoin = async () => {
     if (joinEvent) {
       await handleLeaveEvent();
+      setToggle(false)
     } else {
       await handleJoinEvent();
+      setToggle(true)
     }
-    setToggle(!toggle);
+    //setToggle(!toggle);
   };
 
   return (
