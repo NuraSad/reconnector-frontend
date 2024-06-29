@@ -24,12 +24,9 @@ export default function NewEvent() {
   const [togglePerson, setTogglePerson] = useState(false);
   const [groups, setGroups] = useState({});
   const [value, setValue] = useState(dayjs(new Date()));
-  const [supaUserId, setSupaUserId] = useState("");
   const [userId, setUserId] = useState();
   const [imagePreview, setImagePreview] = useState();
   const [imageFile, setImageFile] = useState();
-  const [lat, setLat] = useState();
-  const [lng, setLng] = useState();
   const VITE_GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
   const CDNURL =
@@ -158,25 +155,11 @@ export default function NewEvent() {
   }
 
   useEffect(() => {
-    const getSupaUserID = async () => {
-      try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user !== null) {
-          setSupaUserId(user.id);
-        } else {
-          setSupaUserId("");
-        }
-      } catch (error) {}
-    };
-
     const fetchUser = async () => {
       const user = await getUserId();
       setUserId(user);
     };
     fetchUser();
-    getSupaUserID();
   }, []);
 
   useEffect(() => {
@@ -210,8 +193,6 @@ export default function NewEvent() {
       if (data.results.length > 0) {
         const fetchedLat = data.results[0].geometry.location.lat;
         const fetchedLng = data.results[0].geometry.location.lng;
-        setLat(fetchedLat);
-        setLng(fetchedLng);
         return { lat: fetchedLat, lng: fetchedLng };
       } else {
         alert("No results found for the provided address.");
@@ -259,11 +240,6 @@ export default function NewEvent() {
     }
 
     // add event
-    // get internal user id
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
     const { data: event_data, error: event_error } = await supabase
       .from("event")
       .insert([
@@ -352,6 +328,7 @@ export default function NewEvent() {
     }
   }
 
+  console.log(newEvent.groupList);
   return (
     <section className="newEvent">
       <h1>
