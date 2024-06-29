@@ -17,8 +17,6 @@ import AvatarGroup from "@mui/material/AvatarGroup";
 import { renderEventContent } from "../Calendar/Calendar.jsx";
 import * as bootstrap from "bootstrap";
 
-
-
 function SingleGroup() {
   const [groups, setGroups] = useState();
   const [fetchError, setFetchError] = useState(null);
@@ -264,14 +262,14 @@ function SingleGroup() {
                   meridiem: "short",
                 }}
                 eventContent={renderEventContent}
-                eventDidMount={(info)=>{
+                eventDidMount={(info) => {
                   new bootstrap.Popover(info.el, {
                     placement: "auto",
                     trigger: "hover",
                     customClass: "popoverStyle",
                     content: info.event.title,
                     html: true,
-                  })
+                  });
                 }}
               />
             </div>
@@ -292,6 +290,7 @@ function SingleGroup() {
               groupId={id}
               online=""
               eventDescription=""
+              handleJoinGrp={handleJoinGrp}
             />
           )}
         </section>
