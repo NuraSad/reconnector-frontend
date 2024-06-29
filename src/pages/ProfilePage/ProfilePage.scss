@@ -20,7 +20,7 @@
 
         .top{
             width: 100%;
-            height: 20rem;
+            height: 25rem;
             border-top-left-radius: inherit;
             border-top-right-radius: inherit;
             background: linear-gradient(
@@ -36,7 +36,23 @@
             justify-content: center;
             row-gap: 1rem;
             color: white;
+            position: relative;
             
+            .edit-btn{
+                background-color: transparent;
+                border:none;
+                box-shadow: none;
+                cursor: pointer;
+                position: absolute;
+                right: 2rem;
+                top: 1rem;
+
+               img{
+                object-fit: fill;
+                width: 2rem;
+               }
+            }
+
             .avatar-field{
                 display: flex;
                 align-items: center;
@@ -48,6 +64,13 @@
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
+                    row-gap: 0.3rem;
+
+                    img{
+                        width: 1.5rem;
+                        height: 1.5rem;
+                        object-fit: fill;
+                    }
 
                     p{
                         font-size: 1rem;
@@ -55,13 +78,17 @@
                 }
                 .avatar {
                     position: relative;
-                    width: 30%;
+                    width: 20%;
                     
                     .photo {
                         width: 100%;
                         height: auto;
                         aspect-ratio: 1 / 1;
                         border-radius: 50%;
+                        object-fit: cover;
+
+                        
+
                         // border: 5px solid #9E46FF;
                     }
                     .logo{
@@ -93,7 +120,7 @@
         }
         h3 {
             font-weight: 500;
-            margin-left: 1rem;
+            margin-left: 1.5rem;
         }
         .awards-field{
             width: 95%;
@@ -141,17 +168,39 @@
             width: 90%;
             margin: auto;
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
-            justify-content: center;
-            column-gap: 1rem;
+            justify-content: flex-start;
+            gap: 1rem;
+
+
+            a {
+                flex-basis: 30%;
+                width: inherit;
+                height: inherit;
+            }
 
         }
         .posts-field{
-            margin: auto;
-            display: flex;
-            flex-direction: column;
+            // margin: auto;
+            // display: flex;
+            // flex-direction: column;
+            // justify-content: center;
+            // align-items: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(325px, 1fr));
             justify-content: center;
-            align-items: center;
+            gap: 1rem;
+            width: 95%;
+            margin: 0 auto;
+            padding: 0rem 1rem 1rem;
+            
+        }
+        .empty-message{
+            font-size: 1.2rem;
+            font-style: italic;
+            color: lightgrey;
+            margin: 2rem;
         }
     }
 }

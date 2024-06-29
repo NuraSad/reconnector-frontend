@@ -2,6 +2,7 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+    overflow-y: auto;
     display: grid;
     grid-template-columns: 17% 66% 17%
 }
@@ -25,19 +26,30 @@ nav {
         h4{
             color: #939396;
         }
+        h5{
+            color: #D9D9D9;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+
+        }
         .avatar-field {
             position: relative;
             width: min-content;
 
             #avatar{
-                width: 9rem;
-                height: 9rem;
+                width: 10rem;
+                height: 10rem;
                 border-radius: 50%;
+                object-fit: cover;
+                background-color: grey;
             }
             #company-logo{
                 position: absolute;
                 bottom: 0;
                 right: 0;
+                width: 3rem;
+                height: 3rem;
+                border-radius: 50%;
             }
         }
         .stats-field{
@@ -52,6 +64,7 @@ nav {
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
+                row-gap: 0.3rem;
                 
                 p{
                     margin: 0;
@@ -59,6 +72,11 @@ nav {
                     font-family: "Roboto", sans-serif;
                     font-weight: 500;
                     color:#939396;
+                }
+                img{
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    object-fit: fill;
                 }
             }
         }
@@ -69,7 +87,7 @@ nav {
         padding: 0;
 
         li{
-            margin: 1.5rem 0;
+            margin: 1.5rem 1rem;
 
             a{
                 color: #939396;
@@ -80,6 +98,18 @@ nav {
                 font-weight: 900;
             }
         }
+        li:last-child{
+            margin-top: 4rem;
+        }
+    }
+    .btn {
+        color: white;
+        background-color: #D9D9D9;
+        box-shadow: none;
+        font-size: 1rem;
+    }
+    .btn:hover{
+        background-color: rgba(108, 62, 214, 0.31);
     }
 }
 

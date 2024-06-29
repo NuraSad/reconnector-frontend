@@ -20,6 +20,7 @@ function Btn({
   inputType = "button",
   checked,
   onChange,
+  name,
 }) {
   return (
     <>
@@ -33,11 +34,12 @@ function Btn({
           padding: padding,
           height: height,
           fontSize: fontSize,
-          fontWeight:fontWeight,
+          fontWeight: fontWeight,
           marginTop: marginTop,
           marginLeft: marginLeft,
           border: border,
         }}
+        name={name}
       >
         {image ? (
           <div className="btn__imgDiv">
