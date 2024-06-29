@@ -1,0 +1,105 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.profile-popup{
+    margin: 2rem 4rem;
+    padding: 0 2rem 4rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    background-color: white;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    row-gap: 0.5rem;
+    grid-template-areas: 
+    "header close"
+    "first last"
+    "email company"
+    "location pre_radius"
+    "avatar ."
+    "button .";
+    
+   
+    h1 {
+        grid-area: header;
+        padding-top: 2rem;
+        font-size: 42px;
+        color:$color-medium-transparent;
+        text-align: start;
+        font-weight: 900;
+    }
+    .close-btn {
+        grid-area: close;
+        place-self: start end;
+        font-size: 1.5rem;
+        background-color: transparent;
+        border: none;
+        color: darkgray; 
+        margin-top: 1rem;
+        cursor: pointer;
+    }
+    
+    label {
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 2.25rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+
+        input, select {
+            border-radius: 10px;
+            border: 3px solid #D9D9D9;
+            padding: 0.5rem;
+            font-family: $font-primary;
+            font-size: 1rem;
+            width: 80%;
+        }
+    }
+    label[for="first_name"]{
+        grid-area: first;
+    }
+    label[for="last_name"]{
+        grid-area: last;
+    }
+    label[for="email"]{
+        grid-area: email;
+    }
+    label[for="company_id"]{
+        grid-area: company;
+    }
+    label[for="location"]{
+        grid-area: location;
+    }
+    label[for="preferred_radius"]{
+        grid-area: pre_radius;
+    }
+
+    .image-wrapper {
+        grid-area: avatar;
+        margin-top: 1rem;
+        img {
+            width: 60%;
+            height: auto;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 1rem 0;
+            
+        }
+    }
+    .submit {
+        grid-area: button;
+        font-size: 1rem;
+        width: fit-content;
+        height: 2.5rem;
+        color: white;
+        background-color: rgba(108, 62, 214, 0.31);
+    }
+    .submit:hover{
+        background-color: #6C3ED6;
+    }
+
+}

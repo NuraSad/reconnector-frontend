@@ -1,84 +1,97 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./SingleLeaderBoard.scss";
-import { useParams } from "react-router-dom";
-import starbucks from "../../assets/starbucks.png";
+import { useLocation, useParams } from "react-router-dom";
 import icon_medal from "../../assets/icons/icon_medal.svg";
 import icon_star from "../../assets/icons/icon_star.svg";
 import icon_people from "../../assets/icons/icon_people-group.svg";
 import icon_fire from "../../assets/icons/icon_fire.png";
-import user1 from "../../assets/user1.png";
-import posts from "../../data/postData.json";
 import Post from "../../components/mainComponents/Post/Post";
 import supabase from "../../config/supabaseClient";
-const leaderboard = [
-  {
-    username: "Alex Guerrerro",
-    total_starts: 408,
-    week_streaks: 123,
-    groups_apart_of: 8,
-    most_active_group: ["#Mountain Bike Ride", "#Girls Running and Drinks"],
-  },
-  {
-    username: "Brown Guerrerro",
-    total_starts: 408,
-    week_streaks: 12,
-    groups_apart_of: 8,
-    most_active_group: ["#Mountain Bike Ride", "#Girls Running and Drinks"],
-  },
-  {
-    username: "Rima Guerrerro",
-    total_starts: 411,
-    week_streaks: 17,
-    groups_apart_of: 80,
-    most_active_group: ["#Mountain Bike Ride"],
-  },
-  {
-    username: "Alex Ray",
-    total_starts: 800,
-    week_streaks: 12,
-    groups_apart_of: 157,
-    most_active_group: [
-      "#Mountain Bike Ride",
-      "#Girls Running and Drinks",
-      "#Hiking park",
-    ],
-  },
-  {
-    username: "Alex Ray",
-    total_starts: 800,
-    week_streaks: 12,
-    groups_apart_of: 157,
-    most_active_group: [
-      "#Mountain Bike Ride",
-      "#Girls Running and Drinks",
-      "#Hiking park",
-    ],
-  },
-];
+
 const SingleLeaderBoard = () => {
   const { id } = useParams();
 
   const [fetchError, setFetchError] = useState("");
-  const [fetchOne, setFetchOne] = useState([]);
+  const [users, setUsers] = useState([]);
+  const location = useLocation();
+
+  const {
+    logo,
+    points,
+    medals,
+    employeeCount,
+    companyId,
+    companyName,
+    description,
+  } = location.state;
   useEffect(() => {
-    const fetchSingleCompany = async (id) => {
+    const fetchUser = async (id) => {
       const { data, error } = await supabase
-        .from("company")
+        .from("user")
         .select("*")
-        .eq("id", id)
-        .single();
+        .eq("company_id", id);
 
       if (error) {
         setFetchError("Could not Fetch the Company");
       }
       if (data) {
-        setFetchOne(data);
-        console.log(data);
-        setFetchError(null);
+        setUsers(data);
+        
       }
     };
-    fetchSingleCompany(id);
+
+    fetchUser(id);
+
   }, [id]);
+
+  useEffect(() => {
+    if (users.length == 0) return;
+    const userIds = users.map((item) => item.id);
+    const fetchGroup = async () => {
+      const { data: grpCount, error } = await supabase.rpc(`getgroupcount`, {
+        user_ids: userIds,
+      });
+      if (error) {
+        setFetchError("Error fetching in group");
+      } else {
+        const updatedUsers = users.map((item) => {
+          const foundgrp = grpCount.find((data) => data.user_id === item.id);
+          if (foundgrp) return { ...item, groupCount: foundgrp.groupcount };
+          else {
+            return item;
+          }
+        });
+        if (JSON.stringify(updatedUsers) !== JSON.stringify(users)) {
+          setUsers(updatedUsers);
+        }
+      }
+    };
+
+    fetchGroup();
+  }, [users]);
+
+  const [posts, setPosts] = useState();
+
+  useEffect(() => {
+    async function getPosts() {
+      const userIds = users.map((item) => item.id);
+      let { data: posts_data, error: posts_error } = await supabase
+        .from("post")
+        .select()
+        .in("created_by", userIds);
+
+      if (posts_error) {
+        console.error("Error fetching posts:", posts_error.message);
+        return;
+      }
+
+      if (posts_data) {
+        setPosts(posts_data);
+      }
+    }
+    getPosts();
+  }, [users]);
+
   return (
     <div className="singleleaderboard">
       {fetchError ? (
@@ -86,34 +99,28 @@ const SingleLeaderBoard = () => {
       ) : (
         <div className="singleleaderboard-first">
           <section className="singleleaderboard-first-companyLogo">
-            <img src={`${fetchOne.logo}`} alt="" />
+            <img src={logo} alt="" />
           </section>
           <section className="singleleaderboard-first-description">
-            <h1 className="company-heading"> {fetchOne.name}</h1>
+            <h1 className="company-heading"> {companyName}</h1>
             <div className="company-bulletins">
               <article className="company-bulletins-item">
                 {" "}
                 <img src={icon_medal} alt="" />
-                <span>{fetchOne.medal}</span>
+                <span>{medals}</span>
               </article>
               <article className="company-bulletins-item">
                 {" "}
                 <img src={icon_star} alt="" />
-                <span>{fetchOne.points}</span>
+                <span>{points}</span>
               </article>
               <article className="company-bulletins-item">
                 {" "}
                 <img src={icon_people} alt="" />
-                <span>{fetchOne.employeecount}</span>
+                <span>{employeeCount}</span>
               </article>
             </div>
-            <p className="company-description">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse lacinia eros vitae nunc feugiat sollicitudin. Donec
-              suscipit, erat a rhoncus cursus, orci dui varius augue, vel
-              blandit augue magna ut orci. Pellentesque in lorem volutpat,
-              blandit urna eu, laoreet magna. Pellentesque sed eros tellus.
-            </p>
+            <p className="company-description">{description}</p>
           </section>
         </div>
       )}
@@ -136,30 +143,32 @@ const SingleLeaderBoard = () => {
             <h5 className="activegroup">Most Active Groups</h5>
           </div>
         </section>
-        {leaderboard.map((item, index) => (
+        {users?.map((item, index) => (
           <section className="singleleaderboard-second-data" key={index}>
             <div className="author">
-              <img className="author-image" src={user1} alt="" />
-              <span>{item.username}</span>
+              <img className="author-image" src={`${item.avatar}`} alt="" />
+              <span>
+                {item.first_name} {item.last_name}
+              </span>
             </div>
             <div>
               <img src={icon_star} alt="" />
-              <span>{item.total_starts}</span>
+              <span>{item.points}</span>
             </div>
             <div>
               <img src={icon_fire} alt="aoo" />
-              <span>{item.week_streaks}</span>
+              <span>{item.streak}</span>
             </div>
             <div>
               <img src={icon_people} alt="" />
-              <span>{item.groups_apart_of}</span>
+              <span>{item.groupCount}</span>
             </div>
             <div className="activegroups">
-              {item.most_active_group.slice(0, 2).map((mag, index) => (
+              {/* {item.most_active_group.slice(0, 2).map((mag, index) => (
                 <span className="activegroups-outline" key={index}>
                   {mag}
                 </span>
-              ))}
+              ))} */}
             </div>
           </section>
         ))}
@@ -173,13 +182,11 @@ const SingleLeaderBoard = () => {
               profileAvatar={post.profileAvatar}
               last_name={post.last_name}
               first_name={post.first_name}
-              username={post.username}
-              tag={post.tag}
-              img1={post.img_main}
-              img2={post.img_sec}
-              img3={post.img_third}
-              postTitle={post.postTitle}
-              postText={post.postText}
+              username={post.created_by}
+              tag={post.group_name}
+              img1={post.image}
+              postTitle={post.title}
+              postText={post.body}
               likes={post.likes}
             />
           ))}

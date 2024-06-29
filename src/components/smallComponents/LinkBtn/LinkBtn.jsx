@@ -13,6 +13,7 @@ function LinkBtn({
   fontSize,
   image,
   imgHeight,
+  event,
 }) {
   return (
     <a
@@ -26,11 +27,16 @@ function LinkBtn({
         fontSize: fontSize,
       }}
       href={link}
-      onClick={onClickFunction}
+      onClick={(e) => onClickFunction(e, event, false)}
     >
       {image ? (
         <div className="linkBtn__imgDiv">
-          <img style={{ height: imgHeight }} src={image} alt={image} />
+          <img
+            style={{ height: imgHeight }}
+            src={image}
+            alt={image}
+            onClick={(e) => onClickFunction(e, event, true)}
+          />
           {textBtn}
         </div>
       ) : (
@@ -51,5 +57,6 @@ LinkBtn.propTypes = {
   padding: PropTypes.string,
   image: PropTypes.string,
   imgHeight: PropTypes.string,
+  event: PropTypes.object,
 };
 export default LinkBtn;
