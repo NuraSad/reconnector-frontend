@@ -23,8 +23,8 @@ function NewPost() {
   const [imagePreview, setImagePreview] = useState();
   const [groups, setGroups] = useState([]);
   const [isValid, setIsValid] = useState(true);
-  const [KM, setKM] = useState(0);
-  const [actLength, setActLength] = useState(0);
+  const [KM, setKM] = useState();
+  const [actLength, setActLength] = useState();
   const [embed, setEmbed] = useState({
     embedType: "activity",
     embedId: 10597199340,
@@ -73,7 +73,12 @@ function NewPost() {
   //   }
   // };
 
-  useEffect(() => {}, []);
+  // useEffect(() => {
+  //   let Kilometers = KM;
+  //   let Length = actLength;
+  //   let total = parseInt(Kilometers) + parseInt(Length);
+  //   setPoints(total);
+  // }, [KM, actLength]);
 
   useEffect(() => {
     const getSupaUserID = async () => {
@@ -126,21 +131,30 @@ function NewPost() {
       return notCreate();
     }
 
-    const sendData = async () => {
-      //const userId = await getUserId();
-      const { data, error } = await supabase.from("user").insert([
-        {
-          points: points,
-        },
-      ]);
-      //if you create a post you get a point
-      //per km you get a point
-      //per hour you get a point and they get rounded to the highest integer
-      if (error) {
-        return alert(error);
+    const Kilometers = parseInt(KM);
+    const Length = parseInt(actLength);
+    const totalPoints = Kilometers + Length;
+    console.log(totalPoints);
+    const updateUserPoints = async () => {
+      try {
+        const userId = await getUserId();
+        console.log(userId);
+        const { data, error } = await supabase
+          .from("users")
+          .insert({ points: totalPoints }) // Update the points
+          .eq("id", userId); // Match the user by id
+
+        if (error) {
+          throw error;
+        }
+
+        console.log("User points updated successfully:", data);
+      } catch (error) {
+        alert("Error updating user points: " + error.message);
       }
     };
-    sendData();
+
+    updateUserPoints();
 
     let imageURL = null;
 
