@@ -22,7 +22,7 @@ function SingleGroup() {
   const [groupId, setGroupId] = useState();
   const [fetchError, setFetchError] = useState(null);
   const [groupMembers, setGroupMembers] = useState([]);
-
+  const [userId, setUserId] = useState();
   const [events, setEvents] = useState([]);
   const [calendarEvents, setCalendarEvents] = useState([]);
   const [openEventModal, setOpenEventModal] = useState(false);
@@ -122,9 +122,25 @@ function SingleGroup() {
     fetchGroupMembers();
   }, [id]);
 
-  const handleJoinEvents = (e, selectedEvent) => {
+  const handleJoinEvents = async (e, selectedEvent, plus) => {
 		setEventTitle(selectedEvent.title);
 		setGroupId(selectedEvent.created_by_group_id);
+		if (plus == true) {
+			let { count } = await supabase
+        .from("event_participants")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .eq("event_id", selectedEvent.id);
+
+			if (count == 0) {
+				const { data, error } = await supabase.from("event_participants").insert([
+					{
+						user_id: userId,
+						event_id: selectedEvent.id,
+					},
+				]);
+			}
+		}
 		setOpenEventModal(true);
 	};
 
@@ -143,6 +159,7 @@ function SingleGroup() {
   useEffect(() => {
     const fetchSetJoinGroup = async () => {
       const userId = await getUserId();
+      setUserId(userId);
       const { data, error } = await supabase
         .from("group_members")
         .select()
