@@ -208,10 +208,10 @@ export default function NewEvent() {
       );
 
       if (data.results.length > 0) {
-				const fetchedLat = data.results[0].geometry.location.lat;
-				const fetchedLng = data.results[0].geometry.location.lng;
-				setLat(fetchedLat);
-				setLng(fetchedLng);
+        const fetchedLat = data.results[0].geometry.location.lat;
+        const fetchedLng = data.results[0].geometry.location.lng;
+        setLat(fetchedLat);
+        setLng(fetchedLng);
         return { lat: fetchedLat, lng: fetchedLng };
       } else {
         alert("No results found for the provided address.");
@@ -225,9 +225,15 @@ export default function NewEvent() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!newEvent.eventName || !newEvent.description || !newEvent.address || !newEvent.city || !newEvent.country) {
-			return notCreate();
-		}
+    if (
+      !newEvent.eventName ||
+      !newEvent.description ||
+      !newEvent.address ||
+      !newEvent.city ||
+      !newEvent.country
+    ) {
+      return notCreate();
+    }
 
     const { lat, lng } = await getGeoCode();
 
@@ -287,7 +293,7 @@ export default function NewEvent() {
     if (event_data) {
       const eventID = event_data[0].id;
       eventCreate();
-      setTimeout(() => navigate(`/groups/${eventID}`), 500);
+      setTimeout(() => navigate(`/groups/${newEvent.groupList}`), 500);
       //redirect to group page of that id
 
       let { data: user_data, user_error } = await supabase
