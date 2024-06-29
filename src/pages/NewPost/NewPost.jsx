@@ -255,16 +255,12 @@ function NewPost() {
               onChange={handleFileChange}
             />
             <button onClick={handleUpload}>Upload Files</button> */}
-            <div className="newEvent__image-wrapper" {...getRootProps()}>
-              <input {...getInputProps()} />
-              <Btn textBtn={"Upload Image"} />
-              {imagePreview && imagePreview !== undefined ? (
-                <img
-                  className="newEvent__imageUpload"
-                  alt={`${postTitle} image`}
-                  src={imagePreview}
-                />
-              ) : null}
+            <div className="image-wrapper" {...getRootProps()}>
+                <input {...getInputProps()} />
+                <Btn textBtn={"Upload image"} />
+                {imagePreview === undefined ? null : (
+                  <img alt={`post picture`} src={imagePreview} />
+                )}
             </div>
           </div>
           <div className="form__input-container">
