@@ -126,12 +126,20 @@ function SingleGroup() {
 		setEventTitle(selectedEvent.title);
 		setGroupId(selectedEvent.created_by_group_id);
 		if (plus == true) {
-			const { data, error } = await supabase.from("event_participants").insert([
-				{
-					user_id: userId,
-					event_id: selectedEvent.id,
-				},
-			]);
+			let { count } = await supabase
+        .from("event_participants")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .eq("event_id", selectedEvent.id);
+
+			if (count == 0) {
+				const { data, error } = await supabase.from("event_participants").insert([
+					{
+						user_id: userId,
+						event_id: selectedEvent.id,
+					},
+				]);
+			}
 		}
 		setOpenEventModal(true);
 	};
