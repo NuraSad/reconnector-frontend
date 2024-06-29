@@ -38,16 +38,16 @@ Henry Bellman [@hheennrryyb](https://github.com/hheennrryyb)
 
 ### 🖊️ Wireframe
 
-<a href="https://www.figma.com/file/SKLo9xQkuOUE3LnJN2Jczx/SolarSystemHackathon?node-id=0%3A1&t=TJt5GIPi0GyAOFmV-1" target="_blank">WireFrame</a>
+<a href="https://www.figma.com/design/PgZEp7yG7BhuQN4TSNFEXs/Stack-Five-Hackathon?node-id=0-1&t=mL6aujEOKQQoTQbX-0" target="_blank">WireFrame</a>
 
 ### 📝 Trello board for tickets/tasks
 
-<a href="https://trello.com/b/HAw11w0p/quackathon" target="_blank">Ticket board</a>
+<a href="https://trello.com/b/8vVBTjOh/stackfivehackathon" target="_blank">Ticket board</a>
 
 ## Deployed Site
 
 <p>We deployed using Netlify and Heroku</p>
-<p>Check it out 👉 <a href="https://intergalactic-planetary.netlify.app/" target="_blank">HERE</a></p>
+<p>Check it out 👉 <a href="https://reconnector.vercel.app/" target="_blank">HERE</a></p>
 
 ## ⚒️ Tech Stack
 ![Logo](https://skillicons.dev/icons?i=html,scss,materialui,vite,supabase,postgres)
