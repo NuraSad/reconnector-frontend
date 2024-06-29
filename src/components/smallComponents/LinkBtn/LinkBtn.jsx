@@ -27,7 +27,7 @@ function LinkBtn({
         fontSize: fontSize,
       }}
       href={link}
-      onClick={(e) => onClickFunction(e, event)}
+      onClick={(e) => onClickFunction(e, event, false)}
     >
       {image ? (
         <div className="linkBtn__imgDiv">
@@ -35,7 +35,7 @@ function LinkBtn({
             style={{ height: imgHeight }}
             src={image}
             alt={image}
-            onClick={(e) => onClickFunction(e, event)}
+            onClick={(e) => onClickFunction(e, event, true)}
           />
           {textBtn}
         </div>
