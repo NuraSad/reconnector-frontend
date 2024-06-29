@@ -26,12 +26,58 @@ Henry Bellman [@hheennrryyb](https://github.com/hheennrryyb)
 - The events can be help online or offline.
 - Any user can create an event or a group.
 
-
 **Database:**
 
 - Supabase hosts all our tables.
 - We used Supabase for Authorization.
 - We query our backend tables from the frontend.
+
+**What it can do**
+Login page uses Supabase Authenticate
+
+Profile Page
+Their posts best liked to least
+Their groups
+Awards, dummy data, potential to work on in the future
+
+Update your profile with the icon in the top right corner
+
+SideBar Nav
+
+Explore:
+User Posts
+Likes (affects the Leaderboard posts for a company, higher liked ones will go first that are from a company employee)
+How the # is associated with the group
+
+Groups
+View all the groups
+See what members are in the group
+Read more about the group
+Click on a group
+	Within the group:
+Join or unjoin a group
+Checkout the events for the group in the calendar
+Checkout events on the side buttons
+	Pop-up shows info about the event
+	Join event
+	See who is in the event
+
+Calendar
+Shows all the logged in users events
+Can hover over and it will show more
+
+Leaderboard
+All the companies who have remote employees participating in Reconnect
+Big bubbles mean more points, little bubbles mean less
+
+Leaderboard Single
+Checkout the company, it’s info, maybe it is looking for more employees?
+Top star holders
+The posts from it’s employees that are highly liked to lowest
+
+Create Post
+
+Create Group
 
 
 ## Planning and Preparation Documentation
@@ -67,8 +113,9 @@ To install and run locally, you may follow these steps:
 
 ## 🔨 Things to Work On
 
-- Creating the awards section with the points
-- Hooking up the Strava Component with the embed
+- Creating the awards section with the points (commented out code)
+- Hooking up the Strava Component with the embed (commented out code)
+- Lattitude and longitude are part of the site, they just need to be implemented into a map for the Event pop-ups that are physical events.
 - Gaining points depending on the events you participate in (just by clicking the box), creating a post, and shareing your kms/hrs for an activity.
 - You and your company would gain points from from your participation. You and your company could win different medals for participation.
 - The user could see their raters and so the companies see their overall rating for employee involvement.
