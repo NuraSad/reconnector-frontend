@@ -16,6 +16,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import TextField from "@mui/material/TextField";
 import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import axios from "axios";
 
 export default function NewEvent() {
   const [newEvent, setNewEvent] = useState({});
@@ -23,10 +24,10 @@ export default function NewEvent() {
   const [togglePerson, setTogglePerson] = useState(false);
   const [groups, setGroups] = useState({});
   const [value, setValue] = useState(dayjs(new Date()));
-  const [supaUserId, setSupaUserId] = useState("");
   const [userId, setUserId] = useState();
   const [imagePreview, setImagePreview] = useState();
   const [imageFile, setImageFile] = useState();
+  const VITE_GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
   const CDNURL =
     "https://manuqmuduusjcgdzuyqt.supabase.co/storage/v1/object/public/";
@@ -55,7 +56,7 @@ export default function NewEvent() {
 
   const eventCreate = () => toast.success("Event is Created");
   const notCreate = () =>
-    toast.warn("Event name AND description are Required!");
+    toast.warn("Event name, description, and complete address are Required!");
 
   //location street, city, country
   function addressOnchange(e) {
@@ -65,6 +66,11 @@ export default function NewEvent() {
       address: address,
     }));
   }
+
+  // const address = newEvent.location;
+  // const encodedAddress = encodeURIComponent(address);
+  // const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${VITE_GOOGLE_API_KEY}`;
+  // console.log(geocodeUrl);
 
   function cityOnchange(e) {
     let city = e.target.value;
@@ -82,6 +88,15 @@ export default function NewEvent() {
     }));
   }
 
+  // / function to get the data from the API
+  // let getLatLong = async (location) => {
+  //   //function on load
+  //   let response = await axios(
+  //     `https://maps.googleapis.com/maps/api/geocode/json?address=${location.address},${location.city},${location.country}&key=${VITE_GOOGLEKEY}`
+  //   );
+  //   console.log(response);
+  //   //return response;
+  // };
   //set the online
   function onlineOnchange() {
     setToggleOnline((prevState) => {
@@ -140,25 +155,11 @@ export default function NewEvent() {
   }
 
   useEffect(() => {
-    const getSupaUserID = async () => {
-      try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user !== null) {
-          setSupaUserId(user.id);
-        } else {
-          setSupaUserId("");
-        }
-      } catch (error) {}
-    };
-
     const fetchUser = async () => {
       const user = await getUserId();
       setUserId(user);
     };
     fetchUser();
-    getSupaUserID();
   }, []);
 
   useEffect(() => {
@@ -178,19 +179,50 @@ export default function NewEvent() {
     fetchGroups();
   }, []);
 
+  const getGeoCode = async () => {
+    // Replace spaces with plus signs
+    const newAddress = newEvent.address.replace(/ /g, "+");
+    const newCity = newEvent.city.replace(/ /g, "+");
+    const newCountry = newEvent.country.replace(/ /g, "+");
+
+    try {
+      const { data } = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${newAddress},+${newCity},+${newCountry}&key=${VITE_GOOGLE_API_KEY}`
+      );
+
+      if (data.results.length > 0) {
+        const fetchedLat = data.results[0].geometry.location.lat;
+        const fetchedLng = data.results[0].geometry.location.lng;
+        return { lat: fetchedLat, lng: fetchedLng };
+      } else {
+        alert("No results found for the provided address.");
+      }
+    } catch (error) {
+      console.error("Error fetching geocode data:", error);
+      alert("Error fetching geocode data.");
+    }
+  };
+
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!newEvent.eventName || !newEvent.description) {
+    if (
+      !newEvent.eventName ||
+      !newEvent.description ||
+      !newEvent.address ||
+      !newEvent.city ||
+      !newEvent.country
+    ) {
       return notCreate();
     }
+
+    const { lat, lng } = await getGeoCode();
 
     let imageURL = null;
 
     if (imageFile) {
       // supabase storage uses authenticated user id instead of our internal id
       const auth_user_id = await getAuthUserId();
-      console.log(imageFile);
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from("groupImages")
         .upload(auth_user_id + "/" + uuidv4(), imageFile);
@@ -208,12 +240,6 @@ export default function NewEvent() {
     }
 
     // add event
-    // get internal user id
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    console.log(user);
-
     const { data: event_data, error: event_error } = await supabase
       .from("event")
       .insert([
@@ -230,6 +256,8 @@ export default function NewEvent() {
             (newEvent.city ? newEvent.city + "," : "") +
             (newEvent.country ? newEvent.country : ""),
           event_date: value,
+          lat: lat,
+          long: lng,
         },
       ])
       .select();
@@ -241,10 +269,7 @@ export default function NewEvent() {
     if (event_data) {
       const eventID = event_data[0].id;
       eventCreate();
-      setTimeout(
-        () => navigate(`/groups/${event_data[0].created_by_group_id}`),
-        500
-      );
+      setTimeout(() => navigate(`/groups/${newEvent.groupList}`), 500);
       //redirect to group page of that id
 
       let { data: user_data, user_error } = await supabase
@@ -302,6 +327,8 @@ export default function NewEvent() {
       }
     }
   }
+
+  console.log(newEvent.groupList);
   return (
     <section className="newEvent">
       <h1>
