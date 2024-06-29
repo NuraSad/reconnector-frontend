@@ -25,30 +25,50 @@ Henry Bellman [@hheennrryyb](https://github.com/hheennrryyb)
 - Once your profile is created, you can join groups and events created by groups.
 - The events can be help online or offline.
 - Any user can create an event or a group.
-- You will gain points depending on the events you participate in (just by clicking the box), creating a post, and 
-- If a planet has more than one moon, the moon information must be displayed in repeating elements.
-- All planet and moon content MUST be stored in a database.
 
-## Tech Stack
+
+**Database:**
+
+- Supabase hosts all our tables.
+- We used Supabase for Authorization.
+- We query our backend tables from the frontend.
+
+
+## Planning and Preparation Documentation
+
+### 🖊️ Wireframe
+
+<a href="https://www.figma.com/file/SKLo9xQkuOUE3LnJN2Jczx/SolarSystemHackathon?node-id=0%3A1&t=TJt5GIPi0GyAOFmV-1" target="_blank">WireFrame</a>
+
+### 📝 Trello board for tickets/tasks
+
+<a href="https://trello.com/b/HAw11w0p/quackathon" target="_blank">Ticket board</a>
+
+## Deployed Site
+
+<p>We deployed using Netlify and Heroku</p>
+<p>Check it out 👉 <a href="https://intergalactic-planetary.netlify.app/" target="_blank">HERE</a></p>
+
+## ⚒️ Tech Stack
 ![Logo](https://skillicons.dev/icons?i=html,scss,materialui,vite,supabase,postgres)
 
-## Setup
-### Initial setup
-1. Clone this repository.
-2. Run `npm i` to install all dependancies.
-3. Make a local .env file by copying the env.sample file.
 
-### Setting up Supabase
-1. Fill in `VITE_SUPABASE_URL` and `VITE_ANON_KEY` in your local .env file.
+## 👩‍💻 Local Installation : Frontend
 
-### Run the Application
-```Run Application
-npm run dev
-```
+To install and run locally, you may follow these steps:
 
-## Author
-Kayle Robson [@revyrob](https://github.com/revyrob)  
-Aparna Dhara [@AD9-1](https://github.com/AD9-1)  
-Angela Kwok [@angelatyk](https://www.github.com/angelatyk)  
-Ainur Saduova [@NuraSad](https://github.com/NuraSad)  
-Henry Bellman [@hheennrryyb](https://github.com/hheennrryyb)
+1. To start using this app you first need to clone the repository: `git clone git@github.com:NuraSad/reconnector-frontend.git`
+
+2. Then you will need to install all the required packages for the application. Run this command (if you're using npm): `npm i`
+
+3. Run the frontend by the following command `npm run dev`
+
+4. Create a .env file in the root folder and add the following to the file: `VITE_SUPABASE_URL` and `VITE_ANON_KEY` and `VITE_GOOGLE_API_KEY` in your local .env file.
+
+## 🔨 Things to Work On
+
+- Creating the awards section with the points
+- Hooking up the Strava Component with the embed
+- Gaining points depending on the events you participate in (just by clicking the box), creating a post, and shareing your kms/hrs for an activity.
+- You and your company would gain points from from your participation. You and your company could win different medals for participation.
+- The user could see their raters and so the companies see their overall rating for employee involvement.
