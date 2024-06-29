@@ -278,7 +278,7 @@ export default function NewEvent() {
 				console.log("User was successfully added to event member table.");
 				eventCreate();
 				//I want this to navigate to the eventID
-				setTimeout(() => navigate(`/groups/${eventID}`), 500);
+				setTimeout(() => navigate(`/groups/${newEvent.groupList}`), 500);
 			}
 		}
 	}
