@@ -67,10 +67,6 @@ export default function NewEvent() {
     }));
   }
 
-  // const address = newEvent.location;
-  // const encodedAddress = encodeURIComponent(address);
-  // const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${VITE_GOOGLE_API_KEY}`;
-  // console.log(geocodeUrl);
 
   function cityOnchange(e) {
     let city = e.target.value;
@@ -88,16 +84,7 @@ export default function NewEvent() {
     }));
   }
 
-  // / function to get the data from the API
-  // let getLatLong = async (location) => {
-  //   //function on load
-  //   let response = await axios(
-  //     `https://maps.googleapis.com/maps/api/geocode/json?address=${location.address},${location.city},${location.country}&key=${VITE_GOOGLEKEY}`
-  //   );
-  //   console.log(response);
-  //   //return response;
-  // };
-  //set the online
+ 
   function onlineOnchange() {
     setToggleOnline((prevState) => {
       const newToggleOnline = !prevState;
