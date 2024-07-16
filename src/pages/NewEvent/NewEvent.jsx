@@ -67,7 +67,6 @@ export default function NewEvent() {
     }));
   }
 
-
   function cityOnchange(e) {
     let city = e.target.value;
     setNewEvent((prevState) => ({
@@ -84,7 +83,6 @@ export default function NewEvent() {
     }));
   }
 
- 
   function onlineOnchange() {
     setToggleOnline((prevState) => {
       const newToggleOnline = !prevState;
@@ -191,7 +189,7 @@ export default function NewEvent() {
   };
 
   async function handleSubmit(event) {
-		event.preventDefault();
+    event.preventDefault();
 
     if (
       !newEvent.eventName ||
@@ -203,82 +201,86 @@ export default function NewEvent() {
       return notCreate();
     }
 
-		const { lat, lng } = await getGeoCode();
+    const { lat, lng } = await getGeoCode();
 
-		let imageURL = null;
+    let imageURL = null;
 
-		if (imageFile) {
-			// supabase storage uses authenticated user id instead of our internal id
-			const auth_user_id = await getAuthUserId();
-			const { data: uploadData, error: uploadError } = await supabase.storage.from("groupImages").upload(auth_user_id + "/" + uuidv4(), imageFile);
+    if (imageFile) {
+      // supabase storage uses authenticated user id instead of our internal id
+      const auth_user_id = await getAuthUserId();
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from("groupImages")
+        .upload(auth_user_id + "/" + uuidv4(), imageFile);
 
-			if (uploadError) {
-				console.log("Unable to upload image file.");
-			}
+      if (uploadError) {
+        console.log("Unable to upload image file.");
+      }
 
-			if (uploadData) {
-				imageURL = CDNURL + uploadData.fullPath;
-			}
-		}
-		if (!imageFile) {
-			setImageFile(defaultImage);
-		}
+      if (uploadData) {
+        imageURL = CDNURL + uploadData.fullPath;
+      }
+    }
+    if (!imageFile) {
+      setImageFile(defaultImage);
+    }
 
-		// add event
-		const { data: event_data, error: event_error } = await supabase
-			.from("event")
-			.insert([
-				{
-					title: newEvent.eventName,
-					description: newEvent.description,
-					created_by_group_id: newEvent.groupList,
-					event_image: imageURL,
-					created_by_user_id: userId,
-					online: newEvent.online ? true : false,
-					in_person: newEvent.inperson ? true : false,
-					location: (newEvent.address ? newEvent.address + "," : "") + (newEvent.city ? newEvent.city + "," : "") + (newEvent.country ? newEvent.country : ""),
-					event_date: value,
-					lat: lat,
-					long: lng,
-				},
-			])
-			.select();
+    // add event
+    const { data: event_data, error: event_error } = await supabase
+      .from("event")
+      .insert([
+        {
+          title: newEvent.eventName,
+          description: newEvent.description,
+          created_by_group_id: newEvent.groupList,
+          event_image: imageURL,
+          created_by_user_id: userId,
+          online: newEvent.online ? true : false,
+          in_person: newEvent.inperson ? true : false,
+          location:
+            (newEvent.address ? newEvent.address + "," : "") +
+            (newEvent.city ? newEvent.city + "," : "") +
+            (newEvent.country ? newEvent.country : ""),
+          event_date: value,
+          lat: lat,
+          long: lng,
+        },
+      ])
+      .select();
 
-		if (event_error) {
-			console.log(event_error);
-		}
+    if (event_error) {
+      console.log(event_error);
+    }
 
-		if (event_data) {
-			const eventID = event_data[0].id;
+    if (event_data) {
+      const eventID = event_data[0].id;
 
-			// add user to event members
-			const { data: event_members_data, error: event_members_error } = await supabase
-				.from("event_participants")
-				.insert([{ event_id: eventID, user_id: userId }])
-				.select();
+      // add user to event members
+      const { data: event_members_data, error: event_members_error } =
+        await supabase
+          .from("event_participants")
+          .insert([{ event_id: eventID, user_id: userId }])
+          .select();
 
-			if (event_members_error) {
-				console.log("Failed to add user to event member table " + event_members_error);
-			}
+      if (event_members_error) {
+        console.log(
+          "Failed to add user to event member table " + event_members_error
+        );
+      }
 
-			if (event_members_data) {
-				console.log("User was successfully added to event member table.");
-				eventCreate();
-				//I want this to navigate to the eventID
-				setTimeout(() => navigate(`/groups/${newEvent.groupList}`), 500);
-			}
-		}
-	}
+      if (event_members_data) {
+        console.log("User was successfully added to event member table.");
+        eventCreate();
+        //I want this to navigate to the eventID
+        setTimeout(() => navigate(`/groups/${newEvent.groupList}`), 500);
+      }
+    }
+  }
 
   return (
     <section className="newEvent">
       <h1>
-        {newEvent.eventName && newEvent.eventName ? (
-          <img src={create} alt="create event" />
-        ) : null}
-        {newEvent.eventName && newEvent.eventName
-          ? ` ${newEvent.eventName}`
-          : "Create New Event"}
+        {newEvent.eventName ? <img src={create} alt="create event" /> : null}
+        {newEvent.eventName ? ` ${newEvent.eventName}` : "Create New Event"}
       </h1>
       <div className="newEvent__col-1">
         <div className="newEvent__input">
